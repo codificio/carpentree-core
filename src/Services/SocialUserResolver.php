@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Core\Services;
+namespace Carpentree\Core\Services;
 
 use Exception;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;

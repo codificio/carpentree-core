@@ -1,7 +1,7 @@
 {
     "name": "carpentree/core",
     "description": ":description",
-    "license": "license MIT",
+    "license": "MIT",
     "authors": [
         {
             "name": "Enrico Nardo",

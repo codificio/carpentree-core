@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Core\Services;
+namespace Carpentree\Core\Services;
 
 use App\Modules\Core\Models\User;
 use App\Modules\Core\Models\LinkedSocialAccount;
