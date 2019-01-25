@@ -2,8 +2,8 @@
 
 namespace Carpentree\Core\Services;
 
-use App\Modules\Core\Models\User;
-use App\Modules\Core\Models\LinkedSocialAccount;
+use Carpentree\Core\Models\User;
+use Carpentree\Core\Models\LinkedSocialAccount;
 use Laravel\Socialite\Two\User as ProviderUser;
 
 class SocialAccountsService

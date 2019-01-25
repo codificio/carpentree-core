@@ -2,7 +2,7 @@
 
 namespace Carpentree\Core\Providers;
 
-use App\Modules\Core\Services\SocialUserResolver;
+use Carpentree\Core\Services\SocialUserResolver;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
