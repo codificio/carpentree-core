@@ -8,6 +8,10 @@ This is where your description should go. Take a look at [contributing.md](contr
 ``` bash
 $ composer require carpentree/core
 ```
+- **IMPORTANT!** Remove default Laravel migrations about users:
+    - `yyyy_mm_dd_HHiiss_create_users_table.php`
+    - `yyyy_mm_dd_HHiiss_create_password_resets_table.php`
+
 - Run migrations
 ``` bash
 $ php artisan migrate
@@ -16,10 +20,43 @@ $ php artisan migrate
 ``` bash
 $ php artisan passport:install
 ```
-- Remove default user migrations from your Laravel installation.
-- Remove default User model class.
+- In your `config/auth.php` configuration file, you should set the `driver` option of the `api` authentication guard to `passport`.
+``` php
+'guards' => [
+    'api' => [
+        'driver' => 'passport',
+        'provider' => 'users',
+    ],
+],
+```
+- Remove default `User` model class in `App/User`.
+- In your `config/auth.php` configuration file, you should set the `model` option of the `users` provider to the new User class.
+``` php
+'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => \Carpentree\Core\Models\User::class,
+        ],
+    ],
+```
 
 ## Usage
+
+### Enable social authentication
+
+Add credentials for the OAuth services your application utilizes. These credentials should be placed in your `config/services.php` configuration file, and should use the key equals to provider name (e.g., `facebook`, `google`, `github` etc.).
+
+For example:
+
+``` php
+'google' => [
+    'client_id' => env('GOOGLE_CLIENT_ID'),
+    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+    'redirect' => env('GOOGLE_REDIRECT_URL'),
+],
+```
+
+> We will use Socialite just for retrieving user details from an access token so we can fill client_id, client_secret, redirect with **empty strings (not NULL)** because they won’t be used in our flow.
 
 ## Change log
 
