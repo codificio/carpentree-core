@@ -43,7 +43,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Carpentree\\Core\\Providers\\CoreServiceProvider"
+                "Carpentree\\Core\\Providers\\CoreServiceProvider",
+                "Carpentree\\Core\\Providers\\EventServiceProvider"
             ]
         }
     }

@@ -29,7 +29,8 @@ $ php artisan passport:install
     ],
 ],
 ```
-- Remove default `User` model class in `App/User`.
+- [Optional] If you want, remove default `User` model class in `App/User`.
+- [Optional] If you want, remove no more useful Middleware and Controller. Remember this package aim to provide a _stateless_ application skeleton, so default `session` authentication will not be used.
 - In your `config/auth.php` configuration file, you should set the `model` option of the `users` provider to the new User class.
 ``` php
 'providers' => [
