@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Providers;
 
+use Carpentree\Core\Listeners\PruneOldTokens;
 use Carpentree\Core\Listeners\RevokeOldTokens;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,11 +19,9 @@ class EventServiceProvider extends ServiceProvider
             RevokeOldTokens::class,
         ],
 
-        /*
         'Laravel\Passport\Events\RefreshTokenCreated' => [
-            'App\Listeners\PruneOldTokens',
+            PruneOldTokens::class,
         ],
-        */
     ];
 
     /**
