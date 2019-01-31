@@ -55,8 +55,6 @@ class CoreServiceProvider extends ServiceProvider
      */
     protected function mapRoutes()
     {
-        Passport::routes();
-
         $this->loadRoutesFrom(__DIR__.'/../../routes/api.php');
     }
 

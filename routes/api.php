@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,18 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('try', function (Request $request) {
-    return response()->json(array('scemo' => 'oio'));
+Route::prefix('api')->group(function() {
+
+    Route::middleware('auth:api')->group(function() {
+
+        Route::get('try', function (Request $request) {
+            return response()->json(array('message' => 'success'));
+        })->name('api.try');
+
+        Route::get('user', function (Request $request) {
+            return Auth::user();
+        });
+
+    });
+
 });
