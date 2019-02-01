@@ -23,8 +23,8 @@ Route::prefix('api')->group(function() {
             return response()->json(array('message' => 'success'));
         })->name('api.try');
 
-        Route::get('user', function (Request $request) {
-            return Auth::user();
+        Route::get('users/me', function (Request $request) {
+            return new \Carpentree\Core\Http\Resources\UserResource(Auth::user());
         });
 
     });

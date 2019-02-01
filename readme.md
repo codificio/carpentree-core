@@ -43,7 +43,9 @@ $ php artisan passport:install
 
 ## Usage
 
-### Enable social authentication
+### Authorization and authentication
+
+#### Enable social authentication
 
 Add credentials for the OAuth services your application utilizes. These credentials should be placed in your `config/services.php` configuration file, and should use the key equals to provider name (e.g., `facebook`, `google`, `github` etc.).
 
@@ -55,6 +57,21 @@ For example:
     'client_secret' => env('GOOGLE_CLIENT_SECRET'),
     'redirect' => env('GOOGLE_REDIRECT_URL'),
 ],
+```
+
+#### Roles and permissions
+
+##### Middlewares
+
+Since this package base his roles and permissions system on `spatie\laravel-permission`, if you want to use middlewares, you need to add them inside your `app/Http/Kernel.php` file.
+
+``` php
+protected $routeMiddleware = [
+    // ...
+    'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+    'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+    'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+];
 ```
 
 > We will use Socialite just for retrieving user details from an access token so we can fill client_id, client_secret, redirect with **empty strings (not NULL)** because they won’t be used in our flow.
