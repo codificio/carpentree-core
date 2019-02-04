@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Providers;
 
+use Carpentree\Core\Console\Commands\RefreshPermissions;
 use Carpentree\Core\Services\SocialUserResolver;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Support\Facades\Route;
@@ -31,19 +32,27 @@ class CoreServiceProvider extends ServiceProvider
 
         $this->mapRoutes();
 
-        // $this->registerConfig();
+        $this->publishConfig();
 
         // Publishing is only necessary when using the CLI.
-        /*
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
-        */
     }
 
-    public function registerConfig()
+    public function register()
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/carpentree.php',
+            'carpentree'
+        );
+    }
+
+    public function publishConfig()
+    {
+        $this->publishes([
+            __DIR__.'/../../config/carpentree.php' => config_path('carpentree.php'),
+        ], 'config');
     }
 
     /**
@@ -74,6 +83,8 @@ class CoreServiceProvider extends ServiceProvider
     protected function bootForConsole()
     {
         // Registering package commands.
-        // $this->commands([]);
+        $this->commands([
+            RefreshPermissions::class
+        ]);
     }
 }

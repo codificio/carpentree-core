@@ -59,13 +59,15 @@ For example:
 ],
 ```
 
+> We will use Socialite just for retrieving user details from an access token so we can fill client_id, client_secret, redirect with **empty strings (not NULL)** because they won’t be used in our flow.
+
 #### Roles and permissions
 
 There is a `Super Admin` role who can do everything. To make sure you correctly pass the check on this role, you must use the native Laravel `@can` and `can()` directives.
 
 It is generally best to code the app around `permissions` only. That way you can always use the native Laravel `@can` and `can()` directives everywhere in your app.
 
-##### Middlewares
+##### Middleware
 
 Since this package base his roles and permissions system on `spatie\laravel-permission`, if you want to use middlewares, you need to add them inside your `app/Http/Kernel.php` file.
 
@@ -78,7 +80,41 @@ protected $routeMiddleware = [
 ];
 ```
 
-> We will use Socialite just for retrieving user details from an access token so we can fill client_id, client_secret, redirect with **empty strings (not NULL)** because they won’t be used in our flow.
+##### Manage permissions
+
+- Add permissions you want to the `carpentree` config file, e.g:
+
+``` php
+'permissions' => [
+    'users' => [
+        'create',
+        'read',
+        'update',
+        'delete',
+        'manage-permissions'
+    ],
+    
+    'group-key' => [
+        'permission-key-1',
+        'permission-key-2',
+        // ...
+    ]
+]
+```
+
+- Update your database by running the console command:
+
+``` bash
+$ php artisan carpentree:refresh-permissions
+```
+
+> For consistency reasons, old permissions are not removed automatically by the command. You have to do manually. 
+
+Permission final name will be `group-key.permission-key` adn you can refer to it from the code, for example, in this way:
+
+``` php
+$user->hasPermissionTo('users.delete');
+```
 
 ## Change log
 
