@@ -61,6 +61,10 @@ For example:
 
 #### Roles and permissions
 
+There is a `Super Admin` role who can do everything. To make sure you correctly pass the check on this role, you must use the native Laravel `@can` and `can()` directives.
+
+It is generally best to code the app around `permissions` only. That way you can always use the native Laravel `@can` and `can()` directives everywhere in your app.
+
 ##### Middlewares
 
 Since this package base his roles and permissions system on `spatie\laravel-permission`, if you want to use middlewares, you need to add them inside your `app/Http/Kernel.php` file.
