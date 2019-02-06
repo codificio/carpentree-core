@@ -16,7 +16,7 @@ use Spatie\Permission\Exceptions\UnauthorizedException;
 |
 */
 
-Route::prefix('api')->group(function() {
+Route::prefix('api')->namespace('Carpentree\Core\Http\Controllers')->group(function() {
 
     Route::middleware('auth:api')->group(function() {
 
@@ -27,6 +27,30 @@ Route::prefix('api')->group(function() {
         Route::get('users/me', function (Request $request) {
             return new \Carpentree\Core\Http\Resources\UserResource(Auth::user());
         });
+
+        /**
+         * Permissions
+         */
+        Route::get('permissions', 'PermissionController@list')
+            ->name('api.permissions.list');
+
+        Route::post('permissions/user/give', 'PermissionController@giveToUser')
+            ->name('api.permissions.user.give');
+
+        Route::post('permissions/user/revoke', 'PermissionController@revokeFromUser')
+            ->name('api.permissions.user.revoke');
+
+        /**
+         * Roles
+         */
+        Route::get('roles', 'RoleController@list')
+            ->name('api.roles.list');
+
+        Route::post('roles/user/assign', 'RoleController@assignToUser')
+            ->name('api.permissions.user.give');
+
+        Route::post('roles/user/remove', 'RoleController@removeFromUser')
+            ->name('api.permissions.user.revoke');
 
     });
 
