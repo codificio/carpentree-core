@@ -1,6 +1,15 @@
-# Core
+# Carpentree Core
 
 This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
+
+## Requirements
+- PHP 7.2+
+- Laravel 5.7+
+- MySQL 5.7+ (this package use `json` column)
+- `exif` extension (on most systems it will be installed by default).
+- [GD](http://php.net/manual/en/book.image.php) extension
+- If you want to create PDF or SVG thumbnails [Imagick](http://php.net/manual/en/book.imagick.php) and [Ghostscript](https://www.ghostscript.com/) are required. 
+- For the creation of thumbnails of video files `ffmpeg` should be installed on your system.
 
 ## Installation
 
