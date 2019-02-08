@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Http\Controllers;
 
+use Carpentree\Core\Http\Requests\CreateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +43,16 @@ class UserController extends Controller
         }
 
         return UserResource::make($this->repository->find($id));
+    }
+
+    public function create(CreateUserRequest $request)
+    {
+        if (!Auth::user()->can('users.create')) {
+            throw UnauthorizedException::forPermissions(['users.create']);
+        }
+
+        $attributes = $request->input('attributes');
+        $this->repository->create($attributes);
     }
 
 }

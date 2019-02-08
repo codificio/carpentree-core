@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Spatie\Permission\Exceptions\UnauthorizedException;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +17,7 @@ use Spatie\Permission\Exceptions\UnauthorizedException;
 
 Route::prefix('api')->namespace('Carpentree\Core\Http\Controllers')->group(function() {
 
-    Route::middleware('auth:api')->group(function() {
+    Route::middleware(['auth:api', 'verified'])->group(function() {
 
         Route::get('try', function (Request $request) {
             return response()->json(array('message' => 'success'));
@@ -40,19 +39,19 @@ Route::prefix('api')->namespace('Carpentree\Core\Http\Controllers')->group(funct
         /**
          * Users permissions
          */
-        Route::post('user/{id}/permissions/sync', 'PermissionController@syncWithUser')
+        Route::post('users/{id}/permissions/sync', 'PermissionController@syncWithUser')
             ->name('api.users.permissions.sync');
 
-        Route::post('user/{id}/permissions/revoke', 'PermissionController@revokeFromUser')
+        Route::post('users/{id}/permissions/revoke', 'PermissionController@revokeFromUser')
             ->name('api.users.permissions.revoke');
 
         /**
          * Users roles
          */
-        Route::post('user/{id}/roles/sync', 'RoleController@syncWithUser')
+        Route::post('users/{id}/roles/sync', 'RoleController@syncWithUser')
             ->name('api.users.roles.sync');
 
-        Route::post('user/{id}/roles/revoke', 'RoleController@revokeFromUser')
+        Route::post('users/{id}/roles/revoke', 'RoleController@revokeFromUser')
             ->name('api.users.roles.revoke');
 
         /**
