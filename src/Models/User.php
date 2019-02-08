@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Models;
 
+use Carpentree\Core\Models\User\Meta;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Passport\HasApiTokens;
@@ -46,8 +47,33 @@ class User extends Authenticatable
         parent::__construct($attributes);
     }
 
+    /**
+     * Get the social accounts linked.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function linkedSocialAccounts()
     {
         return $this->hasMany(LinkedSocialAccount::class);
+    }
+
+    /**
+     * Get the addresses of the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    /**
+     * Get the meta informations of the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function meta()
+    {
+        return $this->hasMany(Meta::class);
     }
 }
