@@ -29,22 +29,31 @@ Route::prefix('api')->namespace('Carpentree\Core\Http\Controllers')->group(funct
         });
 
         /**
+         * Users
+         */
+        Route::get('users', 'UserController@list')
+            ->name('api.users.list');
+
+        Route::get('users/{id}', 'UserController@get')
+            ->name('api.users.get');
+
+        /**
          * Users permissions
          */
         Route::post('user/{id}/permissions/sync', 'PermissionController@syncWithUser')
-            ->name('api.user.permissions.sync');
+            ->name('api.users.permissions.sync');
 
         Route::post('user/{id}/permissions/revoke', 'PermissionController@revokeFromUser')
-            ->name('api.user.permissions.revoke');
+            ->name('api.users.permissions.revoke');
 
         /**
          * Users roles
          */
         Route::post('user/{id}/roles/sync', 'RoleController@syncWithUser')
-            ->name('api.user.roles.sync');
+            ->name('api.users.roles.sync');
 
         Route::post('user/{id}/roles/revoke', 'RoleController@revokeFromUser')
-            ->name('api.user.roles.revoke');
+            ->name('api.users.roles.revoke');
 
         /**
          * Permissions

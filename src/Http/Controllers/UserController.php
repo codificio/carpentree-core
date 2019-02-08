@@ -3,32 +3,45 @@
 namespace Carpentree\Core\Http\Controllers;
 
 use Carpentree\Core\Http\Resources\UserResource;
-use Carpentree\Core\Models\User;
+use Carpentree\Core\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class UserController extends Controller
 {
 
+    /**
+     * @var UserRepository
+     */
+    protected $repository;
+
+    public function __construct(UserRepository $repository){
+        $this->repository = $repository;
+    }
+
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function list()
     {
         if (!Auth::user()->can('users.read')) {
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        User::all()->paginate(config('carpentree.items_per_page'));
+        return UserResource::collection($this->repository->paginate());
     }
 
+    /**
+     * @param $id
+     * @return UserResource
+     */
     public function get($id)
     {
         if (!Auth::user()->can('users.read')) {
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        /** @var User $user */
-        $user = User::findOrFail($id);
-
-        return response()->json(UserResource::make($user));
+        return UserResource::make($this->repository->find($id));
     }
 
 }

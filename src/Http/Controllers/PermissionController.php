@@ -4,6 +4,7 @@ namespace Carpentree\Core\Http\Controllers;
 
 use Carpentree\Core\Http\Resources\PermissionResource;
 use Carpentree\Core\Models\User;
+use Carpentree\Core\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
@@ -12,13 +13,25 @@ use Spatie\Permission\Models\Permission;
 class PermissionController extends Controller
 {
 
+    /**
+     * @var UserRepository
+     */
+    protected $userRepository;
+
+    public function __construct(UserRepository $userRepository){
+        $this->userRepository = $userRepository;
+    }
+
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function list()
     {
         if (!Auth::user()->can('permissions.read')) {
             throw UnauthorizedException::forPermissions(['permissions.read']);
         }
 
-        return response()->json(PermissionResource::collection(Permission::all()));
+        return PermissionResource::collection(Permission::all());
     }
 
     /**
@@ -36,15 +49,17 @@ class PermissionController extends Controller
         ]);
 
         /** @var User $user */
-        $user = User::findOrFail($id);
+        $user = $this->userRepository->find($id);
         $user->syncPermissions($request->input('permissions'));
 
-        return response()->json([
-            "status" => "success",
-            "data" => null
-        ]);
+        return response()->json();
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function revokeFromUser($id, Request $request)
     {
         if (!Auth::user()->can('users.manage-permissions')) {
@@ -58,13 +73,10 @@ class PermissionController extends Controller
         $name = $request->input('name');
 
         /** @var User $user */
-        $user = User::findOrFail($id);
+        $user = $this->userRepository->find($id);
         $user->revokePermissionTo($name);
 
-        return response()->json([
-            "status" => "success",
-            "data" => null
-        ]);
+        return response()->json();
     }
 
 }

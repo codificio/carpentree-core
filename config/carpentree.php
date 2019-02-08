@@ -4,11 +4,6 @@
 return [
 
     /**
-     * Pagination: items per page
-     */
-    'items_per_page' => 10,
-
-    /**
      * Permissions
      */
     'permissions' => [
