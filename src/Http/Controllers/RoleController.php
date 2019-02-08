@@ -25,22 +25,19 @@ class RoleController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function assignToUser(Request $request)
+    public function syncWithUser($id, Request $request)
     {
         if (!Auth::user()->can('users.manage-roles')) {
             throw UnauthorizedException::forPermissions(['users.manage-roles']);
         }
 
         $request->validate([
-            'user_id' => 'required|integer',
-            'name' => 'required|string',
+            'roles' => 'required|array',
         ]);
 
-        $name = $request->input('name');
-
         /** @var User $user */
-        $user = User::findOrFail($request->input('user_id'));
-        $user->assignRole($name);
+        $user = User::findOrFail($id);
+        $user->syncRoles($request->input('roles'));
 
         return response()->json([
             "status" => "success",
@@ -48,21 +45,20 @@ class RoleController extends Controller
         ]);
     }
 
-    public function removeFromUser(Request $request)
+    public function revokeFromUser($id, Request $request)
     {
         if (!Auth::user()->can('users.manage-roles')) {
             throw UnauthorizedException::forPermissions(['users.manage-roles']);
         }
 
         $request->validate([
-            'user_id' => 'required|integer',
             'name' => 'required|string',
         ]);
 
         $name = $request->input('name');
 
         /** @var User $user */
-        $user = User::findOrFail($request->input('user_id'));
+        $user = User::findOrFail($id);
         $user->removeRole($name);
 
         return response()->json([

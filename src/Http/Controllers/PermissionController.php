@@ -25,22 +25,19 @@ class PermissionController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function giveToUser(Request $request)
+    public function syncWithUser($id, Request $request)
     {
         if (!Auth::user()->can('users.manage-permissions')) {
             throw UnauthorizedException::forPermissions(['users.manage-permissions']);
         }
 
         $request->validate([
-            'user_id' => 'required|integer',
-            'name' => 'required|string',
+            'permissions' => 'required|array',
         ]);
 
-        $name = $request->input('name');
-
         /** @var User $user */
-        $user = User::findOrFail($request->input('user_id'));
-        $user->givePermissionTo($name);
+        $user = User::findOrFail($id);
+        $user->syncPermissions($request->input('permissions'));
 
         return response()->json([
             "status" => "success",
@@ -48,21 +45,20 @@ class PermissionController extends Controller
         ]);
     }
 
-    public function revokeFromUser(Request $request)
+    public function revokeFromUser($id, Request $request)
     {
         if (!Auth::user()->can('users.manage-permissions')) {
             throw UnauthorizedException::forPermissions(['users.manage-permissions']);
         }
 
         $request->validate([
-            'user_id' => 'required|integer',
             'name' => 'required|string',
         ]);
 
         $name = $request->input('name');
 
         /** @var User $user */
-        $user = User::findOrFail($request->input('user_id'));
+        $user = User::findOrFail($id);
         $user->revokePermissionTo($name);
 
         return response()->json([

@@ -29,28 +29,34 @@ Route::prefix('api')->namespace('Carpentree\Core\Http\Controllers')->group(funct
         });
 
         /**
+         * Users permissions
+         */
+        Route::post('user/{id}/permissions/sync', 'PermissionController@syncWithUser')
+            ->name('api.user.permissions.sync');
+
+        Route::post('user/{id}/permissions/revoke', 'PermissionController@revokeFromUser')
+            ->name('api.user.permissions.revoke');
+
+        /**
+         * Users roles
+         */
+        Route::post('user/{id}/roles/sync', 'RoleController@syncWithUser')
+            ->name('api.user.roles.sync');
+
+        Route::post('user/{id}/roles/revoke', 'RoleController@revokeFromUser')
+            ->name('api.user.roles.revoke');
+
+        /**
          * Permissions
          */
         Route::get('permissions', 'PermissionController@list')
             ->name('api.permissions.list');
-
-        Route::post('permissions/user/give', 'PermissionController@giveToUser')
-            ->name('api.permissions.user.give');
-
-        Route::post('permissions/user/revoke', 'PermissionController@revokeFromUser')
-            ->name('api.permissions.user.revoke');
 
         /**
          * Roles
          */
         Route::get('roles', 'RoleController@list')
             ->name('api.roles.list');
-
-        Route::post('roles/user/assign', 'RoleController@assignToUser')
-            ->name('api.permissions.user.give');
-
-        Route::post('roles/user/remove', 'RoleController@removeFromUser')
-            ->name('api.permissions.user.revoke');
 
     });
 
