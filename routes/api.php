@@ -36,6 +36,12 @@ Route::prefix('api')->namespace('Carpentree\Core\Http\Controllers')->group(funct
         Route::get('users/{id}', 'UserController@get')
             ->name('api.users.get');
 
+        Route::post('users/create', 'UserController@create')
+            ->name('api.users.create');
+
+        Route::delete('users/{id}', 'UserController@delete')
+            ->name('api.users.delete');
+
         /**
          * Users permissions
          */

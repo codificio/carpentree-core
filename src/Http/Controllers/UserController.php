@@ -45,6 +45,11 @@ class UserController extends Controller
         return UserResource::make($this->repository->find($id));
     }
 
+    /**
+     * @param CreateUserRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function create(CreateUserRequest $request)
     {
         if (!Auth::user()->can('users.create')) {
@@ -52,7 +57,26 @@ class UserController extends Controller
         }
 
         $attributes = $request->input('attributes');
-        $this->repository->create($attributes);
+        $user = $this->repository->create($attributes);
+
+        return UserResource::make($user)->response()->setStatusCode(201);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete($id)
+    {
+        if (!Auth::user()->can('users.create')) {
+            throw UnauthorizedException::forPermissions(['users.delete']);
+        }
+
+        if ($this->repository->delete($id)) {
+            return response()->json(null, 204);
+        } else {
+            return response()->json(null, 202);
+        }
     }
 
 }
