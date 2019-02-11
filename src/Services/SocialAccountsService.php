@@ -4,10 +4,26 @@ namespace Carpentree\Core\Services;
 
 use Carpentree\Core\Models\User;
 use Carpentree\Core\Models\LinkedSocialAccount;
+use Carpentree\Core\Repositories\LinkedSocialAccountRepository;
+use Carpentree\Core\Repositories\UserRepository;
+use Illuminate\Auth\Events\Registered;
 use Laravel\Socialite\Two\User as ProviderUser;
 
 class SocialAccountsService
 {
+    /** @var UserRepository */
+    protected $userRepository;
+
+    /** @var LinkedSocialAccountRepository */
+    protected $linkedSocialAccountRepository;
+
+    public function __construct(UserRepository $userRepository, LinkedSocialAccountRepository $linkedSocialAccountRepository)
+    {
+        $this->linkedSocialAccountRepository = $linkedSocialAccountRepository;
+        $this->userRepository = $userRepository;
+        $this->userRepository->skipCache(true);
+    }
+
     /**
      * Find or create user instance by provider user instance and provider name.
      *
@@ -15,12 +31,14 @@ class SocialAccountsService
      * @param string $provider
      *
      * @return User
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function findOrCreate(ProviderUser $providerUser, string $provider): User
     {
-        $linkedSocialAccount = LinkedSocialAccount::where('provider_name', $provider)
-            ->where('provider_id', $providerUser->getId())
-            ->first();
+        $linkedSocialAccount = $this->linkedSocialAccountRepository->findWhere([
+            'provider_name' => $provider,
+            'provider_id' => $providerUser->getId()
+        ]);
 
         if ($linkedSocialAccount) {
 
@@ -31,19 +49,22 @@ class SocialAccountsService
             $user = null;
 
             if ($email = $providerUser->getEmail()) {
-                $user = User::where('email', $email)->first();
+                $user = $this->userRepository->findWhere(['email', $email]);
 
                 if (!$user) {
-                    $user = User::create([
+                    $user = $this->userRepository->create([
                         'first_name' => $providerUser->getName(),
                         'last_name' => $providerUser->getName(),
                         'email' => $providerUser->getEmail(),
                     ]);
+
+                    event(new Registered($user));
                 }
 
-                $user->linkedSocialAccounts()->create([
+                $this->linkedSocialAccountRepository->create([
                     'provider_id' => $providerUser->getId(),
                     'provider_name' => $provider,
+                    'user_id' => $user->id
                 ]);
             }
 
