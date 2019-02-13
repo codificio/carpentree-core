@@ -27,6 +27,10 @@ class AuthServiceProvider extends ServiceProvider
             return null;
         });
 
+        Passport::tokensCan([
+            'admin' => 'Enter to the admin panel'
+        ]);
+
         Passport::routes();
     }
 }

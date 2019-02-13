@@ -4,15 +4,15 @@ namespace Carpentree\Core\Models;
 
 use Carpentree\Core\Models\User\Meta;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carpentree\Core\Traits\MustVerifyEmail;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens, HasRoles;
+    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail;
 
     protected $guard_name = 'api';
 

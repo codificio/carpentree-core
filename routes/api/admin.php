@@ -15,49 +15,45 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('api')->namespace('Carpentree\Core\Http\Controllers')->group(function() {
+Route::prefix('api/admin')->namespace('Carpentree\Core\Http\Controllers\Admin')->group(function () {
 
     Route::middleware(['auth:api', 'verified'])->group(function() {
-
-        Route::get('try', function (Request $request) {
-            return response()->json(array('message' => 'success'));
-        })->name('api.try');
-
-        Route::get('users/me', function (Request $request) {
-            return new \Carpentree\Core\Http\Resources\UserResource(Auth::user());
-        });
 
         /**
          * Users
          */
+        Route::get('user/me', function () {
+            return new \Carpentree\Core\Http\Resources\UserResource(Auth::user());
+        });
+
         Route::get('users', 'UserController@list')
             ->name('api.users.list');
 
-        Route::get('users/{id}', 'UserController@get')
+        Route::get('user/{id}', 'UserController@get')
             ->name('api.users.get');
 
-        Route::post('users/create', 'UserController@create')
+        Route::post('user', 'UserController@create')
             ->name('api.users.create');
 
-        Route::delete('users/{id}', 'UserController@delete')
+        Route::delete('user/{id}', 'UserController@delete')
             ->name('api.users.delete');
 
         /**
          * Users permissions
          */
-        Route::post('users/{id}/permissions/sync', 'PermissionController@syncWithUser')
+        Route::post('user/{id}/permissions/sync', 'PermissionController@syncWithUser')
             ->name('api.users.permissions.sync');
 
-        Route::post('users/{id}/permissions/revoke', 'PermissionController@revokeFromUser')
+        Route::post('user/{id}/permissions/revoke', 'PermissionController@revokeFromUser')
             ->name('api.users.permissions.revoke');
 
         /**
          * Users roles
          */
-        Route::post('users/{id}/roles/sync', 'RoleController@syncWithUser')
+        Route::post('user/{id}/roles/sync', 'RoleController@syncWithUser')
             ->name('api.users.roles.sync');
 
-        Route::post('users/{id}/roles/revoke', 'RoleController@revokeFromUser')
+        Route::post('user/{id}/roles/revoke', 'RoleController@revokeFromUser')
             ->name('api.users.roles.revoke');
 
         /**

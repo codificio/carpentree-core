@@ -1,7 +1,8 @@
 <?php
 
-namespace Carpentree\Core\Http\Controllers;
+namespace Carpentree\Core\Http\Controllers\Admin;
 
+use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\CreateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Repositories\UserRepository;
@@ -65,6 +66,7 @@ class UserController extends Controller
     /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function delete($id)
     {

@@ -1,16 +1,17 @@
 <?php
 
-namespace Carpentree\Core\Http\Controllers;
+namespace Carpentree\Core\Http\Controllers\Admin;
 
-use Carpentree\Core\Http\Resources\PermissionResource;
+use Carpentree\Core\Http\Controllers\Controller;
+use Carpentree\Core\Http\Resources\RoleResource;
 use Carpentree\Core\Models\User;
 use Carpentree\Core\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
-class PermissionController extends Controller
+class RoleController extends Controller
 {
 
     /**
@@ -27,30 +28,31 @@ class PermissionController extends Controller
      */
     public function list()
     {
-        if (!Auth::user()->can('permissions.read')) {
-            throw UnauthorizedException::forPermissions(['permissions.read']);
+        if (!Auth::user()->can('roles.read')) {
+            throw UnauthorizedException::forPermissions(['roles.read']);
         }
 
-        return PermissionResource::collection(Permission::all());
+        return RoleResource::collection(Role::all());
     }
 
     /**
+     * @param $id
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function syncWithUser($id, Request $request)
     {
-        if (!Auth::user()->can('users.manage-permissions')) {
-            throw UnauthorizedException::forPermissions(['users.manage-permissions']);
+        if (!Auth::user()->can('users.manage-roles')) {
+            throw UnauthorizedException::forPermissions(['users.manage-roles']);
         }
 
         $request->validate([
-            'permissions' => 'required|array',
+            'roles' => 'required|array',
         ]);
 
         /** @var User $user */
         $user = $this->userRepository->find($id);
-        $user->syncPermissions($request->input('permissions'));
+        $user->syncRoles($request->input('roles'));
 
         return response()->json();
     }
@@ -62,8 +64,8 @@ class PermissionController extends Controller
      */
     public function revokeFromUser($id, Request $request)
     {
-        if (!Auth::user()->can('users.manage-permissions')) {
-            throw UnauthorizedException::forPermissions(['users.manage-permissions']);
+        if (!Auth::user()->can('users.manage-roles')) {
+            throw UnauthorizedException::forPermissions(['users.manage-roles']);
         }
 
         $request->validate([
@@ -74,7 +76,7 @@ class PermissionController extends Controller
 
         /** @var User $user */
         $user = $this->userRepository->find($id);
-        $user->revokePermissionTo($name);
+        $user->removeRole($name);
 
         return response()->json();
     }

@@ -3,7 +3,6 @@
 namespace Carpentree\Core\Services;
 
 use Carpentree\Core\Models\User;
-use Carpentree\Core\Models\LinkedSocialAccount;
 use Carpentree\Core\Repositories\LinkedSocialAccountRepository;
 use Carpentree\Core\Repositories\UserRepository;
 use Illuminate\Auth\Events\Registered;

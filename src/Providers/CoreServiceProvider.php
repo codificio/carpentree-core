@@ -64,8 +64,8 @@ class CoreServiceProvider extends ServiceProvider
      */
     protected function mapRoutes()
     {
-        $this->loadRoutesFrom(__DIR__.'/../../routes/api.php');
-        $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
+        $this->loadRoutesFrom(__DIR__.'/../../routes/api/admin.php');
+        $this->loadRoutesFrom(__DIR__.'/../../routes/auth.php');
     }
 
     /**
