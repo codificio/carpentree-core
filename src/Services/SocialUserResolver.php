@@ -28,7 +28,7 @@ class SocialUserResolver implements SocialUserResolverInterface
         }
 
         if ($providerUser) {
-            return (app(SocialAccountsService::class))->findOrCreate($providerUser, $provider);
+            return (new SocialAccountsService())->findOrCreate($providerUser, $provider);
         }
 
         return null;

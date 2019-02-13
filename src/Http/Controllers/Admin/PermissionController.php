@@ -5,7 +5,6 @@ namespace Carpentree\Core\Http\Controllers\Admin;
 use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Resources\PermissionResource;
 use Carpentree\Core\Models\User;
-use Carpentree\Core\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
@@ -13,15 +12,6 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
-
-    /**
-     * @var UserRepository
-     */
-    protected $userRepository;
-
-    public function __construct(UserRepository $userRepository){
-        $this->userRepository = $userRepository;
-    }
 
     /**
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -50,7 +40,7 @@ class PermissionController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $this->userRepository->find($id);
+        $user = User::findOrFail($id);
         $user->syncPermissions($request->input('permissions'));
 
         return response()->json();
@@ -74,7 +64,7 @@ class PermissionController extends Controller
         $name = $request->input('name');
 
         /** @var User $user */
-        $user = $this->userRepository->find($id);
+        $user = User::findOrFail($id);
         $user->revokePermissionTo($name);
 
         return response()->json();

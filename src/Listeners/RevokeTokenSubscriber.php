@@ -4,20 +4,12 @@
 namespace Carpentree\Core\Listeners;
 
 use Carpentree\Core\Events\UserDeleted;
-use Carpentree\Core\Repositories\UserRepository;
+use Carpentree\Core\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\Events\AccessTokenCreated;
 
 class RevokeTokenSubscriber
 {
-    /** @var UserRepository */
-    protected $userRepository;
-
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-        $this->userRepository->skipCache(true);
-    }
 
     public function onUserDelete($event)
     {
@@ -28,7 +20,8 @@ class RevokeTokenSubscriber
 
     public function onAccessTokenCreate($event)
     {
-        $user = $this->userRepository->find($event->userId);
+        /** @var User $user */
+        $user = User::findOrFail($event->userId);
 
         $tokens = $user->tokens()
             ->where('id', '<>', $event->tokenId)

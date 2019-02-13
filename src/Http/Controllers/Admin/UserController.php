@@ -2,24 +2,17 @@
 
 namespace Carpentree\Core\Http\Controllers\Admin;
 
+use Carpentree\Core\Events\UserDeleted;
 use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\CreateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
-use Carpentree\Core\Repositories\UserRepository;
+use Carpentree\Core\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class UserController extends Controller
 {
 
-    /**
-     * @var UserRepository
-     */
-    protected $repository;
-
-    public function __construct(UserRepository $repository){
-        $this->repository = $repository;
-    }
 
     /**
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -30,7 +23,7 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        return UserResource::collection($this->repository->paginate());
+        return UserResource::collection(User::paginate(config('carpentree.pagination.per_page')));
     }
 
     /**
@@ -43,13 +36,14 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        return UserResource::make($this->repository->find($id));
+        $user = User::findOrFail($id);
+
+        return UserResource::make($user);
     }
 
     /**
      * @param CreateUserRequest $request
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function create(CreateUserRequest $request)
     {
@@ -58,7 +52,7 @@ class UserController extends Controller
         }
 
         $attributes = $request->input('attributes');
-        $user = $this->repository->create($attributes);
+        $user = User::create($attributes);
 
         return UserResource::make($user)->response()->setStatusCode(201);
     }
@@ -66,7 +60,7 @@ class UserController extends Controller
     /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Prettus\Repository\Exceptions\RepositoryException
+     * @throws \Exception
      */
     public function delete($id)
     {
@@ -74,7 +68,11 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.delete']);
         }
 
-        if ($this->repository->delete($id)) {
+        /** @var User $user */
+        $user = User::findOrFail($id);
+
+        if ($user->delete()) {
+            event(new UserDeleted($id));
             return response()->json(null, 204);
         } else {
             return response()->json(null, 202);

@@ -4,8 +4,6 @@ namespace Carpentree\Core\Notifications;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Auth\Notifications\VerifyEmail as ParentNotifications;
 
 class VerifyEmail extends ParentNotifications
