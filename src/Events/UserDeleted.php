@@ -2,6 +2,8 @@
 
 namespace Carpentree\Core\Events;
 
+use Carpentree\Core\Models\User;
+
 class UserDeleted
 {
     /**
@@ -16,8 +18,8 @@ class UserDeleted
      *
      * @param $userId
      */
-    public function __construct($userId)
+    public function __construct(User $user)
     {
-        $this->userId = $userId;
+        $this->userId = $user->id;
     }
 }

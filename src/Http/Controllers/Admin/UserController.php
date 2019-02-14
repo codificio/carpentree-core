@@ -72,7 +72,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         if ($user->delete()) {
-            event(new UserDeleted($id));
             return response()->json(null, 204);
         } else {
             return response()->json(null, 202);

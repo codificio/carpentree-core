@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Models;
 
+use Carpentree\Core\Events\UserDeleted;
 use Carpentree\Core\Models\User\Meta;
 use Illuminate\Notifications\Notifiable;
 use Carpentree\Core\Traits\MustVerifyEmail;
@@ -36,6 +37,15 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'deleted' => UserDeleted::class,
     ];
 
     public function getFullNameAttribute()
