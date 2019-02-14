@@ -28,6 +28,7 @@
         "doctrine/dbal": "^2.9",
         "laravel/tinker": "^1.0",
         "spatie/laravel-medialibrary": "^7.0.0",
+        "spatie/laravel-model-status": "^1.6",
         "spatie/laravel-permission": "^2.30"
     },
     "require-dev": {

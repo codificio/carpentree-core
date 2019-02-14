@@ -125,6 +125,10 @@ Permission final name will be `group-key.permission-key` adn you can refer to it
 $user->hasPermissionTo('users.delete');
 ```
 
+### Assign statuses to Eloquent models
+
+We use `laravel-model-status` package by Spatie. Look at their [documentation](https://github.com/spatie/laravel-model-status). 
+
 ## Change log
 
 Please see the [changelog](changelog.md) for more information on what has changed recently.
