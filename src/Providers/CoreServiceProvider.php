@@ -44,14 +44,14 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(
             __DIR__.'/../../config/carpentree.php',
-            'carpentree'
+            'carpentree.core'
         );
     }
 
     public function publishConfig()
     {
         $this->publishes([
-            __DIR__.'/../../config/carpentree.php' => config_path('carpentree.php'),
+            __DIR__.'/../../config/carpentree.php' => config_path('carpentree/core.php'),
         ], 'config');
     }
 
