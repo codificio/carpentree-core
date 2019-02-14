@@ -1,10 +1,10 @@
 <?php
 
-namespace Carpentree\Core\Models\User;
+namespace Carpentree\Core\Models\User\Meta;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MetaTranslation extends Model
+class Translation extends Model
 {
     public $timestamps = false;
 

@@ -43,7 +43,7 @@ class CreateUserMetaTranslationsTable extends Migration
     {
         Schema::dropIfExists('user_meta_translations');
 
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('user_meta', function (Blueprint $table) {
             $table->string('value')->after('key');
         });
     }

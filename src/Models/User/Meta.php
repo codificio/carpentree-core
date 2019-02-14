@@ -3,6 +3,7 @@
 namespace Carpentree\Core\Models\User;
 
 use Carpentree\Core\Models\User;
+use Carpentree\Core\Models\User\Meta\Translation;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,7 +11,7 @@ class Meta extends Model
 {
     use Translatable;
 
-    public $translationModel = MetaTranslation::class;
+    public $translationModel = Translation::class;
 
     protected $table = 'user_meta';
 
