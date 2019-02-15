@@ -2,9 +2,8 @@
 
 namespace Carpentree\Core\Console\Commands;
 
+use Carpentree\Core\Services\RefreshPermissionsService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Permission;
 
 class RefreshPermissions extends Command
 {
@@ -37,30 +36,9 @@ class RefreshPermissions extends Command
      */
     public function handle()
     {
-        $config = config('carpentree.permissions');
-
-        // Forget Spatie Laravel Permissions cache
-        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-
-        DB::transaction(function () use ($config) {
-
-            $addedIds = array();
-
-            // Add new permissions
-            foreach ($config as $groupKey => $group) {
-                foreach ($group as $permissionKey) {
-                    $fullKey = $groupKey.'.'.$permissionKey;
-                    $permission = Permission::findOrCreate($fullKey);
-                    $addedIds[] = $permission->id;
-                }
-            }
-
-            // Remove old permissions
-            // Permission::whereNotIn('id', $addedIds)->delete();
-
-        });
+        $service = new RefreshPermissionsService();
+        $service->refresh();
 
         $this->info('Permissions correctly refreshed.');
-
     }
 }

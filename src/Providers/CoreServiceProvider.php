@@ -7,9 +7,7 @@ use Carpentree\Core\Console\Commands\RefreshPermissions;
 use Carpentree\Core\Services\SocialUserResolver;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Laravel\Passport\Passport;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -50,15 +48,24 @@ class CoreServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../../config/carpentree.php',
+            __DIR__.'/../../config/core.php',
             'carpentree.core'
+        );
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/permissions.php',
+            'carpentree.permissions'
         );
     }
 
     public function publishConfig()
     {
         $this->publishes([
-            __DIR__.'/../../config/carpentree.php' => config_path('carpentree/core.php'),
+            __DIR__.'/../../config/core.php' => config_path('carpentree/core.php'),
+        ], 'config');
+
+        $this->publishes([
+            __DIR__.'/../../config/permissions.php' => config_path('carpentree/permissions.php'),
         ], 'config');
     }
 
