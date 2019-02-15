@@ -2,9 +2,11 @@
 
 namespace Carpentree\Core\Providers;
 
+use Barryvdh\Cors\HandleCors;
 use Carpentree\Core\Console\Commands\RefreshPermissions;
 use Carpentree\Core\Services\SocialUserResolver;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
@@ -38,6 +40,11 @@ class CoreServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
+
+        // Middlewares
+        /** @var Router $router */
+        $router = $this->app['router'];
+        $router->pushMiddlewareToGroup('api', HandleCors::class);
     }
 
     public function register()

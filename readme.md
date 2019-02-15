@@ -54,6 +54,44 @@ $ php artisan passport:install
 
 ### Authorization and authentication
 
+#### CORS
+
+CORS Middleware is base on https://github.com/barryvdh/laravel-cors.
+
+CORS middleware is already included in `api` routes group. 
+
+In order to make your own configuration, publish CORS config file:
+
+``` bash
+$ php artisan vendor:publish --provider="Barryvdh\Cors\ServiceProvider" 
+```
+
+> Note: When using custom headers, like X-Auth-Token or X-Requested-With, you must set the allowedHeaders to include those headers. You can also set it to array('*') to allow all custom headers.
+
+> Note: If you are explicitly whitelisting headers, you must include Origin or requests will fail to be recognized as CORS.
+
+``` php
+return [
+     /*
+     |--------------------------------------------------------------------------
+     | Laravel CORS
+     |--------------------------------------------------------------------------
+     |
+     | allowedOrigins, allowedHeaders and allowedMethods can be set to array('*')
+     | to accept any value.
+     |
+     */
+    'supportsCredentials' => false,
+    'allowedOrigins' => ['*'],
+    'allowedHeaders' => ['Content-Type', 'X-Requested-With'],
+    'allowedMethods' => ['*'], // ex: ['GET', 'POST', 'PUT',  'DELETE']
+    'exposedHeaders' => [],
+    'maxAge' => 0,
+];
+```
+
+> Note: Because of http method overriding in Laravel, allowing POST methods will also enable the API users to perform PUT and DELETE requests as well.
+
 #### Enable social authentication
 
 Add credentials for the OAuth services your application utilizes. These credentials should be placed in your `config/services.php` configuration file, and should use the key equals to provider name (e.g., `facebook`, `google`, `github` etc.).

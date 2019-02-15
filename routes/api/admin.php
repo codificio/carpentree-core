@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('api/admin')->namespace('Carpentree\Core\Http\Controllers\Admin')->group(function () {
 
-    Route::middleware(['auth:api', 'verified'])->group(function() {
+    Route::middleware(['api', 'auth:api', 'verified'])->group(function() {
 
         /**
          * Users

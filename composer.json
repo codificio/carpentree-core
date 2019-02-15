@@ -13,6 +13,7 @@
     "keywords": ["Laravel", "Carpentree", "Core"],
     "require": {
         "php": "^7.1.3",
+        "barryvdh/laravel-cors": "^0.11.2",
         "dimsav/laravel-translatable": "^9.3",
         "kalnoy/nestedset": "^4.3",
         "illuminate/support": "~5",
