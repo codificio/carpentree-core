@@ -174,7 +174,13 @@ $user->hasPermissionTo('users.delete');
 
 ### Assign statuses to Eloquent models
 
-We use `laravel-model-status` package by Spatie. Look at their [documentation](https://github.com/spatie/laravel-model-status). 
+We use `laravel-model-status` package by Spatie. Look at their [documentation](https://github.com/spatie/laravel-model-status).
+
+### Assign categories to Eloquent models
+
+To add categories support to your eloquent models simply use `\Carpentree\Core\Traits\Categorizable` trait.
+
+For his feature, we were inspired by https://github.com/rinvex/laravel-categories. Read it documentation for more info.
 
 ## Change log
 
