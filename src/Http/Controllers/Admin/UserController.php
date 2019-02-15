@@ -2,7 +2,6 @@
 
 namespace Carpentree\Core\Http\Controllers\Admin;
 
-use Carpentree\Core\Events\UserDeleted;
 use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\CreateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;

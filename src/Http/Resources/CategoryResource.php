@@ -4,8 +4,9 @@ namespace Carpentree\Core\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserMetaResource extends JsonResource
+class CategoryResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -16,11 +17,12 @@ class UserMetaResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'key' => $this->key,
-            'value' => $this->value,
+            'slug' => $this->slug,
+            'name' => $this->name,
+            'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];
     }
+
 }
