@@ -50,6 +50,9 @@ $ php artisan passport:install
     ],
 ```
 
+- Remove default Laravel routes from `routes` folder unless you need to override it. By default, Carpentree has a root route (and a view) for the index in order to initialize React app.
+> Do not remove files because they will be useful to make your own application. Just remove its content before starting developing.
+
 ## Usage
 
 ### Authorization and authentication
