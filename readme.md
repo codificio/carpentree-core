@@ -129,7 +129,13 @@ protected $routeMiddleware = [
 
 ##### Manage permissions
 
-- Add permissions you want to the `carpentree` config file, e.g:
+- Publish config file:
+
+``` bash
+$ php artisan vendor:publish --provider="Carpentree\Core\CoreServiceProvider --tag=config" 
+```
+
+- Add permissions you want to the `carpentree.permissions` config file, e.g:
 
 ``` php
 'permissions' => [
