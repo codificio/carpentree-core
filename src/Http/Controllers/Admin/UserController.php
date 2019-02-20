@@ -63,7 +63,7 @@ class UserController extends Controller
      */
     public function delete($id)
     {
-        if (!Auth::user()->can('users.create')) {
+        if (!Auth::user()->can('users.delete')) {
             throw UnauthorizedException::forPermissions(['users.delete']);
         }
 
