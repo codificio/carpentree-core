@@ -1,0 +1,142 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.facebookButton{
+  /*background: #3a5999 !important;*/
+  /*color: #fff !important;*/
+  background: #fff !important;
+  color: #3a5999 !important;
+  width: 100%;
+  border: 1px solid #3a5999 !important;
+}
+
+.googleButton{
+  background: #cb4023 !important;
+  color: #fff !important;
+  width: 100%;
+}
+
+
+
+html,
+body,
+#app,
+#root,
+#app > div {
+  height: 100%;
+}
+
+.activeLink {
+  color: tomato;
+  font-weight: "bold";
+}
+
+.heightFull {
+  height: 100%;
+  min-height: 100%;
+}
+
+.c-pointer {
+  cursor: pointer;
+}
+
+.l {
+  text-align: left;
+}
+
+.c {
+  text-align: center;
+}
+
+.r {
+  text-align: right;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.dropzone {
+  width: 100%;
+  height: 20%;
+  padding: 60px 0px 120px 0px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px dashed black;
+}
+
+.dropzoneMinimized {
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  border: 1px dashed lightGrey;
+  border-radius: 0px;
+}
+
+@media only screen and (max-width: 399px) {
+  .btnFacebook,
+  .btnGoogle {
+    width: 100%;
+  }
+}
+
+.zoomSpanButton:hover {
+  background: #ccc !important;
+}
+
+.thumbnailSpanButton:hover {
+  border: 1px solid rgba(224, 91, 2, 0) !important;
+  -webkit-box-shadow: 0px 0px 7px 1px rgba(224, 91, 2, 0.8);
+  -moz-box-shadow: 0px 0px 7px 1px rgba(224, 91, 2, 0.8);
+  box-shadow: 0px 0px 7px 1px rgba(224, 91, 2, 0.8);
+}
+
+.thumbnailSpanButtonSelected {
+  border: 1px solid rgba(224, 91, 2, 0) !important;
+  -webkit-box-shadow: 0px 0px 7px 1px rgba(224, 91, 2, 0.8);
+  -moz-box-shadow: 0px 0px 7px 1px rgba(224, 91, 2, 0.8);
+  box-shadow: 0px 0px 7px 1px rgba(224, 91, 2, 0.8);
+}
+
+.imageFillDiv {
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+}
+
+.squareBox {
+  position: relative;
+  width: 100%; /* desired width */
+}
+.squareBox:before {
+  content: "";
+  display: block;
+  padding-top: 100%; /* initial ratio of 1:1*/
+}
+
+.squareBoxContent {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.boxWithBorder {
+  border: 1px solid #ccc;
+}

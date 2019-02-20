@@ -1,0 +1,20 @@
+{
+  "loginWithFacebookShow": false,
+  "facebookAppIdForLogin": "373560779862659",
+  "loginWithGoogleShow": false,
+  "googleAppIdForLogin": "16905287816-pu6gqnlfhbbernudj3hflijfoffdqi6r.apps.googleusercontent.com",
+  "recaptchaKey": "6LdUyY8UAAAAAKl-Aw9j1Xll5_v3HnT8jPcv18E_",
+  "recaptchaSecret": "6LdUyY8UAAAAAP9gKnQESOcK_rvNdjxZbAlEzOhb",
+
+  "fakeLoginMode": true,
+  "fakeTokenReal": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6ImI4NjQ5MTViLWMzZGUtNGQxMC1iNmYyLTVlYjVkYmVhN2VlNCIsImlhdCI6MTU0NzI0MDEwNywiZXhwIjoxNTQ3MjQzNzA3fQ._bDsexo2fM4_1S1-av6FaiiYIbRL2B8T1DTpYcVkXJo",
+  "fakeToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6ImI4NjQ5MTViLWMzZGUtNGQxMC1iNmYyLTVlYjVkYmVhN2VlNCIsImlhdCI6MTU0NzI0MDEwNywiZXhwIjoxNTQ3MjQzNzA3fQ._bDsexo2fM4_1S1-av6FaiiYIbRL2B8T1DTpYcVkXJo",
+
+  "apiUrl": "https://www.skeinet.com/carpentree/api.php",
+  "noImageUrl": "https://www.skeinet.com/carpentree/images/products/noImage.jpg",
+  
+  "navBarWidth": 200,
+  "collectionsPageSize": 10
+
+  
+}
