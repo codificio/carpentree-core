@@ -16,7 +16,7 @@ class CreateCategoryTranslationsTable extends Migration
         Schema::create('category_translations', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('category_id');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('locale')->index();
