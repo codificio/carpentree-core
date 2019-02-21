@@ -4,6 +4,8 @@ namespace Carpentree\Core\Models;
 
 use Carpentree\Core\Events\UserDeleted;
 use Carpentree\Core\Models\User\Meta;
+use Carpentree\Core\Notifications\ResetPassword;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Notifications\Notifiable;
 use Carpentree\Core\Traits\MustVerifyEmail;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail;
+    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail, CanResetPassword;
 
     protected $guard_name = 'api';
 
@@ -53,11 +55,6 @@ class User extends Authenticatable
         return "{$this->first_name} {$this->last_name}";
     }
 
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = Hash::make($value);
-    }
-
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -91,5 +88,10 @@ class User extends Authenticatable
     public function meta()
     {
         return $this->hasMany(Meta::class);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPassword($token));
     }
 }
