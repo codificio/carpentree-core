@@ -42,7 +42,7 @@ class PasswordChangeForm extends Form {
 
   handleCancel = () => {
     window.location = "/login";
-  }
+  };
 
   render() {
     return (
@@ -63,7 +63,7 @@ class PasswordChangeForm extends Form {
             </p>
             <form onSubmit={this.handleSubmit}>
               {this.renderInput("email", "Email", "email")}
-              {this.renderButton("Cambia password", false, "float-left")}
+              {this.renderSubmitButton("Cambia password", false, "float-left")}
               {this.renderCancelButton("Annulla", true, "float-right")}
             </form>
           </Grid>

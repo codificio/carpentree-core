@@ -5,8 +5,7 @@ import Password from "./password";
 import CheckBox from "./checkBox";
 import Select from "./select";
 import Datetime from "./datetime";
-
-
+import Button from "@material-ui/core/Button";
 
 class Form extends Component {
   state = {
@@ -59,19 +58,17 @@ class Form extends Component {
     this.doSubmit();
   };
 
-  handleCheckBoxChange = ({currentTarget:item}, checked) => {
-    const itemToValidate = { name : item.name, value : checked};
+  handleCheckBoxChange = ({ currentTarget: item }, checked) => {
+    const itemToValidate = { name: item.name, value: checked };
     const errors = { ...this.state.errors };
     const errorMessage = this.validateProperty(itemToValidate);
     if (errorMessage) errors[itemToValidate.name] = errorMessage;
     else delete errors[itemToValidate.name];
-    
+
     const data = { ...this.state.data };
     data[itemToValidate.name] = itemToValidate.value;
     this.setState({ data, errors });
-  }
-
-
+  };
 
   // Questa handle aggiorna il teso dell'input dato dallo state e lo scrive dentro l'input
   handleChange = ({ currentTarget: item }) => {
@@ -96,33 +93,48 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
-
   // A parte il label per il resto il login button è interamente riutilizzabile quindi lo metto qui dentro
-  renderButton(label, defaultValidated = false, pull = "", width="") {
+  renderSubmitButton(label, defaultValidated = false, pull = "", width = "") {
     return (
-      <button
+      <Button
         variant="contained"
+        size="medium"
         color="primary"
         disabled={this.validate() != null && !defaultValidated}
-        className={"btn btn-primary my-2 " + width + " " + pull}
+        className={pull}
         onClick={this.doSubmit}
       >
         {label}
-      </button>
+      </Button>
+    );
+  }
+
+  renderButton(label, color, size, className = "", handle) {
+    return (
+      <Button
+        variant="outlined"
+        size={size}
+        color={color}
+        className={className + " ml-3"}
+        onClick={handle}
+      >
+        {label}
+      </Button>
     );
   }
 
   renderCancelButton(label, defaultValidated = false, pull = "") {
     return (
-      <button
+      <Button
         variant="contained"
-        color="primary"
+        size="medium"
+        color="default"
         disabled={this.validate() != null && !defaultValidated}
-        className={"btn btn-secondary my-2 " + pull}
+        className={pull}
         onClick={this.handleCancel}
       >
         {label}
-      </button>
+      </Button>
     );
   }
 
@@ -134,14 +146,14 @@ class Form extends Component {
         value={data[name]}
         label={label}
         options={options}
-        multiple = { multiple === "multiple" }
+        multiple={multiple === "multiple"}
         onChange={this.handleSpecialControlsChange}
         error={errors[name]}
       />
     );
   }
 
-  renderInput(name, label, type, errorDisabled= false) {
+  renderInput(name, label, type, errorDisabled = false) {
     const { data, errors } = this.state;
 
     return (
@@ -157,7 +169,7 @@ class Form extends Component {
     );
   }
 
-  renderPassword(name, label, type, errorDisabled= false) {
+  renderPassword(name, label, type) {
     const { data, errors } = this.state;
 
     return (
@@ -172,7 +184,6 @@ class Form extends Component {
     );
   }
 
-  
   renderCheckBox(name, label) {
     const { data, errors } = this.state;
     return (

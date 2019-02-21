@@ -1,40 +1,42 @@
 import React from "react";
 import Joi from "joi-browser";
-import { register  } from "../../services/authService";
+import { register } from "../../services/authService";
 import Form from "../common/form";
 import Grid from "@material-ui/core/Grid";
 import { recaptchaKey } from "../../config.json";
-import Recaptcha from 'react-google-invisible-recaptcha';
+import Recaptcha from "react-google-invisible-recaptcha";
 
-const emptyData = { 
-  name: "", 
-  phone: "", 
-  email: "", 
-  password: "", 
+const emptyData = {
+  name: "",
+  phone: "",
+  email: "",
+  password: "",
   privacyPolicy: ""
-}
+};
 
-
- 
 function onChange(value) {
   console.log("Captcha value:", value);
 }
- 
 
 class RegistrationForm extends Form {
   state = {
     data: emptyData,
     errors: {},
-    isLoggedIn: false,
+    isLoggedIn: false
   };
 
   schema = {
     name: Joi.string()
       .required()
-      .options({ language: { any: { allowOnly: "Il campo nome non può essere vuoto" }, label: "Ragione sociale" } }),
+      .options({
+        language: {
+          any: { allowOnly: "Il campo nome non può essere vuoto" },
+          label: "Ragione sociale"
+        }
+      }),
     phone: Joi.string()
       .required()
-      .label("Telefono"),  
+      .label("Telefono"),
     email: Joi.string()
       .required()
       .email()
@@ -45,13 +47,13 @@ class RegistrationForm extends Form {
     privacyPolicy: Joi.any()
       .valid([true, 1, "on"])
       .required()
-      .label("Privacy policy")  
+      .label("Privacy policy")
   };
 
   doSubmit = async () => {
     try {
       const { data } = this.state;
-     // await register(data);
+      // await register(data);
       window.location = "/registrationDone"; // Questo ricarica il browser così si prendono bene tutte le variabili User
       this.setState({ data: emptyData });
     } catch (ex) {
@@ -84,16 +86,25 @@ class RegistrationForm extends Form {
               {this.renderPassword("password", "Password", "password")}
               {this.renderInput("name", "Ragione sociale", "text")}
               {this.renderInput("phone", "Telefono", "number")}
-              <div className="row pl-3">{this.renderCheckBox("privacyPolicy", "Ho letto ed accetto la privacy policy")}</div>
+              <div className="row pl-3">
+                {this.renderCheckBox(
+                  "privacyPolicy",
+                  "Ho letto ed accetto la privacy policy"
+                )}
+              </div>
               <div className="row pb-3 justify-content-center">
                 <Recaptcha
-                  ref={ ref => this.recaptcha = ref }
-                  sitekey={ recaptchaKey }
-                  onResolved={ () => console.log( 'Human detected.' ) } />
+                  ref={ref => (this.recaptcha = ref)}
+                  sitekey={recaptchaKey}
+                  onResolved={() => console.log("Human detected.")}
+                />
               </div>
-              <div className="row px-3 justify-content-center">{this.renderButton("Registra", false)}</div>
-              <div className="row px-3 justify-content-center"><a href="/login">Sei già registrato?</a></div>
-              
+              <div className="row px-3 justify-content-center">
+                {this.renderSubmitButton("Registra", false)}
+              </div>
+              <div className="row px-3 justify-content-center">
+                <a href="/login">Sei già registrato?</a>
+              </div>
             </form>
           </Grid>
         </Grid>
@@ -101,6 +112,5 @@ class RegistrationForm extends Form {
     );
   }
 }
-
 
 export default RegistrationForm;

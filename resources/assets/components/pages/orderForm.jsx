@@ -3,16 +3,16 @@ import Joi from "joi-browser";
 import Form from "../common/form";
 import { getItem, setItem } from "../../services/collectionServices";
 
-const collectionFather= 'users';
+const collectionFather = "users";
 
 class UserForm extends Form {
   state = {
-    data: { 
-      date: "", 
-      state: "", 
-      customerId: "" ,
+    data: {
+      date: "",
+      state: "",
+      customerId: ""
     },
-    errors: {},
+    errors: {}
   };
 
   async componentDidMount() {
@@ -28,20 +28,20 @@ class UserForm extends Form {
       .label("Data ordine"),
     state: Joi.string()
       .required()
-      .label("Stato dell'ordine"),  
+      .label("Stato dell'ordine"),
     customerId: Joi.string()
       .required()
-      .label("Cliente"),
+      .label("Cliente")
   };
 
   handleCancel = () => {
-    this.props.history.push("/"+collectionFather);
+    this.props.history.push("/" + collectionFather);
   };
 
   doSubmit = async () => {
     try {
       await setItem(collectionFather, this.state.data);
-      this.props.history.push("/"+collectionFather);
+      this.props.history.push("/" + collectionFather);
     } catch (error) {}
   };
 
@@ -54,10 +54,10 @@ class UserForm extends Form {
         </div>
         <div className="col-12 bg-white p-5">
           <form onSubmit={this.handleSubmit} className="pb-5">
-           <div className="row m-0">
+            <div className="row m-0">
               <div className="col-6">
                 <div className="row m-0">
-                <div className="col-12">
+                  <div className="col-12">
                     {this.renderInput("date", "Data")}
                   </div>
                   <div className="col-12">
@@ -67,7 +67,7 @@ class UserForm extends Form {
                     {this.renderInput("customerId", "Cliente")}
                   </div>
                   <div className="col-12">
-                    {this.renderButton("Salva", true, "float-left")}
+                    {this.renderSubmitButton("Salva", true, "float-left")}
                     {this.renderCancelButton("Annulla", true, "float-right")}
                   </div>
                 </div>

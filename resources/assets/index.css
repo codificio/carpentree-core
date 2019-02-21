@@ -13,7 +13,7 @@ code {
     monospace;
 }
 
-.facebookButton{
+.facebookButton {
   /*background: #3a5999 !important;*/
   /*color: #fff !important;*/
   background: #fff !important;
@@ -22,13 +22,11 @@ code {
   border: 1px solid #3a5999 !important;
 }
 
-.googleButton{
+.googleButton {
   background: #cb4023 !important;
   color: #fff !important;
   width: 100%;
 }
-
-
 
 html,
 body,
@@ -139,4 +137,12 @@ body,
 
 .boxWithBorder {
   border: 1px solid #ccc;
+}
+
+.borderLeftThiny {
+  border-left: 1px solid #eee;
+}
+
+.borderRightThiny {
+  border-right: 1px solid #eee;
 }
