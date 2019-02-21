@@ -1,19 +1,21 @@
 import React from "react";
 import Joi from "joi-browser";
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
-import GoogleLogin from 'react-google-login';
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import GoogleLogin from "react-google-login";
 import { login, loginWithFacebook } from "../../services/authService";
 import Form from "../common/form";
-import { 
-  facebookAppIdForLogin, 
-  googleAppIdForLogin, 
+import {
+  facebookAppIdForLogin,
+  googleAppIdForLogin,
   loginWithFacebookShow,
-  loginWithGoogleShow,
+  loginWithGoogleShow
 } from "../../config.json";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
+import {
+  FacebookLoginButton,
+  GoogleLoginButton
+} from "react-social-login-buttons";
 
 class LoginForm extends Form {
   state = {
@@ -37,8 +39,8 @@ class LoginForm extends Form {
     try {
       const { data } = this.state;
       await login(data.username, data.password);
-      window.location = "/"; // Questo ricarica il browser così si prendono bene tutte le variabili User
-      this.setState({ data: { username: "" } });
+      //window.location = "/"; // Questo ricarica il browser così si prendono bene tutte le variabili User
+      //this.setState({ data: { username: "" } });
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         // Se ho un errore riconosciuto lo scrivo nella label errore dello username
@@ -57,7 +59,7 @@ class LoginForm extends Form {
   };
 
   facebookResponse = response => {
-    console.log("Facebook response", response)
+    console.log("Facebook response", response);
     loginWithFacebook(response);
     window.location = "/";
   };
@@ -80,24 +82,8 @@ class LoginForm extends Form {
             <img src={require("../../logo.png")} className="w-25 mb-4" />
 
             <form onSubmit={this.handleSubmit}>
-              <TextField
-                id="username"
-                name="username"
-                margin="dense"
-                label="Login"
-                type="text"
-                variant="outlined"
-                className="w-full"
-              />
-              <TextField
-                id="password"
-                name="password"
-                margin="dense"
-                label="Password"
-                type="password"
-                variant="outlined"
-                className="w-full"
-              />
+              {this.renderInput("username", "Login")}
+              {this.renderInput("password", "Pawword")}
               <div className="row pt-2 pb-3 px-3">
                 <div className="col-6 p-0 l">
                   <a href="/registration">
@@ -119,54 +105,59 @@ class LoginForm extends Form {
               </button>
             </form>
 
-            { (loginWithFacebookShow || loginWithGoogleShow) &&  
-            <div>
-              <hr className="mt-4" />
-              <div className="row justify-content-center">
-                <div className="col-4 p-0">
-                  <Typography
-                    align="center"
-                    style={{
-                      marginTop: "-28px",
-                      marginBottom: "20px",
-                      fontSize: "1.05rem",
-                      color: "#666",
-                      background: "#fff"
-                    }}
-                  >
-                    OPPURE
-                  </Typography>
+            {(loginWithFacebookShow || loginWithGoogleShow) && (
+              <div>
+                <hr className="mt-4" />
+                <div className="row justify-content-center">
+                  <div className="col-4 p-0">
+                    <Typography
+                      align="center"
+                      style={{
+                        marginTop: "-28px",
+                        marginBottom: "20px",
+                        fontSize: "1.05rem",
+                        color: "#666",
+                        background: "#fff"
+                      }}
+                    >
+                      OPPURE
+                    </Typography>
+                  </div>
                 </div>
               </div>
-            </div>     
-            }
+            )}
 
-            { loginWithFacebookShow &&       
-            <div className="row mx-1 mb-12">
-              <FacebookLogin
-                appId={facebookAppIdForLogin}
-                callback={this.facebookResponse}
-                render={renderProps => (
-                  <FacebookLoginButton onClick={renderProps.onClick} style={{width:"100%"}}/>
-                )}
-              />
-            </div>
-            }
+            {loginWithFacebookShow && (
+              <div className="row mx-1 mb-12">
+                <FacebookLogin
+                  appId={facebookAppIdForLogin}
+                  callback={this.facebookResponse}
+                  render={renderProps => (
+                    <FacebookLoginButton
+                      onClick={renderProps.onClick}
+                      style={{ width: "100%" }}
+                    />
+                  )}
+                />
+              </div>
+            )}
 
-            { loginWithGoogleShow &&       
-            <div className="row mx-1">
-            <GoogleLogin
-              clientId={googleAppIdForLogin}
-              buttonText="LOGIN WITH GOOGLE"
-              onSuccess={this.googleResponse}
-              onFailure={this.googleResponse}
-              render={renderProps => (
-                <GoogleLoginButton onClick={renderProps.onClick} style={{width:"100%"}} />
-              )}
-            />
-            </div>
-            }
-            
+            {loginWithGoogleShow && (
+              <div className="row mx-1">
+                <GoogleLogin
+                  clientId={googleAppIdForLogin}
+                  buttonText="LOGIN WITH GOOGLE"
+                  onSuccess={this.googleResponse}
+                  onFailure={this.googleResponse}
+                  render={renderProps => (
+                    <GoogleLoginButton
+                      onClick={renderProps.onClick}
+                      style={{ width: "100%" }}
+                    />
+                  )}
+                />
+              </div>
+            )}
           </Grid>
         </Grid>
       </div>

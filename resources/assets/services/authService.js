@@ -1,15 +1,31 @@
 import jwtDecode from "jwt-decode";
 import http from "./httpService";
-import { apiUrl, fakeLoginMode, fakeToken } from "../config.json";
+import {
+  apiUrl,
+  fakeLoginMode,
+  fakeToken,
+  client_id,
+  client_secret,
+  grant_type,
+  scope
+} from "../config.json";
 
-const apiEndpoint = apiUrl + "/auth";
+const apiEndpoint = apiUrl + "/oauth/token";
 
 http.setJwt(getJwt());
 
-export async function login(email, password) {
+export async function login(username, password) {
   const jwt = fakeToken;
   if (!fakeLoginMode) {
-    const { data: jwt } = await http.post(apiEndpoint, { email, password });
+    console.log(apiEndpoint);
+    const { data: jwt } = await http.post(apiEndpoint, {
+      username,
+      password,
+      client_id,
+      client_secret,
+      grant_type,
+      scope
+    });
   }
   localStorage.setItem("token", jwt);
   localStorage.removeItem("facebookToken");
