@@ -31,18 +31,6 @@ class VerificationController extends Controller
     protected $redirectTo = '/';
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-        $this->middleware('signed')->only('verify');
-        $this->middleware('throttle:6,1')->only('verify', 'resend');
-    }
-
-    /**
      * Mark the authenticated user's email address as verified.
      *
      * @see https://stackoverflow.com/questions/52362927/laravel-email-verification-5-7-using-rest-api
