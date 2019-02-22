@@ -17,7 +17,6 @@ http.setJwt(getJwt());
 export async function login(username, password) {
   const jwt = fakeToken;
   if (!fakeLoginMode) {
-    console.log(apiEndpoint);
     const { data: jwt } = await http.post(apiEndpoint, {
       username,
       password,
