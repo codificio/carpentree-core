@@ -6,16 +6,17 @@ use Carpentree\Core\Events\UserDeleted;
 use Carpentree\Core\Models\User\Meta;
 use Carpentree\Core\Notifications\ResetPassword;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Carpentree\Core\Traits\MustVerifyEmail;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail, CanResetPassword;
+    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail, CanResetPassword, SoftDeletes, Searchable;
 
     protected $guard_name = 'api';
 
@@ -42,6 +43,17 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
+    /**
      * The event map for the model.
      *
      * @var array
@@ -49,6 +61,33 @@ class User extends Authenticatable
     protected $dispatchesEvents = [
         'deleted' => UserDeleted::class,
     ];
+
+    /**
+     * Get the index name for the model.
+     *
+     * @return string
+     */
+    public function searchableAs()
+    {
+        return 'users_index';
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $array = [
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'roles' => $this->getRoleNames()
+        ];
+
+        return $array;
+    }
 
     public function getFullNameAttribute()
     {
@@ -90,8 +129,23 @@ class User extends Authenticatable
         return $this->hasMany(Meta::class);
     }
 
+    /**
+     * Send password reset notification.
+     *
+     * @param string $token
+     */
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token, $this->email));
+    }
+
+    /**
+     * Check if current user has access to the backend.
+     *
+     * @return bool
+     */
+    public function hasBackendAccess()
+    {
+        return $this->hasAnyRole(config('carpentree.core.backend_roles'));
     }
 }
