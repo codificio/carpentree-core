@@ -15,6 +15,20 @@ class ResetPasswordController extends Controller
     use ResetsPasswords;
 
     /**
+     * Get the password reset validation rules.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+        ];
+    }
+
+    /**
      * Reset the given user's password.
      *
      * @param User  $user
