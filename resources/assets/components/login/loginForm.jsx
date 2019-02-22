@@ -39,8 +39,8 @@ class LoginForm extends Form {
     try {
       const { data } = this.state;
       await login(data.username, data.password);
-      //window.location = "/"; // Questo ricarica il browser così si prendono bene tutte le variabili User
-      //this.setState({ data: { username: "" } });
+      window.location = "/"; // Questo ricarica il browser così si prendono bene tutte le variabili User
+      this.setState({ data: { username: "" } });
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         // Se ho un errore riconosciuto lo scrivo nella label errore dello username
