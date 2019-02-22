@@ -1,10 +1,15 @@
 import React from "react";
 import Joi from "joi-browser";
-import { register } from "../../services/authService";
 import Form from "../common/form";
 import Grid from "@material-ui/core/Grid";
 import { recaptchaKey } from "../../config.json";
 import Recaptcha from "react-google-invisible-recaptcha";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Typography from "@material-ui/core/Typography";
 
 const emptyData = {
   name: "",
@@ -22,7 +27,8 @@ class RegistrationForm extends Form {
   state = {
     data: emptyData,
     errors: {},
-    isLoggedIn: false
+    isLoggedIn: false,
+    opened: true
   };
 
   schema = {
@@ -50,6 +56,11 @@ class RegistrationForm extends Form {
       .label("Privacy policy")
   };
 
+  handleClose = () => {
+    this.setState({ opened: false });
+    window.location = "/login";
+  };
+
   doSubmit = async () => {
     try {
       const { data } = this.state;
@@ -70,45 +81,51 @@ class RegistrationForm extends Form {
   };
 
   render() {
+    const { opened } = this.state;
     return (
-      <div className="heightFull">
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-          className="heightFull "
-        >
-          <Grid item xs={12} sm={9} md={5} lg={3} className="bg-white p-5 c">
-            <img src={require("../../logo.png")} className="w-25 mb-4" />
-            <form onSubmit={this.handleSubmit}>
-              {this.renderInput("email", "Email", "email")}
-              {this.renderPassword("password", "Password", "password")}
-              {this.renderInput("name", "Ragione sociale", "text")}
-              {this.renderInput("phone", "Telefono", "number")}
-              <div className="row pl-3">
-                {this.renderCheckBox(
-                  "privacyPolicy",
-                  "Ho letto ed accetto la privacy policy"
-                )}
-              </div>
-              <div className="row pb-3 justify-content-center">
-                <Recaptcha
-                  ref={ref => (this.recaptcha = ref)}
-                  sitekey={recaptchaKey}
-                  onResolved={() => console.log("Human detected.")}
-                />
-              </div>
-              <div className="row px-3 justify-content-center">
-                {this.renderSubmitButton("Registra", false)}
-              </div>
-              <div className="row px-3 justify-content-center">
-                <a href="/login">Sei già registrato?</a>
-              </div>
-            </form>
-          </Grid>
-        </Grid>
-      </div>
+      <Dialog
+        open={opened}
+        onClose={this.handleClose}
+        aria-labelledby="customized-dialog-title"
+      >
+        <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
+          Registrazione utente
+          <hr />
+        </DialogTitle>
+        <DialogContent>
+          <div className="row" style={{ width: "400px" }}>
+            <div className="col-12 bg-white p-3 c">
+              <form onSubmit={this.handleSubmit}>
+                {this.renderInput("email", "Email", "email")}
+                {this.renderPassword("password", "Password", "password")}
+                {this.renderInput("name", "Ragione sociale", "text")}
+                {this.renderInput("phone", "Telefono", "number")}
+                <div className="row pl-5">
+                  {this.renderCheckBox(
+                    "privacyPolicy",
+                    "Ho letto ed accetto la privacy policy"
+                  )}
+                </div>
+                <div className="row pb-3 justify-content-center">
+                  <Recaptcha
+                    ref={ref => (this.recaptcha = ref)}
+                    sitekey={recaptchaKey}
+                    onResolved={() => console.log("Human detected.")}
+                  />
+                </div>
+                <div className="row px-3 justify-content-center">
+                  {this.renderSubmitButton("Registra", false)}
+                </div>
+                <div className="row px-3 mt-3 justify-content-center c-pointer">
+                  <a className="text-primary " onClick={this.handleClose}>
+                    Sei già registrato?
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     );
   }
 }

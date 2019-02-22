@@ -1,38 +1,43 @@
 import React from "react";
-import ResetPassword from "../../services/authService";
-import { apiUrl } from "../../config.json";
+import { resetPassword } from "../../services/authService";
 import queryString from "query-string";
 import Joi from "joi-browser";
 import Form from "../common/form";
 
 const emptyData = {
   password: "",
+  password_confirmation: "",
   email: "",
   token: ""
 };
 
 class PasswordResetForm extends Form {
   state = {
-    data: emptyData,
-    errors: {}
+    data: emptyData
   };
 
   async componentDidMount() {
     localStorage.removeItem("token");
     const values = queryString.parse(this.props.location.search);
-    this.setState({ token: values.token, email: values.email });
+    const { email, token } = values;
+    await this.setState({ data: { email, token } });
   }
 
   schema = {
     password: Joi.string()
       .required()
-      .label("Passowrd")
+      .label("Passowrd"),
+    password_confirmation: Joi.string()
+      .required()
+      .label("Conferma password")
   };
 
   doSubmit = async () => {
     const { data } = this.state;
     try {
-      await ResetPassword(data);
+      await resetPassword(data);
+      window.location = "/passwordResetDone";
+      this.setState({ data: emptyData });
     } catch (error) {}
   };
 
@@ -50,6 +55,7 @@ class PasswordResetForm extends Form {
           </p>
           <form onSubmit={this.handleSubmit}>
             {this.renderPassword("password", "Password")}
+            {this.renderPassword("password_confirmation", "Conferma password")}
             <button
               variant="contained"
               className="btn btn-primary w-25 my-2"
