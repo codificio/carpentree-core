@@ -6,16 +6,17 @@ use Carpentree\Core\Events\UserDeleted;
 use Carpentree\Core\Models\User\Meta;
 use Carpentree\Core\Notifications\ResetPassword;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Carpentree\Core\Traits\MustVerifyEmail;
-use Illuminate\Support\Facades\Hash;
+
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail, CanResetPassword;
+    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail, CanResetPassword, SoftDeletes;
 
     protected $guard_name = 'api';
 
@@ -39,6 +40,15 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'deleted_at'
     ];
 
     /**
