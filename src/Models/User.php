@@ -48,6 +48,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $dates = [
+        'created_at',
+        'updated_at',
         'deleted_at'
     ];
 
@@ -59,6 +61,33 @@ class User extends Authenticatable
     protected $dispatchesEvents = [
         'deleted' => UserDeleted::class,
     ];
+
+    /**
+     * Get the index name for the model.
+     *
+     * @return string
+     */
+    public function searchableAs()
+    {
+        return 'users_index';
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $array = [
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'roles' => $this->getRoleNames()
+        ];
+
+        return $array;
+    }
 
     public function getFullNameAttribute()
     {
