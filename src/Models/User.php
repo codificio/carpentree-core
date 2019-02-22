@@ -90,8 +90,23 @@ class User extends Authenticatable
         return $this->hasMany(Meta::class);
     }
 
+    /**
+     * Send password reset notification.
+     *
+     * @param string $token
+     */
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token, $this->email));
+    }
+
+    /**
+     * Check if current user has access to the backend.
+     *
+     * @return bool
+     */
+    public function hasBackendAccess()
+    {
+        return $this->hasAnyRole(config('carpentree.core.backend_roles'));
     }
 }

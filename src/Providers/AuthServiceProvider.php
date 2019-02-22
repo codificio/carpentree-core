@@ -31,6 +31,6 @@ class AuthServiceProvider extends ServiceProvider
             'admin' => 'Enter to the admin panel'
         ]);
 
-        Passport::routes();
+        // Passport::routes();
     }
 }
