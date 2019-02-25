@@ -4,6 +4,9 @@ namespace Carpentree\Core\Providers;
 
 use Barryvdh\Cors\HandleCors;
 use Carpentree\Core\Console\Commands\RefreshPermissions;
+use Carpentree\Core\Models\User;
+use Carpentree\Core\Repositories\Contracts\UserRepository;
+use Carpentree\Core\Repositories\Users\EloquentRepository;
 use Carpentree\Core\Services\SocialUserResolver;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Routing\Router;
@@ -59,6 +62,14 @@ class CoreServiceProvider extends ServiceProvider
             __DIR__.'/../../config/permissions.php',
             'carpentree.permissions'
         );
+
+        $this->bindImplementation();
+    }
+
+    public function bindImplementation()
+    {
+        // User Repository
+        $this->app->bind(UserRepository::class, EloquentRepository::class);
     }
 
     public function publish()

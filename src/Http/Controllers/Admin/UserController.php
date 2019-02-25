@@ -6,23 +6,34 @@ use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\CreateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
+use Carpentree\Core\Repositories\Contracts\UserRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class UserController extends Controller
 {
 
+    /** @var UserRepository */
+    protected $users;
+
+    public function __construct(UserRepository $users)
+    {
+        $this->users = $users;
+    }
 
     /**
+     * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function list()
+    public function list(Request $request)
     {
         if (!Auth::user()->can('users.read')) {
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        return UserResource::collection(User::paginate(config('carpentree.pagination.per_page')));
+        $users = $this->users->list($request);
+        return UserResource::collection($users);
     }
 
     /**
