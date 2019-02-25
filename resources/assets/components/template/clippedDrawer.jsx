@@ -16,9 +16,12 @@ import GalleryUpload from "../pages/galleryUpload";
 import LoginForm from "../login/loginForm";
 import RegistrationForm from "../login/registrationForm";
 import RegistrationDone from "../login/registrationDone";
-import passwordChangeForm from "../login/passwordChangeForm";
-import passwordChangeDone from "../login/passwordChangeDone";
+import PasswordResetForm from "../login/passwordResetForm";
+import PasswordChangeForm from "../login/passwordChangeForm";
+import PasswordChangeDone from "../login/passwordChangeDone";
+import PasswordResetDone from "../login/passwordResetDone";
 import UserForm from "../pages/userForm";
+import Hello from "../pages/hello";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -75,8 +78,11 @@ class ClippedDrawer extends Component {
         <main className={classes.content} style={{ marginLeft: user ? "" : 0 }}>
           <Switch className={classes.fullHeight}>
             <Route path="/login" component={LoginForm} />
-            <Route path="/passwordChange" component={passwordChangeForm} />
-            <Route path="/passwordChangeDone" component={passwordChangeDone} />
+            <Route path="/hello" component={Hello} />
+            <Route path="/password/reset" component={PasswordResetForm} />
+            <Route path="/passwordResetDone" component={PasswordResetDone} />
+            <Route path="/passwordChange" component={PasswordChangeForm} />
+            <Route path="/passwordChangeDone" component={PasswordChangeDone} />
             <Route path="/registration" component={RegistrationForm} />
             <Route path="/registrationDone" component={RegistrationDone} />
             <ProtectedRoute path="/galleryUpload" component={GalleryUpload} />
@@ -88,7 +94,7 @@ class ClippedDrawer extends Component {
             <ProtectedRoute path="/products" component={Products} />
             <ProtectedRoute path="/users/:id" component={UserForm} />
             <ProtectedRoute path="/users" component={Users} />
-            <Redirect from="/" to="/users" exact />
+            <Redirect from="/" to="/hello" exact />
           </Switch>
         </main>
       </div>

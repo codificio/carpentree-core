@@ -19,11 +19,14 @@ import "../../App.css";
 
 const navBarItems = [
   { label: "Utenti", path: "/users", icon: <GroupIco /> },
-  { label: "Prodotti", path: "/products", icon: <LocalFloristIcon /> },
-  { label: "Ordini", path: "/orders", icon: <ShoppingBasket /> },
-  { label: "File", path: "/files", icon: <FolderIcon /> },
-  { label: "Gallery", path: "/gallery", icon: <Panorama /> }
+  { label: "Media", path: "/files", icon: <FolderIcon /> }
 ];
+
+/*
+{ label: "Prodotti", path: "/products", icon: <LocalFloristIcon /> },
+  { label: "Ordini", path: "/orders", icon: <ShoppingBasket /> },
+  { label: "Gallery", path: "/gallery", icon: <Panorama /> }
+*/
 
 const NavLinkStyle = {
   textDecoration: "none"
@@ -34,7 +37,7 @@ class NavBar extends Component {
 
   handleLogout() {
     logout();
-    window.location = "/";
+    window.location = "/login";
   }
 
   getSelectedItem = item => {
@@ -76,7 +79,9 @@ class NavBar extends Component {
               />
             )}
           </div>
-          <div className="mt-1 mb-4 c">{user.name}</div>
+          <div className="mt-1 mb-4 c c-pointer" onClick={this.handleLogout}>
+            {user.name}
+          </div>
           <Divider />
           <div className="p-4">
             {navBarItems.map(item => (

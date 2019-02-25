@@ -169,12 +169,12 @@ class Form extends Component {
     );
   }
 
-  renderPassword(name, label, type) {
+  renderPassword(name, label) {
     const { data, errors } = this.state;
 
     return (
       <Password
-        type={type}
+        type="password"
         name={name}
         value={data[name]}
         label={label}

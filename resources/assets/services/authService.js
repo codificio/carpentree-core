@@ -10,14 +10,12 @@ import {
   scope
 } from "../config.json";
 
-const apiEndpoint = apiUrl + "/oauth/token";
-
 http.setJwt(getJwt());
 
 export async function login(username, password) {
   const jwt = fakeToken;
   if (!fakeLoginMode) {
-    const { data: jwt } = await http.post(apiEndpoint, {
+    const { data: jwt } = await http.post(apiUrl + "/oauth/token", {
       username,
       password,
       client_id,
@@ -65,7 +63,21 @@ export function getCurrentUser() {
 
 export function register() {}
 
-export function changePassword() {}
+export async function changePassword(email) {
+  await http.post(apiUrl + "/password/email", {
+    email
+  });
+}
+
+export async function resetPassword(data) {
+  const { email, token, password, password_confirmation } = data;
+  const { result } = await http.post(apiUrl + "/password/reset", {
+    email,
+    token,
+    password,
+    password_confirmation
+  });
+}
 
 export function getJwt() {
   return localStorage.getItem("token");
