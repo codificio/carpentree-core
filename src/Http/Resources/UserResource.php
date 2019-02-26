@@ -25,7 +25,7 @@ class UserResource extends JsonResource
             'updated_at' => $this->updated_at,
 
             // Meta
-            'meta' => UserMetaResource::collection($this->resource->meta),
+            'meta' => MetaFieldResource::collection($this->resource->meta),
 
             // Roles
             'roles' => RoleResource::collection($this->resource->roles),
