@@ -16,7 +16,7 @@ class UserDeleted
     /**
      * Create a new event instance.
      *
-     * @param $userId
+     * @param User $user
      */
     public function __construct(User $user)
     {

@@ -7,4 +7,6 @@ use Illuminate\Http\Request;
 interface UserRepository
 {
     public function list(Request $request);
+
+    public function get($id);
 }

@@ -31,6 +31,18 @@ class BaseRepository
     }
 
     /**
+     * @param $id
+     * @return mixed
+     */
+    public function get($id)
+    {
+        return $this->model::findOrFail($id);
+    }
+
+    /**
+     * Sort data based on a request compliant to JSON:API specification.
+     *
+     * @see https://jsonapi.org/format/#fetching-sorting
      * @param $builder
      * @param Request $request
      * @return mixed

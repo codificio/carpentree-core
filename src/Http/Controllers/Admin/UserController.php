@@ -3,13 +3,16 @@
 namespace Carpentree\Core\Http\Controllers\Admin;
 
 use Carpentree\Core\Http\Controllers\Controller;
-use Carpentree\Core\Http\Requests\CreateUserRequest;
+use Carpentree\Core\Http\Requests\Admin\CreateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
 use Carpentree\Core\Repositories\Contracts\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Password;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -46,9 +49,7 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        $user = User::findOrFail($id);
-
-        return UserResource::make($user);
+        return UserResource::make($this->users->get($id));
     }
 
     /**
@@ -61,8 +62,21 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.create']);
         }
 
-        $attributes = $request->input('attributes');
-        $user = User::create($attributes);
+        // TODO: refactoring of user creation
+
+        /** @var User $user */
+        $user = DB::transaction(function() use ($request) {
+            $attributes = $request->input('attributes');
+            $roles = $request->input('relationships.roles', array());
+
+            $user = User::create($attributes);
+
+            foreach ($roles as $role)
+            {
+                $role = Role::findOrFail($role->id);
+                $user->assignRole($role);
+            }
+        });
 
         return UserResource::make($user)->response()->setStatusCode(201);
     }

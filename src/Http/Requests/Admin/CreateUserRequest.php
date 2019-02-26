@@ -1,6 +1,6 @@
 <?php
 
-namespace Carpentree\Core\Http\Requests;
+namespace Carpentree\Core\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -17,7 +17,10 @@ class CreateUserRequest extends FormRequest
             'attributes.first_name' => 'required|string',
             'attributes.last_name' => 'required|string',
             'attributes.email' => 'required|email|unique:users,email',
-            'attributes.password' => 'required|string|min:6'
+            'attributes.password' => 'required|string|min:6',
+
+            // Roles
+            'relationships.roles.*.id' => 'exists:roles,id'
         ];
     }
 }
