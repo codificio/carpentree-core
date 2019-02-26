@@ -4,9 +4,8 @@ namespace Carpentree\Core\Providers;
 
 use Barryvdh\Cors\HandleCors;
 use Carpentree\Core\Console\Commands\RefreshPermissions;
-use Carpentree\Core\Models\User;
+use Carpentree\Core\Repositories\Contracts\MetaFieldsRepository;
 use Carpentree\Core\Repositories\Contracts\UserRepository;
-use Carpentree\Core\Repositories\Users\EloquentRepository;
 use Carpentree\Core\Services\SocialUserResolver;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Routing\Router;
@@ -69,7 +68,10 @@ class CoreServiceProvider extends ServiceProvider
     public function bindImplementation()
     {
         // User Repository
-        $this->app->bind(UserRepository::class, EloquentRepository::class);
+        $this->app->bind(UserRepository::class, \Carpentree\Core\Repositories\Users\EloquentRepository::class);
+
+        // Meta Fields Repository
+        $this->app->bind(MetaFieldsRepository::class, \Carpentree\Core\Repositories\MetaFields\EloquentRepository::class);
     }
 
     public function publish()
@@ -107,6 +109,7 @@ class CoreServiceProvider extends ServiceProvider
      */
     protected function mapRoutes()
     {
+        $this->loadRoutesFrom(__DIR__.'/../../routes/api/base.php');
         $this->loadRoutesFrom(__DIR__.'/../../routes/api/admin.php');
         // $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
         $this->loadRoutesFrom(__DIR__.'/../../routes/auth.php');

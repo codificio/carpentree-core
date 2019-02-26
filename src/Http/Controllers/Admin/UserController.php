@@ -49,7 +49,7 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        return UserResource::make($this->users->get($id));
+        return UserResource::make($this->users->find($id));
     }
 
     /**
@@ -64,12 +64,12 @@ class UserController extends Controller
 
         // TODO: refactoring of user creation
 
-        /** @var User $user */
         $user = DB::transaction(function() use ($request) {
             $attributes = $request->input('attributes');
             $roles = $request->input('relationships.roles', array());
 
-            $user = User::create($attributes);
+            /** @var User $user */
+            $user = $this->users->create($attributes);
 
             foreach ($roles as $role)
             {
@@ -92,10 +92,7 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.delete']);
         }
 
-        /** @var User $user */
-        $user = User::findOrFail($id);
-
-        if ($user->delete()) {
+        if ($this->users->delete($id)) {
             return response()->json(null, 204);
         } else {
             return response()->json(null, 202);

@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Repositories;
 
+use Carpentree\Core\Exceptions\ModelIsNotSearchable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 
@@ -12,31 +13,21 @@ class BaseRepository
     protected $model;
     protected $table;
 
+
     /**
      * @param Request $request
      * @return mixed
      * @throws \Exception
      */
-    public function list(Request $request)
+    protected function search(Request $request)
     {
-        $builder = $this->model::query();
-
         if (method_exists($this->model, 'toSearchableArray') && $request->has('filter')) {
             $builder = $this->model::search($request->input('filter'));
+        } else {
+            throw ModelIsNotSearchable::create($this->model);
         }
 
-        $builder = $this->sort($builder, $request);
-
-        return $builder->paginate(config('carpentree.pagination.per_page'));
-    }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function get($id)
-    {
-        return $this->model::findOrFail($id);
+        return $builder;
     }
 
     /**
@@ -48,8 +39,13 @@ class BaseRepository
      * @return mixed
      * @throws \Exception
      */
-    protected function sort($builder, Request $request)
+    protected function sort(Request $request,  $builder = null)
     {
+        if (is_null($builder))
+        {
+            $builder = $this->model::query();
+        }
+
         $sort = $request->input('sort', null);
 
         if (is_null($sort)) {

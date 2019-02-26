@@ -8,5 +8,9 @@ interface UserRepository
 {
     public function list(Request $request);
 
-    public function get($id);
+    public function find($id);
+
+    public function create(array $attributes);
+
+    public function delete($id);
 }
