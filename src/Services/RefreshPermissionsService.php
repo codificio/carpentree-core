@@ -28,7 +28,7 @@ class RefreshPermissionsService
             }
 
             // Remove old permissions
-            // Permission::whereNotIn('id', $addedIds)->delete();
+            Permission::whereNotIn('id', $addedIds)->delete();
         });
     }
 }

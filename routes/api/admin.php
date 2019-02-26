@@ -34,24 +34,6 @@ Route::prefix('api/admin')->namespace('Carpentree\Core\Http\Controllers\Admin')-
             ->name('api.users.delete');
 
         /**
-         * Users permissions
-         */
-        Route::post('user/{id}/permissions/sync', 'PermissionController@syncWithUser')
-            ->name('api.users.permissions.sync');
-
-        Route::post('user/{id}/permissions/revoke', 'PermissionController@revokeFromUser')
-            ->name('api.users.permissions.revoke');
-
-        /**
-         * Users roles
-         */
-        Route::post('user/{id}/roles/sync', 'RoleController@syncWithUser')
-            ->name('api.users.roles.sync');
-
-        Route::post('user/{id}/roles/revoke', 'RoleController@revokeFromUser')
-            ->name('api.users.roles.revoke');
-
-        /**
          * Permissions
          */
         Route::get('permissions', 'PermissionController@list')

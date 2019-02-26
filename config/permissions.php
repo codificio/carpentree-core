@@ -5,9 +5,7 @@ return [
         'create',
         'read',
         'update',
-        'delete',
-        'manage-permissions',
-        'manage-roles'
+        'delete'
     ],
 
     'permissions' => [
