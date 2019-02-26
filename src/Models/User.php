@@ -3,8 +3,8 @@
 namespace Carpentree\Core\Models;
 
 use Carpentree\Core\Events\UserDeleted;
-use Carpentree\Core\Models\User\Meta;
 use Carpentree\Core\Notifications\ResetPassword;
+use Carpentree\Core\Traits\HasMeta;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -16,7 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail, CanResetPassword, SoftDeletes, Searchable;
+    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail, CanResetPassword, SoftDeletes, Searchable, HasMeta;
 
     protected $guard_name = 'api';
 
@@ -117,16 +117,6 @@ class User extends Authenticatable
     public function addresses()
     {
         return $this->hasMany(Address::class);
-    }
-
-    /**
-     * Get the meta informations of the user.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function meta()
-    {
-        return $this->hasMany(Meta::class);
     }
 
     /**
