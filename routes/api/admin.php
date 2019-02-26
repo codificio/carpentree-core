@@ -21,10 +21,6 @@ Route::prefix('api/admin')->namespace('Carpentree\Core\Http\Controllers\Admin')-
         /**
          * Users
          */
-        Route::get('user/me', function () {
-            return new \Carpentree\Core\Http\Resources\UserResource(Auth::user());
-        });
-
         Route::get('users', 'UserController@list')
             ->name('api.users.list');
 
