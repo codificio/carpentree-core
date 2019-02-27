@@ -4,10 +4,12 @@ namespace Carpentree\Core\Http\Controllers\Admin;
 
 use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\Admin\CreateUserRequest;
+use Carpentree\Core\Http\Requests\Admin\UpdateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
 use Carpentree\Core\Services\Listing\User\UserListingInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Exceptions\UnauthorizedException;
@@ -63,30 +65,60 @@ class UserController extends Controller
 
         // TODO: refactoring of user creation
         $user = DB::transaction(function() use ($request) {
-            $attributes = $request->input('attributes');
-            $roles = $request->input('relationships.roles', array());
 
+            // Create user
+            $attributes = $request->input('attributes');
             /** @var User $user */
             $user = User::create($attributes);
 
-            foreach ($roles as $role)
-            {
-                $role = Role::findOrFail($role->id);
-                $user->assignRole($role);
-            }
+            // Sync roles
+            $roles = $request->input('relationships.roles', array());
+            $user->syncRoles($roles);
+
+            return $user;
         });
 
         return UserResource::make($user)->response()->setStatusCode(201);
     }
 
-    public function update($id)
+    public function update(UpdateUserRequest $request)
     {
         if (!Auth::user()->can('users.update')) {
             throw UnauthorizedException::forPermissions(['users.update']);
         }
 
+        // TODO: refactoring of user update
+
         /** @var User $user */
-        $user = User::findOrFail($id);
+        $user = DB::transaction(function() use ($request) {
+
+            // Update user
+            $id = $request->input('id');
+            /** @var User $user */
+            $user = User::findOrFail($id);
+            if ($request->has('attributes')) {
+                $attributes = $request->input('attributes');
+                $user = $user->fill($attributes);
+            }
+
+            // Sync roles
+            if ($request->has('relationships.roles')) {
+                $roles = $request->input('relationships.roles');
+                $user = $user->syncRoles($roles);
+            }
+
+            // Meta fields
+            if ($request->has('relationships.meta')) {
+                $meta = $request->input('relationships.meta');
+                $user = $user->syncMeta($meta);
+            }
+
+            $user->save();
+
+            return $user;
+        });
+
+        return UserResource::make($user);
     }
 
     /**

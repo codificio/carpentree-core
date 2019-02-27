@@ -18,7 +18,7 @@ class CreateMetaFieldsTranslationsTable extends Migration
 
             $table->unsignedInteger('meta_field_id');
 
-            $table->string('value');
+            $table->text('value');
             $table->string('locale')->index();
 
             $table->unique(['meta_field_id','locale']);

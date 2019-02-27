@@ -25,9 +25,19 @@ class BaseListing implements ListingInterface
 
     public function list(Request $request)
     {
+        $builder = $this->model::query();
+
         // Full text search
-        $builder = $this->search($request->has('filter.query', null));
-        $builder = $this->sort($request->has('sort', null), $builder);
+        if ($request->has('filter.query')) {
+            $query = $request->input('filter.query');
+            $builder = $this->search($query);
+        }
+
+        // Sorting
+        if ($request->has('sort')) {
+            $sort = $request->input('sort');
+            $builder = $this->sort($sort, $builder);
+        }
 
         return $builder->get();
     }

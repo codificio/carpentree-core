@@ -2,11 +2,8 @@
 
 namespace Carpentree\Core\Http\Middleware;
 
-use Carpentree\Core\Models\User;
 use Closure;
-use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Redirect;
-use Spatie\Permission\Traits\HasRoles;
 
 class EnsureEmailIsVerified
 {

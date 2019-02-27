@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('api/admin')->namespace('Carpentree\Core\Http\Controllers\Admin')->group(function () {
 
-    Route::middleware(['api', 'auth:api', 'verified'])->group(function() {
+    Route::middleware(['api', 'auth:api', 'verified', 'scope:admin'])->group(function() {
 
         /**
          * Users
@@ -29,6 +29,9 @@ Route::prefix('api/admin')->namespace('Carpentree\Core\Http\Controllers\Admin')-
 
         Route::post('user', 'UserController@create')
             ->name('api.users.create');
+
+        Route::patch('user', 'UserController@update')
+            ->name('api.users.update');
 
         Route::delete('user/{id}', 'UserController@delete')
             ->name('api.users.delete');
