@@ -39,7 +39,7 @@ class BaseListing implements ListingInterface
             $builder = $this->sort($sort, $builder);
         }
 
-        return $builder->get();
+        return $builder->paginate(config('carpentree.core.pagination.per_page'));
     }
 
     /**
