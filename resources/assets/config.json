@@ -1,7 +1,8 @@
 {
   "loginWithFacebookShow": false,
-  "facebookAppIdForLogin": "373560779862659",
   "loginWithGoogleShow": false,
+  "loginShowRegistration": false,
+  "facebookAppIdForLogin": "373560779862659",
   "googleAppIdForLogin": "16905287816-pu6gqnlfhbbernudj3hflijfoffdqi6r.apps.googleusercontent.com",
   "recaptchaKey": "6LdUyY8UAAAAAKl-Aw9j1Xll5_v3HnT8jPcv18E_",
   "recaptchaSecret": "6LdUyY8UAAAAAP9gKnQESOcK_rvNdjxZbAlEzOhb",
@@ -16,9 +17,11 @@
 
   "grant_type": "password",
   "client_id": "2",
-  "client_secret": "kuLI1uZQRoATnWqrOWmpjnFmi5BZijxC7XsQqXNf",
-  "scope": "",
+  "client_secret": "h17Shm0bkkhV3pXjR8yEVHjb63FMBiOzgyd9JOqG",
+  "scope": "admin",
 
   "navBarWidth": 200,
-  "collectionsPageSize": 10
+  "collectionsPageSize": 10,
+
+  "locale": "it"
 }

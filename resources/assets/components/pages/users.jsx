@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import TableData from '../common/tableData';
+import TableData from "../common/tableData";
 
 class Users extends Component {
   state = {
@@ -8,21 +8,21 @@ class Users extends Component {
       { path: "last_name", label: "Cognome", align: "l", format: "text" },
       { path: "email", label: "Email", align: "l", format: "text" }
     ],
-    editedUser: {},
+    editedUser: {}
   };
-
 
   render() {
     const { columns } = this.state;
     const { history } = this.props;
-    
+
     return (
-      <TableData 
-        pageTitle= 'Utenti'
-        collectionName= 'users'
-        itemLabel= 'utente'
-        columns = { columns }
-        history = { history }
+      <TableData
+        pageTitle="Utenti"
+        collectionName="users"
+        path="user"
+        itemLabel="utente"
+        columns={columns}
+        history={history}
       />
     );
   }

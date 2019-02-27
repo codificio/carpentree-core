@@ -10,9 +10,16 @@ axios.interceptors.response.use(null, error => {
     error.response.status >= 400 &&
     error.response.status < 500;
 
+  if (error.response.status == 401) {
+    //toast.error("Errore imprevisto");
+    localStorage.removeItem("token");
+    localStorage.removeItem("facebookToken");
+    window.location = "/login";
+  }
+
   if (!expectedError) {
     logger.log(error);
-    toast.error("Errore imprevisto");
+    //toast.error("Errore imprevisto");
   }
 
   return Promise.reject(error);

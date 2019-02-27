@@ -13,9 +13,9 @@ import {
 http.setJwt(getJwt());
 
 export async function login(username, password) {
-  const jwt = fakeToken;
+  const token = fakeToken;
   if (!fakeLoginMode) {
-    const { data: jwt } = await http.post(apiUrl + "/oauth/token", {
+    const { data } = await http.post(apiUrl + "/oauth/token", {
       username,
       password,
       client_id,
@@ -23,9 +23,11 @@ export async function login(username, password) {
       grant_type,
       scope
     });
+    localStorage.setItem("token", data.access_token);
+  } else {
+    localStorage.setItem("token", token);
+    localStorage.removeItem("facebookToken");
   }
-  localStorage.setItem("token", jwt);
-  localStorage.removeItem("facebookToken");
 }
 
 export function loginWithFacebook(response) {
@@ -44,6 +46,8 @@ export function logout() {
 
 export function getCurrentUser() {
   try {
+    let user = "";
+
     // Facebook
     const facebookToken = localStorage.getItem("facebookToken");
     if (facebookToken != undefined) {
@@ -53,8 +57,11 @@ export function getCurrentUser() {
     }
 
     // Login e Password
-    const jwt = localStorage.getItem("token");
-    let user = jwtDecode(jwt);
+    const token = localStorage.getItem("token");
+    if (token) {
+      user = { name: "Giorgio" };
+    }
+
     return user;
   } catch (ex) {
     return null;
@@ -64,7 +71,13 @@ export function getCurrentUser() {
 export function register() {}
 
 export async function changePassword(email) {
-  await http.post(apiUrl + "/password/email", {
+  const { data: result } = await http.post(apiUrl + "/password/email", {
+    email
+  });
+}
+
+export async function resendEmail(email) {
+  const { data: result } = await http.post(apiUrl + "/email/resend", {
     email
   });
 }
