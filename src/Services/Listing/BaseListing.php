@@ -1,52 +1,65 @@
 <?php
 
-namespace Carpentree\Core\Repositories;
+namespace Carpentree\Core\Services\Listing;
 
 use Carpentree\Core\Exceptions\ModelIsNotSearchable;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 
-class BaseRepository
+/**
+ * Class BaseListingService
+ *
+ * Filter entity based on Http Request.
+ * Compliant to JSON:API specification.
+ *
+ * @see https://jsonapi.org/format/#fetching-sorting
+ * @package Carpentree\Core\Services\Listing
+ */
+class BaseListing implements ListingInterface
 {
     const SORT_DELIMITER = ',';
 
     protected $model;
     protected $table;
 
+    public function list(Request $request)
+    {
+        // Full text search
+        $builder = $this->search($request->has('filter.query', null));
+        $builder = $this->sort($request->has('sort', null), $builder);
+
+        return $builder->get();
+    }
 
     /**
-     * @param Request $request
+     * Perform a full text search.
+     *
+     * @param string $query
      * @return mixed
-     * @throws \Exception
      */
-    protected function search(Request $request)
+    protected function search(string $query)
     {
-        if (method_exists($this->model, 'toSearchableArray') && $request->has('filter')) {
-            $builder = $this->model::search($request->input('filter'));
-        } else {
+        if (!method_exists($this->model, 'toSearchableArray')) {
             throw ModelIsNotSearchable::create($this->model);
         }
 
-        return $builder;
+        return $this->model::search($query);
     }
 
     /**
      * Sort data based on a request compliant to JSON:API specification.
      *
-     * @see https://jsonapi.org/format/#fetching-sorting
+     * @param string $sort
      * @param $builder
-     * @param Request $request
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function sort(Request $request,  $builder = null)
+    protected function sort(string $sort, $builder = null)
     {
-        if (is_null($builder))
-        {
+        if (is_null($builder)) {
             $builder = $this->model::query();
         }
-
-        $sort = $request->input('sort', null);
 
         if (is_null($sort)) {
 
@@ -67,11 +80,9 @@ class BaseRepository
                 if (Schema::hasColumn($this->table, $col)) {
                     $builder->orderBy($col, $dir);
                 } else {
-                    throw new \Exception(__("Column :column does not exists for model :model", ['column' => $col, 'model' => $this->model]));
+                    throw new Exception(__("Column :column does not exists for model :model", ['column' => $col, 'model' => $this->model]));
                 }
-
             }
-
         }
 
         return $builder;

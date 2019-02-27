@@ -6,23 +6,22 @@ use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\Admin\CreateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
-use Carpentree\Core\Repositories\Contracts\UserRepository;
+use Carpentree\Core\Services\Listing\User\UserListingInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Password;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
 
-    /** @var UserRepository */
-    protected $users;
+    /** @var UserListingInterface */
+    protected $listingService;
 
-    public function __construct(UserRepository $users)
+    public function __construct(UserListingInterface $listingService)
     {
-        $this->users = $users;
+        $this->listingService = $listingService;
     }
 
     /**
@@ -35,7 +34,7 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        $users = $this->users->list($request);
+        $users = $this->listingService->list($request);
         return UserResource::collection($users);
     }
 
@@ -49,7 +48,7 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        return UserResource::make($this->users->find($id));
+        return UserResource::make(User::findOrFail($id));
     }
 
     /**
@@ -63,13 +62,12 @@ class UserController extends Controller
         }
 
         // TODO: refactoring of user creation
-
         $user = DB::transaction(function() use ($request) {
             $attributes = $request->input('attributes');
             $roles = $request->input('relationships.roles', array());
 
             /** @var User $user */
-            $user = $this->users->create($attributes);
+            $user = User::create($attributes);
 
             foreach ($roles as $role)
             {
@@ -79,6 +77,16 @@ class UserController extends Controller
         });
 
         return UserResource::make($user)->response()->setStatusCode(201);
+    }
+
+    public function update($id)
+    {
+        if (!Auth::user()->can('users.update')) {
+            throw UnauthorizedException::forPermissions(['users.update']);
+        }
+
+        /** @var User $user */
+        $user = User::findOrFail($id);
     }
 
     /**
@@ -92,7 +100,10 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.delete']);
         }
 
-        if ($this->users->delete($id)) {
+        /** @var User $user */
+        $user = User::findOrFail($id);
+
+        if ($user->delete($id)) {
             return response()->json(null, 204);
         } else {
             return response()->json(null, 202);

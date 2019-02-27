@@ -4,8 +4,8 @@ namespace Carpentree\Core\Providers;
 
 use Barryvdh\Cors\HandleCors;
 use Carpentree\Core\Console\Commands\RefreshPermissions;
-use Carpentree\Core\Repositories\Contracts\MetaFieldsRepository;
-use Carpentree\Core\Repositories\Contracts\UserRepository;
+use Carpentree\Core\Services\Listing\User\UserListing;
+use Carpentree\Core\Services\Listing\User\UserListingInterface;
 use Carpentree\Core\Services\SocialUserResolver;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Routing\Router;
@@ -67,11 +67,8 @@ class CoreServiceProvider extends ServiceProvider
 
     public function bindImplementation()
     {
-        // User Repository
-        $this->app->bind(UserRepository::class, \Carpentree\Core\Repositories\Users\EloquentRepository::class);
-
-        // Meta Fields Repository
-        $this->app->bind(MetaFieldsRepository::class, \Carpentree\Core\Repositories\MetaFields\EloquentRepository::class);
+        // User Listing Service
+        $this->app->bind(UserListingInterface::class, UserListing::class);
     }
 
     public function publish()
