@@ -4,12 +4,15 @@ namespace Carpentree\Core\Providers;
 
 use Barryvdh\Cors\HandleCors;
 use Carpentree\Core\Console\Commands\RefreshPermissions;
+use Carpentree\Core\Scout\Engines\LocalizedAlgoliaEngine;
+use Algolia\AlgoliaSearch\SearchClient as Algolia;
 use Carpentree\Core\Services\Listing\User\UserListing;
 use Carpentree\Core\Services\Listing\User\UserListingInterface;
 use Carpentree\Core\Services\SocialUserResolver;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Laravel\Scout\EngineManager;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -48,6 +51,13 @@ class CoreServiceProvider extends ServiceProvider
         /** @var Router $router */
         $router = $this->app['router'];
         $router->pushMiddlewareToGroup('api', HandleCors::class);
+
+        // Scout Engines
+        resolve(EngineManager::class)->extend('localized-algolia', function () {
+            return new LocalizedAlgoliaEngine(Algolia::create(
+                config('scout.algolia.id'), config('scout.algolia.secret')
+            ));
+        });
     }
 
     public function register()

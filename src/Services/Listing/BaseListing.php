@@ -5,6 +5,7 @@ namespace Carpentree\Core\Services\Listing;
 use Carpentree\Core\Exceptions\ModelIsNotSearchable;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 
 /**
@@ -54,7 +55,19 @@ class BaseListing implements ListingInterface
             throw ModelIsNotSearchable::create($this->model);
         }
 
-        return $this->model::search($query);
+        if ($this->model::localizedSearchable()) {
+
+            $index = $this->model::first()->searchableAs() . '_' . App::getLocale();
+            $result = $this->model::search($query)->within($index);
+
+        } else {
+
+            $result = $this->model::search($query);
+
+        }
+
+
+        return $result;
     }
 
     /**

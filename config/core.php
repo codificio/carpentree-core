@@ -9,6 +9,11 @@ return [
 
     'backend_roles' => [
         'Super Admin'
+    ],
+
+    'locales' =>[
+        'it',
+        'en'
     ]
 
 ];

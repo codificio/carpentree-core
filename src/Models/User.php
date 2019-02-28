@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Carpentree\Core\Traits\MustVerifyEmail;
 use Laravel\Passport\HasApiTokens;
-use Laravel\Scout\Searchable;
+use Carpentree\Core\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -73,6 +73,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Return true if you want to store this model in localized index.
+     *
+     * @return bool
+     */
+    public static function localizedSearchable()
+    {
+        return true;
+    }
+
+    /**
      * Get the indexable data array for the model.
      *
      * @return array
@@ -83,7 +93,8 @@ class User extends Authenticatable
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
-            'roles' => $this->getRoleNames()
+            'roles' => $this->getRoleNames(),
+            'meta' => $this->meta->pluck('value')
         ];
 
         return $array;
