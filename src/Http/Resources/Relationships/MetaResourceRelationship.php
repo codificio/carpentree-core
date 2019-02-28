@@ -1,11 +1,10 @@
 <?php
 
-namespace Carpentree\Core\Http\Resources;
+namespace Carpentree\Core\Http\Resources\Relationships;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\App;
 
-class MetaFieldResource extends JsonResource
+class MetaResourceRelationship extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,15 +17,10 @@ class MetaFieldResource extends JsonResource
         return [
             'type' => 'meta',
             'id' => $this->id,
-            'locale' => App::getLocale(),
-
             'attributes' => [
                 'key' => $this->key,
-                'value' => $this->value,
-                'created_at' => $this->created_at,
-                'updated_at' => $this->updated_at
+                'value' => $this->value
             ]
-
         ];
     }
 }

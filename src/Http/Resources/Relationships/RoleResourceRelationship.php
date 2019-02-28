@@ -1,10 +1,10 @@
 <?php
 
-namespace Carpentree\Core\Http\Resources;
+namespace Carpentree\Core\Http\Resources\Relationships;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RoleResource extends JsonResource
+class RoleResourceRelationship extends JsonResource
 {
     /**
      * Transform the resource into an array.

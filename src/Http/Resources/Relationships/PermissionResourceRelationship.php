@@ -1,10 +1,10 @@
 <?php
 
-namespace Carpentree\Core\Http\Resources;
+namespace Carpentree\Core\Http\Resources\Relationships;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RoleResource extends JsonResource
+class PermissionResourceRelationship extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +15,7 @@ class RoleResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'type' => 'roles',
+            'type' => 'permissions',
             'id' => $this->id,
 
             'attributes' => [
