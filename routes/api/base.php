@@ -23,6 +23,9 @@ Route::prefix('api')->group(function () {
             return UserResource::make(Auth::user());
         })->name('api.user.me');
 
+        Route::get('locales', 'Carpentree\Core\Http\Controllers\LocaleController@all')
+            ->name('api.locales.all');
+
     });
 
 });
