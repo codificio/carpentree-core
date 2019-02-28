@@ -6,10 +6,11 @@ import { getItems, deleteItem } from "../../services/collectionServices";
 import Table from "../common/table";
 import _ from "lodash";
 import Typography from "@material-ui/core/Typography";
-import { collectionsPageSize } from '../../config.json';
-import SearchIcon from '@material-ui/icons/Search';
-import Cloud from '@material-ui/icons/Cloud';
-import Cached from '@material-ui/icons/Cached';
+import { collectionsPageSize } from "../../config.json";
+import SearchIcon from "@material-ui/icons/Search";
+import Cloud from "@material-ui/icons/Cloud";
+import Cached from "@material-ui/icons/Cached";
+import SpinnerLoading from "../common/spinnerLoading";
 
 const msgYesNoData = {
   open: false,
@@ -20,34 +21,35 @@ const msgYesNoData = {
 
 class TableData extends Component {
   state = {
-    pageTitle: '',
-    collectionName: '',
-    itemLabel: '',
+    pageTitle: "",
+    collectionName: "",
+    itemLabel: "",
     collection: {
       name: "???",
       currentPage: 1,
-      pageSize: collectionsPageSize,
       sortColumn: { path: "id", order: "asc" },
-      totalItems: 0,
-      data: []
+      data: [],
+      meta: {
+        total: 0,
+        per_page: collectionsPageSize
+      }
     },
     pageLoading: true,
-    searchQuery: '', 
+    searchQuery: "",
     columns: [],
     editedRecord: {},
     popperShows: {
       edit: true,
       delete: true
     },
-    msgYesNoData,
+    msgYesNoData
   };
-
 
   async componentDidMount() {
     const { searchQuery, collection } = this.state;
     const { columns, collectionName, pageTitle, itemLabel } = this.props;
     this.setState({ columns, collectionName, pageTitle, itemLabel });
-    const filters = {...collection, data:[], searchQuery };
+    const filters = { ...collection, data: [], searchQuery };
     const collectionFiltered = await getItems(collectionName, filters);
     this.setState({ collection: collectionFiltered, pageLoading: false });
   }
@@ -63,53 +65,61 @@ class TableData extends Component {
     });
   };
 
-  handleMsgYesNoClickYes = () => {
-    const { collection } = this.state
-    const item = this.state.msgYesNoData.item;
-    const collectionUpdated = collection.data.filter(i => i.id !== item.id);
+  handleMsgYesNoClickYes = async () => {
+    const { path } = this.props;
+    const { collection, msgYesNoData } = this.state;
+    const item = msgYesNoData.item;
+    const collectionUpdated = { ...collection };
+    collectionUpdated.data = collectionUpdated.data.filter(
+      i => i.id !== item.id
+    );
     this.setState({ collection: collectionUpdated });
-    this.setState({ msgYesNoData });
-    deleteItem(item.id);
+    this.setState({ msgYesNoData: { open: false } });
+    await deleteItem(path, item.id);
   };
 
   handleMsgYesNoClickNo = () => {
-    this.setState({ msgYesNoData });
+    this.setState({ msgYesNoData: { open: false } });
   };
 
   handleEdit = editedRecord => {
-    this.props.history.push('/'+this.state.collectionName+'/' + editedRecord.id);
+    this.props.history.push("/" + this.props.path + "/" + editedRecord.id);
   };
 
   handlePageChange = async currentPage => {
     const { collectionName } = this.state;
-    const filters = {...this.state.collection, data: [], currentPage};
+    const filters = { ...this.state.collection, data: [], currentPage };
     const collection = await getItems(collectionName, filters);
     this.setState({ collection });
   };
 
   handleSort = async sortColumn => {
     const { collectionName } = this.state;
-    const filters = {...this.state.collection, data: [], sortColumn};
+    const filters = { ...this.state.collection, data: [], sortColumn };
     const collection = await getItems(collectionName, filters);
     this.setState({ collection });
   };
 
   handleSearch = async searchQuery => {
     const { collectionName } = this.state;
-    const filters = {...this.state.collection, data: [], searchQuery};
+    const filters = { ...this.state.collection, data: [], searchQuery };
     const collection = await getItems(collectionName, filters);
     this.setState({ searchQuery });
     this.setState({ collection });
   };
 
-
   handleNew = () => {
-    this.props.history.push("/"+this.state.collectionName+"/0");
+    this.props.history.push("/" + this.state.collectionName + "/0");
   };
 
   render() {
     const { collection, pageTitle, itemLabel, pageLoading } = this.state;
-    const { totalItems, pageSize, currentPage, sortColumn } = collection;
+    const {
+      total: totalItems,
+      per_page: pageSize,
+      current_page: currentPage
+    } = collection.meta;
+    const { sortColumn } = collection;
     const { popperShows, searchQuery } = this.state;
     const { title, text, open } = this.state.msgYesNoData;
 
@@ -123,60 +133,70 @@ class TableData extends Component {
           onMsgYesNoClickNo={this.handleMsgYesNoClickNo}
         />
         <div className="col-12 ">
-          <h1 className="text-secondary c">{ pageTitle }</h1>
+          <h1 className="text-secondary c">{pageTitle}</h1>
         </div>
         <div className="row bg-white px-1 py-3">
-          <div className="col-4">
-            <SearchBox value={searchQuery} onChange={this.handleSearch} />
-          </div>
-          <div className="col-8">
-            <Typography variant="body1" gutterBottom align="right">
-              {totalItems} record visualizzati.
-            </Typography>
-          </div>
-          {  pageLoading &&
+          {!pageLoading && (
+            <div className="col-4">
+              <SearchBox value={searchQuery} onChange={this.handleSearch} />
+            </div>
+          )}
+          {!pageLoading && (
+            <div className="col-8">
+              <Typography variant="body1" gutterBottom align="right">
+                {totalItems} record visualizzati.
+              </Typography>
+            </div>
+          )}
+          {pageLoading && (
             <div className="col-12 c my-4">
-              <Cached className="mr-2"/> Caricamento in corso...
+              <SpinnerLoading />
             </div>
-          }
-          { collection.data.length === 0 && ! pageLoading &&
+          )}
+          {collection.data.length === 0 && !pageLoading && (
             <div className="col-12 c my-4 text-danger">
-              { searchQuery === '' ? <Cloud className="mr-2"/> : <SearchIcon className="mr-2" />}
-              { searchQuery === '' ? 'Nessun record nel database...' : 'Il filtro di ricerca impostato non ha restituito risultati...' }
+              {searchQuery === "" ? (
+                <Cloud className="mr-2" />
+              ) : (
+                <SearchIcon className="mr-2" />
+              )}
+              {searchQuery === ""
+                ? "Nessun record nel database..."
+                : "Il filtro di ricerca impostato non ha restituito risultati..."}
             </div>
-          }
-          { collection.data.length > 0 &&
-          <div className="col-12">
-            <Table
-              data={collection.data}
-              sortColumn={sortColumn}
-              popperShows={popperShows}
-              onLike={this.handleLike}
-              onDelete={this.handleDelete}
-              onEdit={this.handleEdit}
-              onSort={this.handleSort}
-              columns={this.state.columns}
-            />
-            {
-              totalItems &&
-              <Pagination
-                itemsCount={totalItems}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={this.handlePageChange}
+          )}
+          {collection.data.length > 0 && (
+            <div className="col-12">
+              <Table
+                data={collection.data}
+                sortColumn={sortColumn}
+                popperShows={popperShows}
+                onLike={this.handleLike}
+                onDelete={this.handleDelete}
+                onEdit={this.handleEdit}
+                onSort={this.handleSort}
+                columns={this.state.columns}
               />
-            }
-            
+              {totalItems && (
+                <Pagination
+                  itemsCount={totalItems}
+                  pageSize={pageSize}
+                  currentPage={currentPage}
+                  onPageChange={this.handlePageChange}
+                />
+              )}
+            </div>
+          )}
+        </div>
+        {!pageLoading && (
+          <div className="col-12 c">
+            <hr />
+            <button className="btn btn-secondary" onClick={this.handleNew}>
+              {"Nuovo " + itemLabel}
+            </button>
+            <hr />
           </div>
-          }
-        </div>
-        <div className="col-12 c">
-          <hr />
-          <button className="btn btn-secondary" onClick={this.handleNew}>
-            { 'Nuovo '+ itemLabel }
-          </button>
-          <hr />
-        </div>
+        )}
       </div>
     );
   }

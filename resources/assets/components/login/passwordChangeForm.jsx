@@ -3,7 +3,7 @@ import Joi from "joi-browser";
 import { changePassword } from "../../services/authService";
 import Form from "../common/form";
 import Grid from "@material-ui/core/Grid";
-import Spinner from "react-spinner-material";
+import SpinnerLoading from "../common/spinnerLoading";
 
 const emptyData = {
   email: ""
@@ -11,7 +11,7 @@ const emptyData = {
 
 class PasswordChangeForm extends Form {
   state = {
-    data: emptyData,
+    data: { ...emptyData },
     errors: {},
     waiting: false
   };
@@ -27,8 +27,11 @@ class PasswordChangeForm extends Form {
       const { email } = this.state.data;
       this.setState({ waiting: true });
       await changePassword(email);
-      window.location = "/passwordChangeDone"; // Questo ricarica il browser così si prendono bene tutte le variabili User
-      this.setState({ data: emptyData });
+      /*this.props.history.push({
+        pathname: "/passwordChangeDone",
+        data: { email }
+      });*/
+      window.location = "/passwordChangeDone";
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         // Se ho un errore riconosciuto lo scrivo nella label errore dello username
@@ -82,13 +85,7 @@ class PasswordChangeForm extends Form {
               className="col-xs-12 col-sm-9 col-md-5 col-lg-3"
               className="p-5 justify-content-center"
             >
-              <Spinner
-                size={40}
-                spinnerColor={"#33A"}
-                spinnerWidth={2}
-                visible={true}
-                className="mx-auto"
-              />
+              <SpinnerLoading />
             </div>
           )}
         </Grid>

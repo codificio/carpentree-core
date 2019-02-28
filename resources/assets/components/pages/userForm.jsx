@@ -95,7 +95,7 @@ class UserForm extends Form {
 
   doSubmit = async () => {
     try {
-      await setItem(collectionFather, this.state.data);
+      await setItem("user", this.state.data);
       this.props.history.push("/" + collectionFather);
     } catch (error) {}
   };
@@ -123,6 +123,9 @@ class UserForm extends Form {
                   </div>
                   <div className="col-12">
                     {this.renderSelect("roles", "Ruoli", roles, "multiple")}
+                  </div>
+                  <div className="col-12">
+                    {this.renderPassword("password", "Passsword")}
                   </div>
 
                   <div className="col-12 mt-3">

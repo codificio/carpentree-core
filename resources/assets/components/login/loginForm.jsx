@@ -8,7 +8,8 @@ import {
   facebookAppIdForLogin,
   googleAppIdForLogin,
   loginWithFacebookShow,
-  loginWithGoogleShow
+  loginWithGoogleShow,
+  loginShowRegistration
 } from "../../config.json";
 import Typography from "@material-ui/core/Typography";
 import {
@@ -91,12 +92,14 @@ class LoginForm extends Form {
 
                 <form onSubmit={this.handleSubmit}>
                   {this.renderInput("username", "Login")}
-                  {this.renderPassword("password", "Pawword")}
+                  {this.renderPassword("password", "Password")}
                   <div className="row pt-2 pb-3 px-3">
                     <div className="col-6 p-0 l">
-                      <a href="/registration">
-                        <small>Registrazione</small>
-                      </a>
+                      {loginShowRegistration && (
+                        <a href="/registration">
+                          <small>Registrazione</small>
+                        </a>
+                      )}
                     </div>
                     <div className="col-6 p-0 r">
                       <a href="/passwordChange">

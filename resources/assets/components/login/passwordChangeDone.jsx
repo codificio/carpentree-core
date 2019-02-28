@@ -1,10 +1,9 @@
-import React from "react";
-import Form from "../common/form";
+import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
+import SpinnerLoading from "../common/spinnerLoading";
 
-class PasswordChangeDone extends Form {
+class PasswordChangeDone extends Component {
   state = {};
-
   render() {
     return (
       <div className="heightFull">
@@ -19,7 +18,7 @@ class PasswordChangeDone extends Form {
             <img src={require("../../logo.png")} className="w-25 mb-4" />
 
             <p>Cambio password</p>
-            <p>
+            <p className="l">
               Controlla la tua email e segui le istruzioni in essa contenute per
               poter resettare la tua password
             </p>

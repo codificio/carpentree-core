@@ -1,5 +1,5 @@
 import Moment from "moment";
-Moment.locale('it');
+Moment.locale("it");
 
 export function bytesToSize(bytes) {
   var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
@@ -8,13 +8,23 @@ export function bytesToSize(bytes) {
   return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
 }
 
-export function getProgressCompleted(loaded, total){
+export function getProgressCompleted(loaded, total) {
   return Math.round((loaded / total) * 100);
 }
 
-export function dateTimeToDate(originalDate){
+export function dateTimeToDate(originalDate) {
   let date = new Date(originalDate);
-  date=Moment(date).format('DD MMM Y');
-  if(date == 'Invalid date'){ date = ''; }
+  date = Moment(date).format("DD MMM Y");
+  if (date == "Invalid date") {
+    date = "";
+  }
   return date;
+}
+
+export function httpHeaders() {
+  var token = localStorage.getItem("token");
+  var config = {
+    headers: { Authorization: "Bearer " + token }
+  };
+  return config;
 }
