@@ -20,7 +20,7 @@ class CreateUserRequest extends FormRequest
             'attributes.password' => 'required|string|min:6',
 
             // Roles
-            'relationships.roles.*.id' => 'exists:roles,id'
+            'relationships.roles.data.*.id' => 'exists:roles,id'
         ];
     }
 }

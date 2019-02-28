@@ -9,11 +9,9 @@ use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
 use Carpentree\Core\Services\Listing\User\UserListingInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -72,7 +70,7 @@ class UserController extends Controller
             $user = User::create($attributes);
 
             // Sync roles
-            $roles = $request->input('relationships.roles', array());
+            $roles = $request->input('relationships.roles.data', array());
             $user->syncRoles($roles);
 
             return $user;
@@ -103,14 +101,28 @@ class UserController extends Controller
 
             // Sync roles
             if ($request->has('relationships.roles')) {
-                $roles = $request->input('relationships.roles');
+                $_data = $request->input('relationships.roles');
+
+                if (is_array($_data) && sizeof($_data) == 0) {
+                    $roles = array();
+                } else {
+                    $roles = $request->input('relationships.roles.data', array());
+                }
+
                 $user = $user->syncRoles($roles);
             }
 
             // Meta fields
             if ($request->has('relationships.meta')) {
-                $meta = $request->input('relationships.meta');
-                $user = $user->syncMeta($meta);
+                $_data = $request->input('relationships.meta');
+
+                if (is_array($_data) && sizeof($_data) == 0) {
+                    $meta = array();
+                } else {
+                    $meta = $request->input('relationships.meta.data', array());
+                }
+
+                $user = $user->syncMeta(collect($meta)->pluck('attributes')->toArray());
             }
 
             $user->save();

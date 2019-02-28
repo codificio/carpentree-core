@@ -22,12 +22,11 @@ class UpdateUserRequest extends FormRequest
             'attributes.password' => 'string|min:6',
 
             // Roles
-            'relationships.roles.*.id' => 'exists:roles,id',
+            'relationships.roles.data.*.id' => 'exists:roles,id',
 
             // Meta fields
-            'relationships.meta' => 'nullable|array',
-            'relationships.meta.*.key' => 'string',
-            'relationships.meta.*.value' => 'required_with:relationships.meta.*.key|string'
+            'relationships.meta.data.*.attributes.key' => 'string',
+            'relationships.meta.data.*.attributes.value' => 'required_with:relationships.meta.data.*.attributes.key|string'
         ];
     }
 }
