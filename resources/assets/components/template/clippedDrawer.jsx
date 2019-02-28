@@ -95,6 +95,7 @@ class ClippedDrawer extends Component {
             <ProtectedRoute path="/users/:id" component={UserForm} />
             <ProtectedRoute path="/users" component={Users} />
             <Redirect from="/" to="/hello" exact />
+            <Redirect to="/login" exact />
           </Switch>
         </main>
       </div>

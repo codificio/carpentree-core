@@ -88,7 +88,6 @@ class Form extends Component {
   handleSpecialControlsChange = e => {
     const errors = { ...this.state.errors };
     const data = { ...this.state.data };
-    console.log("target", e.target.value);
     data[e.target.name] = e.target.value;
     this.setState({ data, errors });
   };

@@ -50,11 +50,7 @@ class PasswordResetForm extends Form {
 
     return (
       <div className="row justify-content-center h-100">
-        {loading && (
-          <div className="col-xs-12 col-sm-9 col-md-5 col-lg-3  p-5 c my-auto">
-            <SpinnerLoading />
-          </div>
-        )}
+        {loading && <SpinnerLoading />}
         {!loading && (
           <div className="col-xs-12 col-sm-9 col-md-5 col-lg-3 bg-white p-5 c my-auto">
             <img src={require("../../logo.png")} className="w-25 mb-4" />

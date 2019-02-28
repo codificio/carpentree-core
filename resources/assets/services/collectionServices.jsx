@@ -4,9 +4,18 @@ import { httpHeaders } from "../utils/functions";
 
 const apiUrlAdmin = apiUrl + "/api/admin/";
 
+const emptyFilters = {
+  currentPage: 1,
+  sortColumn: { path: "id", order: "asc" }
+};
+
 export async function getItems(collectionName, filters) {
   const userEndpoint = apiUrlAdmin + collectionName;
-  const { currentPage, pageSize, searchQuery } = filters;
+
+  if (!filters) {
+    filters = { ...emptyFilters };
+  }
+  const { currentPage, searchQuery } = filters;
   const { path, order } = filters.sortColumn;
   let sort = path;
   if (order == "desc") {
@@ -23,27 +32,17 @@ export async function getItems(collectionName, filters) {
   if (searchQuery) {
     url += "&filter[query]=" + searchQuery;
   }
-  try {
-    const { data } = await http.get(url, httpHeaders());
-    data.sortColumn = filters.sortColumn;
-    console.log("data", data);
-    return data;
-  } catch (error) {}
+  const { data } = await http.get(url, httpHeaders());
+  data.sortColumn = filters.sortColumn;
+  return data;
 }
 
-export async function setItem(path, formData) {
+export async function setItem(path, data) {
   const userEndpoint = apiUrlAdmin + path;
-  let data = {};
-  data.attributes = formData;
-  data.relationshps = [];
-  try {
-    const url = userEndpoint;
-    if (formData.id) {
-      url += "/" + formData.id;
-    }
-    await http.post(url, data, httpHeaders());
-  } catch (error) {
-    console.log("error", error);
+  if (data.id > 0) {
+    await http.patch(userEndpoint, data, httpHeaders());
+  } else {
+    await http.post(userEndpoint, data, httpHeaders());
   }
 }
 
@@ -51,7 +50,7 @@ export async function getItem(path, id) {
   const userEndpoint = apiUrlAdmin + path;
   try {
     const { data } = await http.get(userEndpoint + "/" + id, httpHeaders());
-    console.log("data", data);
+    console.log("getItem - data", data);
     return data;
   } catch (error) {
     console.log("error", error);

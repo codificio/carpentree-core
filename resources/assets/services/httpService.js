@@ -17,7 +17,7 @@ axios.interceptors.response.use(null, error => {
     window.location = "/login";
   }
 
-  if (!expectedError) {
+  if (expectedError) {
     logger.log(error);
     //toast.error("Errore imprevisto");
   }
@@ -34,5 +34,6 @@ export default {
   post: axios.post,
   put: axios.put,
   delete: axios.delete,
+  patch: axios.patch,
   setJwt
 };

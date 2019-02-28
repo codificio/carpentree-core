@@ -80,14 +80,7 @@ class PasswordChangeForm extends Form {
               </form>
             </Grid>
           )}
-          {waiting && (
-            <div
-              className="col-xs-12 col-sm-9 col-md-5 col-lg-3"
-              className="p-5 justify-content-center"
-            >
-              <SpinnerLoading />
-            </div>
-          )}
+          {waiting && <SpinnerLoading />}
         </Grid>
       </div>
     );

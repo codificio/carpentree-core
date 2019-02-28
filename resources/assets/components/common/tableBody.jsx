@@ -5,7 +5,7 @@ import { dateTimeToDate, bytesToSize } from "../../utils/functions";
 
 class TableBody extends Component {
   renderCell = (item, column) => {
-    const tmpItem = {...item};
+    const tmpItem = { ...item };
     switch (column.format) {
       case "text":
         break;
@@ -17,10 +17,10 @@ class TableBody extends Component {
         break;
       case "currency":
         const curr = tmpItem[column.path];
-        if(!isFinite(curr)){
+        if (!isFinite(curr)) {
           curr = 0;
         }
-        tmpItem[column.path] = curr.toFixed(2)+" EUR";
+        tmpItem[column.path] = curr.toFixed(2) + " EUR";
         break;
     }
     if (column.content) return column.content(tmpItem);
@@ -40,7 +40,7 @@ class TableBody extends Component {
           <tr key={item.id}>
             {columns.map(column => (
               <td key={this.createKey(item, column)} className={column.align}>
-                {this.renderCell(item, column)}
+                {this.renderCell(item.attributes, column)}
               </td>
             ))}
             <td className="r">
