@@ -21,20 +21,22 @@ Route::prefix('api/admin')->namespace('Carpentree\Core\Http\Controllers\Admin')-
         /**
          * Users
          */
-        Route::get('users', 'UserController@list')
-            ->name('api.users.list');
+        Route::prefix('users')->group(function() {
+            Route::get('/', 'UserController@list')
+                ->name('api.users.list');
 
-        Route::get('user/{id}', 'UserController@get')
-            ->name('api.users.get');
+            Route::get('{id}', 'UserController@get')
+                ->name('api.users.get');
 
-        Route::post('user', 'UserController@create')
-            ->name('api.users.create');
+            Route::post('/', 'UserController@create')
+                ->name('api.users.create');
 
-        Route::patch('user', 'UserController@update')
-            ->name('api.users.update');
+            Route::patch('/', 'UserController@update')
+                ->name('api.users.update');
 
-        Route::delete('user/{id}', 'UserController@delete')
-            ->name('api.users.delete');
+            Route::delete('{id}', 'UserController@delete')
+                ->name('api.users.delete');
+        });
 
         /**
          * Permissions
