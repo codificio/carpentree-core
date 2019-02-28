@@ -18,7 +18,7 @@ class UpdateUserRequest extends FormRequest
 
             'attributes.first_name' => 'string',
             'attributes.last_name' => 'string',
-            'attributes.email' => 'email|unique:users,email',
+            'attributes.email' => 'email',
             'attributes.password' => 'string|min:6',
 
             // Roles
