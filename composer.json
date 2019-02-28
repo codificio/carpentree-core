@@ -56,7 +56,8 @@
             "providers": [
                 "Carpentree\\Core\\Providers\\CoreServiceProvider",
                 "Carpentree\\Core\\Providers\\EventServiceProvider",
-                "Carpentree\\Core\\Providers\\AuthServiceProvider"
+                "Carpentree\\Core\\Providers\\AuthServiceProvider",
+                "Carpentree\\Core\\Providers\\LocaleServiceProvider"
             ]
         }
     }
