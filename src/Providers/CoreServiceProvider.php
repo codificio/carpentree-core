@@ -3,6 +3,7 @@
 namespace Carpentree\Core\Providers;
 
 use Barryvdh\Cors\HandleCors;
+use Carpentree\Core\Console\Commands\FlushTemporaryFiles;
 use Carpentree\Core\Console\Commands\RefreshPermissions;
 use Carpentree\Core\Services\Listing\User\UserListing;
 use Carpentree\Core\Services\Listing\User\UserListingInterface;
@@ -129,7 +130,8 @@ class CoreServiceProvider extends ServiceProvider
     {
         // Registering package commands.
         $this->commands([
-            RefreshPermissions::class
+            RefreshPermissions::class,
+            FlushTemporaryFiles::class
         ]);
     }
 }

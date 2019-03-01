@@ -14,41 +14,53 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('api/admin')->namespace('Carpentree\Core\Http\Controllers\Admin')->group(function () {
+Route::prefix('api/admin')
+    ->name('api.admin.')
+    ->namespace('Carpentree\Core\Http\Controllers')
+    ->group(function () {
 
-    Route::middleware(['api', 'auth:api', 'verified', 'scope:admin'])->group(function() {
+    Route::middleware(['api', 'auth:api', 'verified', 'scope:admin'])
+        ->group(function() {
 
         /**
          * Users
          */
         Route::prefix('users')->group(function() {
-            Route::get('/', 'UserController@list')
-                ->name('api.users.list');
+            Route::get('/', 'Admin\UserController@list')
+                ->name('users.list');
 
-            Route::get('{id}', 'UserController@get')
-                ->name('api.users.get');
+            Route::get('{id}', 'Admin\UserController@get')
+                ->name('users.get');
 
-            Route::post('/', 'UserController@create')
-                ->name('api.users.create');
+            Route::post('/', 'Admin\UserController@create')
+                ->name('users.create');
 
-            Route::patch('/', 'UserController@update')
-                ->name('api.users.update');
+            Route::patch('/', 'Admin\UserController@update')
+                ->name('users.update');
 
-            Route::delete('{id}', 'UserController@delete')
-                ->name('api.users.delete');
+            Route::delete('{id}', 'Admin\UserController@delete')
+                ->name('users.delete');
         });
 
         /**
          * Permissions
          */
-        Route::get('permissions', 'PermissionController@list')
-            ->name('api.permissions.list');
+        Route::get('permissions', 'Admin\PermissionController@list')
+            ->name('permissions.list');
 
         /**
          * Roles
          */
-        Route::get('roles', 'RoleController@list')
-            ->name('api.roles.list');
+        Route::get('roles', 'Admin\RoleController@list')
+            ->name('roles.list');
+
+        /**
+         * Media
+         */
+        Route::prefix('media')->group(function() {
+            Route::post('temp', 'UploadTemporary')
+                ->name('media.upload-temp');
+        });
 
     });
 

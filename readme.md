@@ -182,6 +182,15 @@ To add categories support to your eloquent models simply use `\Carpentree\Core\T
 
 For his feature, we were inspired by https://github.com/rinvex/laravel-categories. Read it documentation for more info.
 
+### Full text search
+
+TODO (Algolia)
+
+### Meta fields
+
+Assign `HasMeta` trait to a model in order to enable meta fields for a model.
+In order to maintain both flexibility and simplicity, you can consider `value` attributes of the meta fields as JSON container. 
+
 ## Change log
 
 Please see the [changelog](changelog.md) for more information on what has changed recently.
