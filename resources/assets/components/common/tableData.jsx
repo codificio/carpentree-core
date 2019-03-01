@@ -11,6 +11,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import Cloud from "@material-ui/icons/Cloud";
 import Cached from "@material-ui/icons/Cached";
 import SpinnerLoading from "../common/spinnerLoading";
+import { ToastContainer } from "react-toastify";
 
 const msgYesNoData = {
   open: false,
@@ -50,8 +51,12 @@ class TableData extends Component {
     const { columns, collectionName, pageTitle, itemLabel } = this.props;
     this.setState({ columns, collectionName, pageTitle, itemLabel });
     const filters = { ...collection, data: [], searchQuery };
-    const collectionFiltered = await getItems(collectionName, filters);
-    this.setState({ collection: collectionFiltered, pageLoading: false });
+    try {
+      const collectionFiltered = await getItems(collectionName, filters);
+      this.setState({ collection: collectionFiltered, pageLoading: false });
+    } catch (ex) {
+      console.log(ex);
+    }
   }
 
   handleDelete = item => {
@@ -83,7 +88,9 @@ class TableData extends Component {
   };
 
   handleEdit = editedRecord => {
-    this.props.history.push("/" + this.props.path + "/" + editedRecord.id);
+    this.props.history.push(
+      "/" + this.props.collectionName + "/" + editedRecord.id
+    );
   };
 
   handlePageChange = async currentPage => {
@@ -125,6 +132,7 @@ class TableData extends Component {
 
     return (
       <div>
+        <ToastContainer />
         <MsgYesNo
           title={title}
           text={text}
@@ -148,11 +156,7 @@ class TableData extends Component {
               </Typography>
             </div>
           )}
-          {pageLoading && (
-            <div className="col-12 c my-4">
-              <SpinnerLoading />
-            </div>
-          )}
+          {pageLoading && <SpinnerLoading />}
           {collection.data.length === 0 && !pageLoading && (
             <div className="col-12 c my-4 text-danger">
               {searchQuery === "" ? (

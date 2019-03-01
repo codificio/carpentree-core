@@ -5,7 +5,14 @@ class SpinnerLoading extends Component {
   state = {};
   render() {
     return (
-      <PulseLoader sizeUnit={"px"} size={15} color={"#123abc"} loading={true} />
+      <div className="col-12 c my-4">
+        <PulseLoader
+          sizeUnit={"px"}
+          size={15}
+          color={"#123abc"}
+          loading={true}
+        />
+      </div>
     );
   }
 }

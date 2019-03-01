@@ -23,7 +23,10 @@ export async function login(username, password) {
       grant_type,
       scope
     });
-    localStorage.setItem("token", data.access_token);
+    if (data.access_token) {
+      localStorage.setItem("token", data.access_token);
+    } else {
+    }
   } else {
     localStorage.setItem("token", token);
     localStorage.removeItem("facebookToken");

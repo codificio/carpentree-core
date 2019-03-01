@@ -28,3 +28,16 @@ export function httpHeaders() {
   };
   return config;
 }
+
+export function getMetaValue(data, key) {
+  if (!data.relationships.meta.data) {
+    return "";
+  }
+  for (let i = 0; i < data.relationships.meta.data.length; i++) {
+    if (data.relationships.meta.data[i].attributes.key == key) {
+      return data.relationships.meta.data[i].attributes.value;
+      break;
+    }
+  }
+  return "";
+}

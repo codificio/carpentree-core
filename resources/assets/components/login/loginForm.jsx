@@ -17,6 +17,7 @@ import {
   GoogleLoginButton
 } from "react-social-login-buttons";
 import SpinnerLoading from "../common/spinnerLoading";
+import { ToastContainer, toast } from "react-toastify";
 
 class LoginForm extends Form {
   state = {
@@ -49,14 +50,17 @@ class LoginForm extends Form {
       window.location = "/"; // Questo ricarica il browser così si prendono bene tutte le variabili User
       this.setState({ data: { username: "" } });
     } catch (ex) {
+      this.setState({ loading: false });
+      toast.error("errore: " + ex.response.data.hint);
+      toast.error("errore: " + ex.response.data.message);
       if (ex.response && ex.response.status === 400) {
         // Se ho un errore riconosciuto lo scrivo nella label errore dello username
         // Clono gli errori
         const errors = { ...this.state.errors };
         // Aggiungo l'errore al label username
-        errors.username = ex.response.data;
+        // errors.username = ex.response.data;
         // Setto gli errori
-        this.setState({ errors });
+        //  this.setState({ errors });
       }
     }
   };
@@ -81,11 +85,8 @@ class LoginForm extends Form {
       <div className="heightFull">
         <div className="row w-100 h-100 justify-content-center ">
           <div className="col-xs-12 col-sm-9 col-md-5 col-lg-3 c my-auto">
-            {loading && (
-              <div className="col-12 c">
-                <SpinnerLoading />
-              </div>
-            )}
+            <ToastContainer />
+            {loading && <SpinnerLoading />}
             {!loading && (
               <div className=" bg-white p-5">
                 <img src={require("../../logo.png")} className="w-25 mb-4" />
