@@ -9,9 +9,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\App;
 
 /**
- * Class UserResource. JSON:API compliant.
+ * Class UserResource.
  *
- * @see https://jsonapi.org
  * @package Carpentree\Core\Http\Resources
  */
 class UserResource extends JsonResource
@@ -41,17 +40,20 @@ class UserResource extends JsonResource
 
             'relationships' => [
 
-                'permissions' => [
-                    'data' => PermissionResourceRelationship::collection($this->resource->getAllPermissions())
-                ],
+                // Permissions
+                'permissions' => $this->whenLoaded('roles', array(
+                    'data' => PermissionResourceRelationship::collection($this->getAllPermissions())
+                ), array()),
 
-                'roles' => [
+                // Roles
+                'roles' => $this->whenLoaded('roles', array(
                     'data' => RoleResourceRelationship::collection($this->roles)
-                ],
+                ), array()),
 
-                'meta' => [
+                // Meta
+                'meta' => $this->whenLoaded('meta', array(
                     'data' => MetaResourceRelationship::collection($this->meta)
-                ]
+                ), array())
             ]
 
         ];
