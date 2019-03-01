@@ -164,12 +164,10 @@ $ php artisan vendor:publish --provider="Carpentree\Core\CoreServiceProvider --t
 $ php artisan carpentree:refresh-permissions
 ```
 
-> For consistency reasons, old permissions are not removed automatically by the command. You have to do manually. 
-
 Permission final name will be `group-key.permission-key` adn you can refer to it from the code, for example, in this way:
 
 ``` php
-$user->hasPermissionTo('users.delete');
+$user->can('users.delete');
 ```
 
 ### Assign statuses to Eloquent models
@@ -189,7 +187,11 @@ TODO (Algolia)
 ### Meta fields
 
 Assign `HasMeta` trait to a model in order to enable meta fields for a model.
-In order to maintain both flexibility and simplicity, you can consider `value` attributes of the meta fields as JSON container. 
+In order to maintain both flexibility and simplicity, you can consider `value` attributes of the meta fields as JSON container.
+
+### Localization
+
+Available locales are set in configuration file `carpentree.core`.
 
 ## Change log
 

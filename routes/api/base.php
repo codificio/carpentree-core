@@ -19,10 +19,16 @@ Route::prefix('api')->group(function () {
 
     Route::middleware(['api', 'auth:api'])->group(function() {
 
+        /**
+         * Get current user
+         */
         Route::get('user/me', function() {
             return UserResource::make(Auth::user());
         })->name('api.user.me');
 
+        /**
+         * Get all locales
+         */
         Route::get('locales', 'Carpentree\Core\Http\Controllers\LocaleController@all')
             ->name('api.locales.all');
 
