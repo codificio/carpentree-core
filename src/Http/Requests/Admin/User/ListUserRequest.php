@@ -1,6 +1,6 @@
 <?php
 
-namespace Carpentree\Core\Http\Requests\Admin;
+namespace Carpentree\Core\Http\Requests\Admin\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 

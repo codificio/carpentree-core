@@ -14,6 +14,10 @@ return [
 
     'roles' => [
         'read'
+    ],
+
+    'media' => [
+        'update'
     ]
 
     // ...

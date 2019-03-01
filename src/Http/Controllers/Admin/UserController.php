@@ -3,8 +3,9 @@
 namespace Carpentree\Core\Http\Controllers\Admin;
 
 use Carpentree\Core\Http\Controllers\Controller;
-use Carpentree\Core\Http\Requests\Admin\CreateUserRequest;
-use Carpentree\Core\Http\Requests\Admin\UpdateUserRequest;
+use Carpentree\Core\Http\Requests\Admin\User\CreateUserRequest;
+use Carpentree\Core\Http\Requests\Admin\User\ListUserRequest;
+use Carpentree\Core\Http\Requests\Admin\User\UpdateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
 use Carpentree\Core\Services\Listing\User\UserListingInterface;
@@ -25,10 +26,10 @@ class UserController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ListUserRequest $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function list(Request $request)
+    public function list(ListUserRequest $request)
     {
         if (!Auth::user()->can('users.read')) {
             throw UnauthorizedException::forPermissions(['users.read']);

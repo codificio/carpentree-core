@@ -58,8 +58,8 @@ Route::prefix('api/admin')
          * Media
          */
         Route::prefix('media')->group(function() {
-            Route::post('temp', 'UploadTemporary')
-                ->name('media.upload-temp');
+            Route::post('temp', 'UploadTemporaryMedia')
+                ->name('media.upload-temporary');
         });
 
     });

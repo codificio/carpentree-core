@@ -2,18 +2,18 @@
 
 namespace Carpentree\Core\Console\Commands;
 
-use Carpentree\Core\Services\FlushTemporaryFilesService;
+use Carpentree\Core\Services\FlushTemporaryMediaService;
 
 use Illuminate\Console\Command;
 
-class FlushTemporaryFiles extends Command
+class FlushTemporaryMedia extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'carpentree:flush-temp-files';
+    protected $signature = 'carpentree:flush-temp-media';
 
     /**
      * The console command description.
@@ -27,9 +27,9 @@ class FlushTemporaryFiles extends Command
      */
     public function handle()
     {
-        $service = new FlushTemporaryFilesService();
+        $service = new FlushTemporaryMediaService();
         $service->flush();
 
-        $this->info('Files correctly removed.');
+        $this->info('Media correctly removed.');
     }
 }
