@@ -74,9 +74,11 @@ class LocalizedAlgoliaEngine extends ParentEngine
 
         foreach ($models as $model) {
 
-            foreach (config('carpentree.core.locales') as $locale) {
+            $locales = config('translatable.locales');
 
-                App::setLocale($locale);
+            foreach ($locales as $lang => $countries) {
+
+                App::setLocale($lang);
 
                 $array = array_merge(
                     $model->toSearchableArray(), $model->scoutMetadata()
@@ -86,7 +88,7 @@ class LocalizedAlgoliaEngine extends ParentEngine
                     continue;
                 }
 
-                $objectsByLocale[$locale][] = array_merge(['objectID' => $model->getScoutKey()], $array);
+                $objectsByLocale[$lang][] = array_merge(['objectID' => $model->getScoutKey()], $array);
 
             }
 

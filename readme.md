@@ -191,7 +191,13 @@ In order to maintain both flexibility and simplicity, you can consider `value` a
 
 ### Localization
 
-Available locales are set in configuration file `carpentree.core`.
+Publish configuration with this command:
+
+``` bash
+php artisan vendor:publish --tag=translatable
+``` 
+
+After that, available locales are set in configuration file `config\translatable.php`.
 
 ## Change log
 

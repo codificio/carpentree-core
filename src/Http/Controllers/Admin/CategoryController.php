@@ -38,7 +38,8 @@ class CategoryController extends Controller
         $category = DB::transaction(function() use ($request) {
             $attributes = $request->input('attributes');
             /** @var Category $category */
-            $category = Category::create($attributes);
+            $category = new Category($attributes);
+            $category->save();
 
             $parentData = $request->input('relationships.parent.data', null);
 

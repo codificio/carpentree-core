@@ -7,7 +7,7 @@ class LocaleController extends Controller
 
     public function all()
     {
-        return response()->json(config('carpentree.core.locales'));
+        return response()->json(config('translatable.locales'));
     }
 
 }
