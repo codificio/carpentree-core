@@ -43,6 +43,17 @@ Route::prefix('api/admin')
         });
 
         /**
+         * Categories
+         */
+        Route::prefix('categories')->group(function() {
+            Route::post('/', 'Admin\CategoryController@create')
+                ->name('categories.create');
+
+            Route::patch('/', 'Admin\CategoryController@update')
+                ->name('categories.update');
+        });
+
+        /**
          * Permissions
          */
         Route::get('permissions', 'Admin\PermissionController@list')

@@ -18,6 +18,13 @@ return [
 
     'media' => [
         'update'
+    ],
+
+    'categories' => [
+        'create',
+        'read',
+        'update',
+        'delete'
     ]
 
     // ...

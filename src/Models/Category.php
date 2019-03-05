@@ -20,6 +20,7 @@ class Category extends Model
      * {@inheritdoc}
      */
     protected $fillable = [
+        'type',
         NestedSet::LFT,
         NestedSet::RGT,
         NestedSet::PARENT_ID
