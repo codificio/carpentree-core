@@ -75,9 +75,11 @@ class CoreServiceProvider extends ServiceProvider
     public function publish()
     {
         // Assets
+        /*
         $this->publishes([
             __DIR__ . '/../../resources/assets' => resource_path('vendor/carpentree/core')
         ], 'assets');
+        */
 
         // Public assets
         /*
