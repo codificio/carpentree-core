@@ -102,12 +102,12 @@ class UserController extends Controller
 
             // Sync roles
             if ($request->has('relationships.roles')) {
-                $_data = $request->input('relationships.roles');
+                $_data = $request->input('relationships.roles.data', array());
 
                 if (is_array($_data) && sizeof($_data) == 0) {
                     $roles = array();
                 } else {
-                    $roles = $request->input('relationships.roles.data', array());
+                    $roles = $_data;
                 }
 
                 $user = $user->syncRoles($roles);
@@ -115,12 +115,12 @@ class UserController extends Controller
 
             // Meta fields
             if ($request->has('relationships.meta')) {
-                $_data = $request->input('relationships.meta');
+                $_data = $request->input('relationships.meta.data', array());
 
                 if (is_array($_data) && sizeof($_data) == 0) {
                     $meta = array();
                 } else {
-                    $meta = $request->input('relationships.meta.data', array());
+                    $meta = $_data;
                 }
 
                 $user = $user->syncMeta(collect($meta)->pluck('attributes')->toArray());
