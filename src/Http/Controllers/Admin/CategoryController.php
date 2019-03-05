@@ -15,6 +15,16 @@ class CategoryController extends Controller
 {
 
     /**
+     * @param $type
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getByType($type)
+    {
+        $categories = Category::where('type', $type)->get();
+        return CategoryResource::collection($categories);
+    }
+
+    /**
      * @param CreateCategoryRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -86,4 +96,25 @@ class CategoryController extends Controller
 
         return CategoryResource::make($category)->response()->setStatusCode(201);
     }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete($id)
+    {
+        if (!Auth::user()->can('categories.delete')) {
+            throw UnauthorizedException::forPermissions(['categories.delete']);
+        }
+
+        /** @var Category $user */
+        $category = Category::findOrFail($id);
+
+        if ($category->delete($id)) {
+            return response()->json(null, 204);
+        } else {
+            return response()->json(null, 202);
+        }
+    }
+
 }

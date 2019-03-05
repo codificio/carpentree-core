@@ -20,6 +20,7 @@ class CategoryResourceRelationship extends JsonResource
             'id' => $this->id,
 
             'attributes' => [
+                'type' => $this->type,
                 'slug' => $this->slug,
                 'name' => $this->name,
                 'description' => $this->description,

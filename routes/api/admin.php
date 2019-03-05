@@ -46,11 +46,17 @@ Route::prefix('api/admin')
          * Categories
          */
         Route::prefix('categories')->group(function() {
+            Route::get('{type}', 'Admin\CategoryController@getByType')
+                ->name('categories.get-by-type');
+
             Route::post('/', 'Admin\CategoryController@create')
                 ->name('categories.create');
 
             Route::patch('/', 'Admin\CategoryController@update')
                 ->name('categories.update');
+
+            Route::delete('{id}', 'Admin\CategoryController@delete')
+                ->name('categories.delete');
         });
 
         /**

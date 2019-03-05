@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Http\Resources;
 
+use Carpentree\Core\Http\Resources\Relationships\CategoryResourceRelationship;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\App;
 
@@ -22,6 +23,7 @@ class CategoryResource extends JsonResource
             'locale' => App::getLocale(),
 
             'attributes' => [
+                'type' => $this->type,
                 'slug' => $this->slug,
                 'name' => $this->name,
                 'description' => $this->description,
@@ -30,7 +32,10 @@ class CategoryResource extends JsonResource
             ],
 
             'relationships' => [
-
+                // Parent
+                'parent' => $this->whenLoaded('parent', array(
+                    'data' => CategoryResourceRelationship::make($this->parent)
+                ), null),
             ]
 
         ];
