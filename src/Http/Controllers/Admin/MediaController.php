@@ -3,7 +3,7 @@
 namespace Carpentree\Core\Http\Controllers\Admin;
 
 use Carpentree\Core\Http\Controllers\Controller;
-use Carpentree\Core\Http\Requests\Admin\User\UpdateMediaRequest;
+use Carpentree\Core\Http\Requests\Admin\Media\UpdateMediaRequest;
 use Carpentree\Core\Http\Resources\MediaResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
