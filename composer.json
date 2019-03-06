@@ -1,6 +1,6 @@
 {
     "name": "codificio/carpentree-core",
-    "description": ":description",
+    "description": "Core package of Caprentree Framework",
     "license": "MIT",
     "authors": [
         {
