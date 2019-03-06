@@ -1,10 +1,10 @@
 <?php
 
-namespace Carpentree\Core\Http\Requests\Admin\User;
+namespace Carpentree\Core\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ListUserRequest extends FormRequest
+class ListRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
