@@ -1,7 +1,5 @@
 # Carpentree Core
 
-This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
-
 ## Requirements
 - PHP 7.2+
 - Laravel 5.7+
@@ -199,35 +197,10 @@ php artisan vendor:publish --tag=translatable
 
 After that, available locales are set in configuration file `config\translatable.php`.
 
-## Change log
-
-Please see the [changelog](changelog.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [contributing.md](contributing.md) for details and a todolist.
-
 ## Security
 
 If you discover any security related issues, please email enrico@codificio.com instead of using the issue tracker.
 
-## Credits
-
-- [Enrico Nardo][link-author]
-- [All Contributors][link-contributors]
-
 ## License
 
 MIT. Please see the [license file](license.md) for more information.
-
-[ico-version]: https://img.shields.io/packagist/v/carpentree/core.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/carpentree/core.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/carpentree/core/master.svg?style=flat-square
-[ico-styleci]: https://styleci.io/repos/12345678/shield
-
-[link-packagist]: https://packagist.org/packages/carpentree/core
-[link-downloads]: https://packagist.org/packages/carpentree/core
-[link-travis]: https://travis-ci.org/carpentree/core
-[link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/carpentree
-[link-contributors]: ../../contributors
