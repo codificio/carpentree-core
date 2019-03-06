@@ -87,8 +87,6 @@ class UserController extends Controller
         }
 
         // TODO: refactoring of user update
-
-        /** @var User $user */
         $user = DB::transaction(function() use ($request) {
 
             // Update user
@@ -102,28 +100,14 @@ class UserController extends Controller
 
             // Sync roles
             if ($request->has('relationships.roles')) {
-                $_data = $request->input('relationships.roles.data', array());
-
-                if (is_array($_data) && sizeof($_data) == 0) {
-                    $roles = array();
-                } else {
-                    $roles = $_data;
-                }
-
+                $roles = $request->input('relationships.roles.data', array());
                 $user = $user->syncRoles($roles);
             }
 
             // Meta fields
             if ($request->has('relationships.meta')) {
                 $_data = $request->input('relationships.meta.data', array());
-
-                if (is_array($_data) && sizeof($_data) == 0) {
-                    $meta = array();
-                } else {
-                    $meta = $_data;
-                }
-
-                $user = $user->syncMeta(collect($meta)->pluck('attributes')->toArray());
+                $user = $user->syncMeta(collect($_data)->pluck('attributes')->toArray());
             }
 
             $user->save();

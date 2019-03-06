@@ -25,6 +25,7 @@ class UpdateUserRequest extends FormRequest
             'relationships.roles.data.*.id' => 'exists:roles,id',
 
             // Meta fields
+            'relationships.meta.data' => 'array',
             'relationships.meta.data.*.attributes.key' => 'string',
             'relationships.meta.data.*.attributes.value' => 'required_with:relationships.meta.data.*.attributes.key|string'
         ];
