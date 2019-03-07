@@ -76,7 +76,7 @@ class LocalizedAlgoliaEngine extends ParentEngine
 
             $locales = config('translatable.locales');
 
-            foreach ($locales as $lang => $countries) {
+            foreach ($locales as $lang) {
 
                 App::setLocale($lang);
 
