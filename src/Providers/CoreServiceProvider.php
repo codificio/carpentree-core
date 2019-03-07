@@ -4,6 +4,8 @@ namespace Carpentree\Core\Providers;
 
 use Barryvdh\Cors\HandleCors;
 use Carpentree\Core\Console\Commands\RefreshPermissions;
+use Carpentree\Core\Http\Builders\User\UserBuilder;
+use Carpentree\Core\Http\Builders\User\UserBuilderInterface;
 use Carpentree\Core\Services\Listing\User\UserListing;
 use Carpentree\Core\Services\Listing\User\UserListingInterface;
 use Carpentree\Core\Services\SocialUserResolver;
@@ -69,6 +71,9 @@ class CoreServiceProvider extends ServiceProvider
     {
         // User Listing Service
         $this->app->bind(UserListingInterface::class, UserListing::class);
+
+        // User Http Builder Service
+        $this->app->bind(UserBuilderInterface::class, UserBuilder::class);
     }
 
     public function publish()

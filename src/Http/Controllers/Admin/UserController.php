@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Http\Controllers\Admin;
 
+use Carpentree\Core\Http\Builders\User\UserBuilderInterface;
 use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\Admin\ListRequest;
 use Carpentree\Core\Http\Requests\Admin\User\CreateUserRequest;
@@ -19,9 +20,13 @@ class UserController extends Controller
     /** @var UserListingInterface */
     protected $listingService;
 
-    public function __construct(UserListingInterface $listingService)
+    /** @var UserBuilderInterface */
+    protected $builder;
+
+    public function __construct(UserListingInterface $listingService, UserBuilderInterface $builder)
     {
         $this->listingService = $listingService;
+        $this->builder = $builder;
     }
 
     /**
@@ -61,58 +66,44 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.create']);
         }
 
-        // TODO: refactoring of user creation
-        $user = DB::transaction(function() use ($request) {
+        $builder = $this->builder->init()->create($request->input('attributes'));
 
-            // Create user
-            $attributes = $request->input('attributes');
-            /** @var User $user */
-            $user = User::create($attributes);
+        if ($request->has('relationships.roles')) {
+            $builder = $builder->withRoles($request->input('relationships.roles.data', array()));
+        }
 
-            // Sync roles
-            $roles = $request->input('relationships.roles.data', array());
-            $user->syncRoles($roles);
-
-            return $user;
-        });
+        $user = $builder->build();
 
         return UserResource::make($user)->response()->setStatusCode(201);
     }
 
+    /**
+     * @param UpdateUserRequest $request
+     * @return UserResource
+     */
     public function update(UpdateUserRequest $request)
     {
         if (!Auth::user()->can('users.update')) {
             throw UnauthorizedException::forPermissions(['users.update']);
         }
 
-        // TODO: refactoring of user update
-        $user = DB::transaction(function() use ($request) {
+        $user = User::findOrFail($request->input('id'));
 
-            // Update user
-            $id = $request->input('id');
-            /** @var User $user */
-            $user = User::findOrFail($id);
-            if ($request->has('attributes')) {
-                $attributes = $request->input('attributes');
-                $user = $user->fill($attributes);
-            }
+        $builder = $this->builder->init($user);
 
-            // Sync roles
-            if ($request->has('relationships.roles')) {
-                $roles = $request->input('relationships.roles.data', array());
-                $user = $user->syncRoles($roles);
-            }
+        if ($request->has('attributes')) {
+            $builder = $builder->create($request->input('attributes'));
+        }
 
-            // Meta fields
-            if ($request->has('relationships.meta')) {
-                $_data = $request->input('relationships.meta.data', array());
-                $user = $user->syncMeta(collect($_data)->pluck('attributes')->toArray());
-            }
+        if ($request->has('relationships.roles')) {
+            $builder = $builder->withRoles($request->input('relationships.roles.data', array()));
+        }
 
-            $user->save();
+        if ($request->has('relationships.meta')) {
+            $builder = $builder->withMeta($request->input('relationships.meta.data', array()));
+        }
 
-            return $user;
-        });
+        $user = $builder->build();
 
         return UserResource::make($user);
     }
