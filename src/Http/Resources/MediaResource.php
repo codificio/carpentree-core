@@ -19,11 +19,13 @@ class MediaResource extends JsonResource
             'id' => $this->id,
 
             'attributes' => [
-                'name' => $this->name,
-                'url' => $this->getUrl(),
-                'mime_type' => $this->mime_type,
-                'order' => $this->order_column,
-                'alt' => $this->when($this->hasCustomProperty('alt'), $this->getCustomProperty('alt'))
+                'size' => $this->size,
+                "mime_type"=> $this->mime_type,
+                "extension"=> $this->extension,
+                "filename"=> $this->filename,
+                "url" => $this->getUrl(),
+                "updated_at"=> $this->updated_at,
+                "created_at"=> $this->created_at,
             ]
         ];
     }

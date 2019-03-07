@@ -5,9 +5,12 @@ namespace Carpentree\Core\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Arr;
+use Plank\Mediable\HandlesMediaUploadExceptions;
 
 class Handler extends ExceptionHandler
 {
+    use HandlesMediaUploadExceptions;
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -48,6 +51,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        $exception = $this->transformMediaUploadException($exception);
+
         return parent::render($request, $exception);
     }
 

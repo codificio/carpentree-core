@@ -75,8 +75,11 @@ Route::prefix('api/admin')
          * Media
          */
         Route::prefix('media')->group(function() {
-            Route::post('temp', 'UploadTemporaryMedia')
-                ->name('media.upload-temporary');
+            Route::post('/', 'Admin\MediaController@upload')
+                ->name('media.upload');
+
+            Route::delete('{id}', 'Admin\MediaController@delete')
+                ->name('media.delete');
         });
 
     });

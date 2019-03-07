@@ -3,51 +3,50 @@
 namespace Carpentree\Core\Http\Controllers\Admin;
 
 use Carpentree\Core\Http\Controllers\Controller;
-use Carpentree\Core\Http\Requests\Admin\Media\UpdateMediaRequest;
+use Carpentree\Core\Http\Requests\Admin\Media\CreateMediaRequest;
 use Carpentree\Core\Http\Resources\MediaResource;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Spatie\MediaLibrary\Models\Media;
+use Plank\Mediable\Media;
+use Plank\Mediable\MediaUploaderFacade as MediaUploader;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class MediaController extends Controller
 {
 
-    public function update(UpdateMediaRequest $request)
+    /**
+     * @param CreateMediaRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function upload(CreateMediaRequest $request)
     {
-        if (!Auth::user()->can('media.update')) {
-            throw UnauthorizedException::forPermissions(['media.update']);
+        if (!Auth::user()->can('media.upload')) {
+            throw UnauthorizedException::forPermissions(['media.upload']);
         }
 
-        // TODO: refactoring of media update
+        $media = MediaUploader::fromSource($request->file('media'))->upload();
 
-        $media = DB::transaction(function() use ($request) {
+        return MediaResource::make($media)->response()->setStatusCode(201);
+    }
 
-            $id = $request->input('id');
-            $media = Media::findOrFail($id);
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        if (!Auth::user()->can('media.delete')) {
+            throw UnauthorizedException::forPermissions(['media.delete']);
+        }
 
-            if ($request->has('attributes')) {
-                $attributes = $request->input('attributes');
-                $media = $media->fill($attributes);
-            }
+        /** @var Media $media */
+        $media = Media::findOrFail($id);
 
-            if ($request->has('attributes.order')) {
-                $order = $request->input('attributes.order');
-                $media->order = $order;
-            }
-
-            if ($request->has('attributes.alt')) {
-                $alt = $request->input('attributes.alt');
-                $media->setCustomProperty('alt', $alt);
-            }
-
-            $media->save();
-
-            return $media;
-
-        });
-
-        return MediaResource::make($media);
+        if ($media->delete($id)) {
+            return response()->json(null, 204);
+        } else {
+            return response()->json(null, 202);
+        }
     }
 
 }

@@ -17,7 +17,8 @@ return [
     ],
 
     'media' => [
-        'update'
+        'upload',
+        'delete'
     ],
 
     'categories' => [
