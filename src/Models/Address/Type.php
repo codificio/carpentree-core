@@ -3,14 +3,19 @@
 namespace Carpentree\Core\Models\Address;
 
 use Carpentree\Core\Models\Address;
+use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 
 class Type extends Model
 {
+    use Translatable;
+
+    public $translationModel = Address\Type\Translation::class;
+
     protected $table = 'address_types';
 
-    protected $fillable = [
-        'name'
+    public $translatedAttributes = [
+        'name',
     ];
 
     /**

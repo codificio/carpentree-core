@@ -43,6 +43,23 @@ Route::prefix('api/admin')
         });
 
         /**
+         * Addresses
+         */
+        Route::prefix('addresses')->group(function() {
+            Route::get('{id}', 'Admin\AddressController@get')
+                ->name('addresses.get');
+
+            Route::post('/', 'Admin\AddressController@create')
+                ->name('addresses.create');
+
+            Route::patch('/', 'Admin\AddressController@update')
+                ->name('addresses.update');
+
+            Route::delete('{id}', 'Admin\AddressController@delete')
+                ->name('addresses.delete');
+        });
+
+        /**
          * Categories
          */
         Route::prefix('categories')->group(function() {
