@@ -56,9 +56,10 @@ class CategoryController extends Controller
         return CategoryResource::make($category)->response()->setStatusCode(201);
     }
 
+
     /**
      * @param UpdateCategoryRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return CategoryResource
      */
     public function update(UpdateCategoryRequest $request)
     {
@@ -95,7 +96,7 @@ class CategoryController extends Controller
             return $category;
         });
 
-        return CategoryResource::make($category)->response()->setStatusCode(201);
+        return CategoryResource::make($category);
     }
 
     /**
