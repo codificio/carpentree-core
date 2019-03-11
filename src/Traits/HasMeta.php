@@ -14,6 +14,11 @@ trait HasMeta
 
     public function syncMeta(array $meta)
     {
+        // Works only with array like:
+        // [
+        //   'key' => ...,
+        //   'value' => ...
+        // ]
         DB::transaction(function() use ($meta) {
             $metaToSave = array();
             $idsToMaintain = array();

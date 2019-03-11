@@ -1,8 +1,8 @@
 <?php
 
-namespace Carpentree\Core\Http\Builders\User;
+namespace Carpentree\Core\Builders\User;
 
-use Carpentree\Core\Http\Builders\BuilderInterface;
+use Carpentree\Core\Builders\BuilderInterface;
 
 interface UserBuilderInterface extends BuilderInterface
 {

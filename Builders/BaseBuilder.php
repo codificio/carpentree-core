@@ -1,6 +1,6 @@
 <?php
 
-namespace Carpentree\Core\Http\Builders;
+namespace Carpentree\Core\Builders;
 
 use Carpentree\Core\Exceptions\ModelHasNotCategories;
 use Carpentree\Core\Traits\Categorizable;
@@ -77,12 +77,7 @@ abstract class BaseBuilder implements BuilderInterface
                 throw ModelHasNotCategories::create($this->getClass());
             }
 
-            $categoryIds = array();
-            foreach ($data as $category) {
-                $categoryIds[] = $category['id'];
-            }
-
-            $this->model = $this->model->syncCategories($categoryIds);
+            $this->model = $this->model->syncCategories($data);
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
@@ -100,7 +95,7 @@ abstract class BaseBuilder implements BuilderInterface
     public function withMeta(array $data): BuilderInterface
     {
         try {
-            $this->model->syncMeta(collect($data)->pluck('attributes')->toArray());
+            $this->model->syncMeta($data);
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
@@ -121,35 +116,18 @@ abstract class BaseBuilder implements BuilderInterface
             $data = collect($data);
 
             if ($data->count() > 0) {
-                $dataByTag = $data->groupBy(function ($item, $key) {
-                    if (array_key_exists('meta', $item)) {
-                        $meta = $item['meta'];
-                        $tag = array_key_exists('tag', $meta) ? $meta['tag'] : 'default';
-                    } else {
-                        $tag = 'default';
-                    }
 
-                    return $tag;
-                });
-
-                /*
-                 * $dataBytag = [
-                 *    'tag-key' => [
-                 *       ['id' => 1, 'meta' => ...],
-                 *       ['id' => 2, 'meta' => ...]
-                 *    ],
-                 * ]
-                 */
-
-                foreach ($dataByTag as $tag => $files) {
-                    $ids = collect($files)->pluck('id')->toArray();
+                foreach ($data as $tag => $ids) {
                     $this->model->syncMedia($ids, $tag);
                 }
+
             } else {
+
                 $dataByTag = $this->model->getAllMediaByTag();
                 foreach ($dataByTag as $tag => $files) {
                     $this->model->detachMediaTags($tag);
                 }
+
             }
 
         } catch (Exception $e) {

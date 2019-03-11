@@ -1,9 +1,9 @@
 <?php
 
-namespace Carpentree\Core\Http\Builders\User;
+namespace Carpentree\Core\Builders\User;
 
-use Carpentree\Core\Http\Builders\BaseBuilder;
-use Carpentree\Core\Http\Builders\BuilderInterface;
+use Carpentree\Core\Builders\BaseBuilder;
+use Carpentree\Core\Builders\BuilderInterface;
 use Carpentree\Core\Models\Address;
 use Carpentree\Core\Models\User;
 use Exception;

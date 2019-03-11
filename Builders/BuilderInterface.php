@@ -1,6 +1,6 @@
 <?php
 
-namespace Carpentree\Core\Http\Builders;
+namespace Carpentree\Core\Builders;
 
 use Illuminate\Database\Eloquent\Model;
 

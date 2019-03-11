@@ -2,7 +2,7 @@
 
 namespace Carpentree\Core\Http\Controllers\Admin;
 
-use Carpentree\Core\Http\Builders\Address\AddressBuilderInterface;
+use Carpentree\Core\Builders\Address\AddressBuilderInterface;
 use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\Admin\Address\CreateAddressRequest;
 use Carpentree\Core\Http\Requests\Admin\Address\UpdateAddressRequest;
@@ -48,10 +48,13 @@ class AddressController extends Controller
             throw UnauthorizedException::forPermissions(['users.create']);
         }
 
+        $userData = $request->input('relationships.user.data');
+        $addressTypeData = $request->input('relationships.type.data');
+
         $address = $this->builder->init()
             ->create($request->input('attributes'))
-            ->withUser($request->input('relationships.user.data'))
-            ->withAddressType($request->input('relationships.type.data'))
+            ->withUser($userData['id'])
+            ->withAddressType($addressTypeData['id'])
             ->build();
 
         return AddressResource::make($address)->response()->setStatusCode(201);
@@ -72,15 +75,18 @@ class AddressController extends Controller
         $builder = $this->builder->init($address);
 
         if ($request->has('attributes')) {
-            $builder = $builder->create($request->input('attributes'));
+            $_attributes = $request->input('attributes');
+            $builder = $builder->create($_attributes);
         }
 
         if ($request->has('relationships.user')) {
-            $builder = $builder->withUser($request->input('relationships.user.data'));
+            $_data = $request->input('relationships.user.data');
+            $builder = $builder->withUser($_data['id']);
         }
 
         if ($request->has('relationships.type')) {
-            $builder = $builder->withAddressType($request->input('relationships.type.data'));
+            $_data = $request->input('relationships.type.data');
+            $builder = $builder->withAddressType($_data['id']);
         }
 
         $address = $builder->build();

@@ -1,9 +1,9 @@
 <?php
 
-namespace Carpentree\Core\Http\Builders\Address;
+namespace Carpentree\Core\Builders\Address;
 
-use Carpentree\Core\Http\Builders\BaseBuilder;
-use Carpentree\Core\Http\Builders\BuilderInterface;
+use Carpentree\Core\Builders\BaseBuilder;
+use Carpentree\Core\Builders\BuilderInterface;
 use Carpentree\Core\Models\Address;
 use Carpentree\Core\Models\User;
 use Exception;
@@ -22,14 +22,21 @@ class AddressBuilder extends BaseBuilder implements AddressBuilderInterface
 
 
     /**
-     * @param array $data
+     * @param User|integer $data
      * @return BuilderInterface
      * @throws Exception
      */
-    public function withUser(array $data): BuilderInterface
+    public function withUser($data): BuilderInterface
     {
         try {
-            $user = User::findOrFail($data['id']);
+
+            if ($data instanceof User) {
+                $user = $data;
+            } else {
+                // $data is id
+                $user = User::findOrFail($data);
+            }
+
             $this->model = $this->model->user()->associate($user);
         } catch (Exception $e) {
             DB::rollBack();
@@ -40,14 +47,14 @@ class AddressBuilder extends BaseBuilder implements AddressBuilderInterface
     }
 
     /**
-     * @param array $data
+     * @param $id
      * @return BuilderInterface
      * @throws Exception
      */
-    public function withAddressType(array $data): BuilderInterface
+    public function withAddressType($id): BuilderInterface
     {
         try {
-            $type = Address\Type::findOrFail($data['id']);
+            $type = Address\Type::findOrFail($id);
             $this->model = $this->model->type()->associate($type);
         } catch (Exception $e) {
             DB::rollBack();
