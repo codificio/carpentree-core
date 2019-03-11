@@ -19,7 +19,7 @@ class UpdateUserRequest extends FormRequest
             'attributes.first_name' => 'string',
             'attributes.last_name' => 'string',
             'attributes.email' => 'email',
-            'attributes.password' => 'string|min:6',
+            'attributes.password' => 'string|min:8',
 
             // Roles
             'relationships.roles.data.*.id' => 'exists:roles,id',

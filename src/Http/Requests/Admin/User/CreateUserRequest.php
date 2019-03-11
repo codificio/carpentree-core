@@ -17,7 +17,7 @@ class CreateUserRequest extends FormRequest
             'attributes.first_name' => 'required|string',
             'attributes.last_name' => 'required|string',
             'attributes.email' => 'required|email|unique:users,email',
-            'attributes.password' => 'required|string|min:6',
+            'attributes.password' => 'required|string|min:8',
 
             // Roles
             'relationships.roles.data.*.id' => 'exists:roles,id'
