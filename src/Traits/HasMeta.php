@@ -24,27 +24,32 @@ trait HasMeta
             $idsToMaintain = array();
 
             foreach ($meta as $field) {
-                if ($meta = $this->meta()->where('key', $field['key'])->first()) {
+
+                $_meta = $this->meta()
+                    ->where('key', $field['key'])
+                    ->first();
+
+                if ($_meta) {
 
                     // Update
                     foreach ($field as $key => $value) {
-                        $meta->$key = $value;
+                        $_meta->$key = $value;
                     }
 
-                    $metaToSave[] = $meta;
-                    $idsToMaintain[] = $meta->id;
+                    $metaToSave[] = $_meta;
+                    $idsToMaintain[] = $_meta->id;
 
                 } else {
 
                     // Create
-                    $meta = new MetaField($field);
-                    $metaToSave[] = $meta;
+                    $_meta = new MetaField($field);
+                    $metaToSave[] = $_meta;
 
                 }
             }
 
             // Removing old fields
-            MetaField::whereNotIn('id', $idsToMaintain)->delete();
+            $this->meta()->whereNotIn('id', $idsToMaintain)->delete();
 
             // Save new fields
             $this->meta()->saveMany($metaToSave);
