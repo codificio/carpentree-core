@@ -48,6 +48,11 @@ class CategoryController extends Controller
                 $category->parent()->associate($parent);
             }
 
+            // Check tree consinstency and fix
+            if (Category::isBroken()) {
+                Category::fixTree();
+            }
+
             $category->save();
 
             return $category;
@@ -87,8 +92,13 @@ class CategoryController extends Controller
                     $category->parent_id = null;
                 } else {
                     $parent = Category::findOrFail($_data['id']);
-                    $category->parent()->associate($parent);
+                    $category->parent_id = $parent->id;
                 }
+            }
+
+            // Check tree consinstency and fix
+            if (Category::isBroken()) {
+                Category::fixTree();
             }
 
             $category->save();
