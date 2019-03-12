@@ -5,6 +5,7 @@ namespace Carpentree\Core\Models\Address;
 use Carpentree\Core\Models\Address;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Type extends Model
 {
@@ -39,7 +40,7 @@ class Type extends Model
      */
     public static function getHomeType()
     {
-        return self::where('name', 'home')->first();
+        return self::getByName('home');
     }
 
     /**
@@ -47,7 +48,7 @@ class Type extends Model
      */
     public static function getBusinessType()
     {
-        return self::where('name', 'business')->first();
+        return self::getByName('business');
     }
 
     /**
@@ -55,7 +56,7 @@ class Type extends Model
      */
     public static function getShippingType()
     {
-        return self::where('name', 'shipping')->first();
+        return self::getByName('shipping');
     }
 
     /**
@@ -63,6 +64,23 @@ class Type extends Model
      */
     public static function getBillingType()
     {
-        return self::where('name', 'billing')->first();
+        return self::getByName('billing');
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    protected static function getByName($name)
+    {
+        $item = self::where('name', $name)->first();
+        if (!$item) {
+            throw new NotFoundHttpException(__(":class with name :name does not exist", [
+                'class' => self::class,
+                'name' => $name
+            ]));
+        }
+
+        return $item;
     }
 }
