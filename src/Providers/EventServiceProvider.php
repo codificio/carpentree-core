@@ -3,8 +3,6 @@
 namespace Carpentree\Core\Providers;
 
 use Carpentree\Core\Listeners\PruneOldTokens;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -17,9 +15,6 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         'Laravel\Passport\Events\RefreshTokenCreated' => [
             PruneOldTokens::class,
-        ],
-        Registered::class => [
-            SendEmailVerificationNotification::class,
         ],
     ];
 
