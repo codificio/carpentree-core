@@ -11,6 +11,6 @@ class Translation extends Model
     protected $table = 'address_type_translations';
 
     protected $fillable = [
-        'name',
+        'label',
     ];
 }

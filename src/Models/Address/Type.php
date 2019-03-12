@@ -14,8 +14,12 @@ class Type extends Model
 
     protected $table = 'address_types';
 
-    public $translatedAttributes = [
+    public $fillable = [
         'name',
+    ];
+
+    public $translatedAttributes = [
+        'label',
     ];
 
     /**
