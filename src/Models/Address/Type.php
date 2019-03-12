@@ -10,6 +10,8 @@ class Type extends Model
 {
     use Translatable;
 
+    public $timestamps = false;
+
     public $translationModel = Address\Type\Translation::class;
 
     protected $table = 'address_types';
