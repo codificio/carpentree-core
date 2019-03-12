@@ -32,4 +32,35 @@ class Type extends Model
         return $this->hasMany(Address::class, 'type_id');
     }
 
+    /**
+     * @return mixed
+     */
+    public static function getHomeType()
+    {
+        return self::where('name', 'home')->first();
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getBusinessType()
+    {
+        return self::where('name', 'business')->first();
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getShippingType()
+    {
+        return self::where('name', 'shipping')->first();
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getBillingType()
+    {
+        return self::where('name', 'billing')->first();
+    }
 }
