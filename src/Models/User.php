@@ -4,6 +4,7 @@ namespace Carpentree\Core\Models;
 
 use Carpentree\Core\Events\UserDeleted;
 use Carpentree\Core\Notifications\ResetPassword;
+use Carpentree\Core\Traits\HasAddresses;
 use Carpentree\Core\Traits\HasMeta;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,7 +18,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmailInterface
 {
-    use Notifiable, HasApiTokens, HasRoles, MustVerifyEmail, CanResetPassword, SoftDeletes, Searchable, HasMeta;
+    use Notifiable,
+        HasApiTokens,
+        HasRoles,
+        MustVerifyEmail,
+        CanResetPassword,
+        SoftDeletes,
+        Searchable,
+        HasMeta,
+        HasAddresses;
 
     protected $guard_name = 'api';
 
@@ -119,16 +128,6 @@ class User extends Authenticatable implements MustVerifyEmailInterface
     public function linkedSocialAccounts()
     {
         return $this->hasMany(LinkedSocialAccount::class);
-    }
-
-    /**
-     * Get the addresses of the user.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function addresses()
-    {
-        return $this->hasMany(Address::class);
     }
 
     /**

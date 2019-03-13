@@ -11,7 +11,6 @@ class Address extends Model
 
     protected $fillable = [
         'type_id',
-        'user_id',
         'full_name',
         'address_line',
         'country',
@@ -31,13 +30,8 @@ class Address extends Model
         return $this->belongsTo(Type::class, 'type_id');
     }
 
-    /**
-     * Get the user that own this address.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
+    public function model()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 }
