@@ -67,7 +67,15 @@ trait HasMeta
             $_meta = new MetaField($meta);
         }
 
-        return $this->meta()->save($_meta);
+        $saved = DB::transaction(function() use ($_meta) {
+            if (!$this->exists) {
+                $this->save();
+            }
+
+            $this->meta()->save($_meta);
+        });
+
+        return $saved;
     }
 
     /**
