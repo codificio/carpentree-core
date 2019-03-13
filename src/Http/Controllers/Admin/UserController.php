@@ -11,6 +11,7 @@ use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
 use Carpentree\Core\Services\Listing\User\UserListingInterface;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class UserController extends Controller
@@ -65,7 +66,13 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.create']);
         }
 
-        $builder = $this->builder->init()->create($request->input('attributes'));
+        $attributes = $request->input('attributes');
+
+        if (array_key_exists('password', $attributes)) {
+            $attributes['password'] = Hash::make($attributes['password']);
+        }
+
+        $builder = $this->builder->init()->create($attributes);
 
         if ($request->has('relationships.roles')) {
             $builder = $builder->withRoles($request->input('relationships.roles.data', array()));
@@ -91,7 +98,14 @@ class UserController extends Controller
         $builder = $this->builder->init($user);
 
         if ($request->has('attributes')) {
-            $builder = $builder->create($request->input('attributes'));
+
+            $attributes = $request->input('attributes');
+
+            if (array_key_exists('password', $attributes)) {
+                $attributes['password'] = Hash::make($attributes['password']);
+            }
+
+            $builder = $builder->create($attributes);
         }
 
         if ($request->has('relationships.roles')) {
