@@ -3,6 +3,7 @@
 namespace Carpentree\Core\Console\Commands;
 
 use Carpentree\Core\Services\RefreshPermissionsService;
+use Carpentree\Core\Services\RefreshRolesService;
 use Illuminate\Console\Command;
 
 class RefreshPermissions extends Command
@@ -19,7 +20,7 @@ class RefreshPermissions extends Command
      *
      * @var string
      */
-    protected $description = 'Refresh permissions in database';
+    protected $description = 'Refresh permissions and roles in database';
 
     /**
      * Create a new command instance.
@@ -36,8 +37,11 @@ class RefreshPermissions extends Command
      */
     public function handle()
     {
-        $service = new RefreshPermissionsService();
-        $service->refresh();
+        $servicePermission = new RefreshPermissionsService();
+        $serviceRole = new RefreshRolesService();
+
+        $servicePermission->refresh();
+        $serviceRole->refresh();
 
         $this->info('Permissions correctly refreshed.');
     }

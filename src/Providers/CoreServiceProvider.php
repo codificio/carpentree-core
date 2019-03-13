@@ -64,6 +64,11 @@ class CoreServiceProvider extends ServiceProvider
             'carpentree.permissions'
         );
 
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/roles.php',
+            'carpentree.roles'
+        );
+
         $this->bindImplementation();
     }
 
@@ -96,6 +101,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../config/core.php' => config_path('carpentree/core.php'),
             __DIR__.'/../../config/permissions.php' => config_path('carpentree/permissions.php'),
+            __DIR__.'/../../config/permissions.php' => config_path('carpentree/roles.php'),
         ], 'config');
 
         // Migrations
