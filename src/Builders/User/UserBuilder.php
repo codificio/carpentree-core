@@ -36,24 +36,4 @@ class UserBuilder extends BaseBuilder implements UserBuilderInterface
 
         return $this;
     }
-
-    public function withAddresses(array $data) : BuilderInterface
-    {
-        try {
-
-            foreach ($data as $address) {
-                if ($address instanceof Address) {
-                    $this->model->addresses()->save($address);
-                } elseif (is_array($address)) {
-                    // TODO Create address from array
-                }
-            }
-
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
-        return $this;
-    }
 }

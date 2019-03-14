@@ -24,5 +24,7 @@ interface BuilderInterface
 
     public function withMedia(array $data) : BuilderInterface;
 
+    public function withAddresses(array $data) : BuilderInterface;
+
     public function build();
 }

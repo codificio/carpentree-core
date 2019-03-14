@@ -8,6 +8,8 @@ class ModelIsNotSearchable extends InvalidArgumentException
 {
     public static function create($class)
     {
-        return new static(__("Model $class is not searchable."));
+        return new static(__("Class :class is not searchable", [
+            'class' => $class
+        ]));
     }
 }

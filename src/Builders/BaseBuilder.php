@@ -2,8 +2,11 @@
 
 namespace Carpentree\Core\Builders;
 
+use Carpentree\Core\Exceptions\ModelHasNotAddresses;
 use Carpentree\Core\Exceptions\ModelHasNotCategories;
+use Carpentree\Core\Models\Address;
 use Carpentree\Core\Traits\Categorizable;
+use Carpentree\Core\Traits\HasAddresses;
 use Illuminate\Database\Eloquent\Model;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -128,6 +131,35 @@ abstract class BaseBuilder implements BuilderInterface
                     $this->model->detachMediaTags($tag);
                 }
 
+            }
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return BuilderInterface
+     * @throws Exception
+     */
+    public function withAddresses(array $data) : BuilderInterface
+    {
+        try {
+
+            if (!in_array(HasAddresses::class, class_uses($this->getClass()))) {
+                throw ModelHasNotAddresses::create($this->getClass());
+            }
+
+            foreach ($data as $address) {
+                if ($address instanceof Address) {
+                    $this->model->addresses()->save($address);
+                } elseif (is_array($address)) {
+                    // TODO Create address from array
+                }
             }
 
         } catch (Exception $e) {
