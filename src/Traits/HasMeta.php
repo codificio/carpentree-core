@@ -25,7 +25,7 @@ trait HasMeta
     {
         $meta = $this->getMetaByKey($key);
 
-        if (!$meta) {
+        if (!is_null($meta)) {
             throw new NotFoundHttpException(__("Meta field with key :key was not found for model :model with id :id", [
                 'key' => $key,
                 'model' => get_class($this),
@@ -36,15 +36,14 @@ trait HasMeta
         return $meta;
     }
 
+
     /**
      * @param $key
-     * @return bool
+     * @return mixed
      */
     public function getMetaByKey($key)
     {
-        $meta = $this->meta()->where('key', $key)->first();
-
-        return $meta ?? false;
+        return $this->meta()->where('key', $key)->first();
     }
 
 
