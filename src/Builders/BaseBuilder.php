@@ -154,13 +154,7 @@ abstract class BaseBuilder implements BuilderInterface
                 throw ModelHasNotAddresses::create($this->getClass());
             }
 
-            foreach ($data as $address) {
-                if ($address instanceof Address) {
-                    $this->model->addresses()->save($address);
-                } elseif (is_array($address)) {
-                    // TODO Create address from array
-                }
-            }
+            $this->model->syncAddresses($data);
 
         } catch (Exception $e) {
             DB::rollBack();
