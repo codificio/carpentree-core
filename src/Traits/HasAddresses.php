@@ -49,10 +49,11 @@ trait HasAddresses
 
             } elseif (is_array($address)) {
 
-                $items[] = new Address($address);
+                $object = new Address($address);
+                $items[] = $object;
 
-                if ($address->id) {
-                    $editedIds[] = $address->id;
+                if ($object->id) {
+                    $editedIds[] = $object->id;
                 }
             }
         }
