@@ -30,11 +30,14 @@ trait HasAddresses
     public function syncAddresses(array $addresses)
     {
         $items = [];
-
         $actualItems = $this->addresses()->select('id')->get();
-        $actualIds = $actualItems->map(function($item) {
-            return $item->id;
-        });
+        $actualIds = [];
+
+        if ($actualItems->count() > 0) {
+            $actualIds = $actualItems->map(function($item) {
+                return $item->id;
+            });
+        }
 
         $editedIds = [];
         foreach ($addresses as $address) {
