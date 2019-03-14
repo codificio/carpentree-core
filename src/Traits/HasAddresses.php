@@ -11,13 +11,13 @@ trait HasAddresses
      */
     public function addresses()
     {
-        return $this->morphMany($this->getMetaModelClassName(), 'model', 'model_type','model_id');
+        return $this->morphMany($this->getAddressModelClassName(), 'model', 'model_type','model_id');
     }
 
     /**
      * @return string
      */
-    protected function getMetaModelClassName(): string
+    protected function getAddressModelClassName(): string
     {
         return Address::class;
     }
