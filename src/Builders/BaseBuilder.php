@@ -54,7 +54,7 @@ abstract class BaseBuilder implements BuilderInterface
      * @return BuilderInterface
      * @throws Exception
      */
-    public function create(array $attributes) : BuilderInterface
+    public function fill(array $attributes) : BuilderInterface
     {
         try {
             $this->model = $this->model->fill($attributes);
@@ -66,6 +66,18 @@ abstract class BaseBuilder implements BuilderInterface
             throw $e;
         }
         return $this;
+    }
+
+
+    /**
+     * @deprecated 0.3.14.3
+     * @param array $attributes
+     * @return BuilderInterface
+     * @throws Exception
+     */
+    public function create(array $attributes) : BuilderInterface
+    {
+        return $this->fill($attributes);
     }
 
     /**
