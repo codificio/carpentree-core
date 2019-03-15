@@ -50,6 +50,11 @@ class UserResource extends JsonResource
                     'data' => RoleResourceRelationship::collection($this->roles)
                 ), array()),
 
+                // Addresses
+                'addresses' => $this->whenLoaded('addresses', array(
+                    'data' => AddressResource::collection($this->addresses)
+                ), array()),
+
                 // Meta
                 'meta' => $this->whenLoaded('meta', array(
                     'data' => MetaResourceRelationship::collection($this->meta)

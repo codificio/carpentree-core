@@ -52,7 +52,7 @@ class AddressController extends Controller
         $addressTypeData = $request->input('relationships.type.data');
 
         $address = $this->builder->init()
-            ->create($request->input('attributes'))
+            ->fill($request->input('attributes'))
             ->withUser($userData['id'])
             ->withAddressType($addressTypeData['id'])
             ->build();
@@ -76,7 +76,7 @@ class AddressController extends Controller
 
         if ($request->has('attributes')) {
             $_attributes = $request->input('attributes');
-            $builder = $builder->create($_attributes);
+            $builder = $builder->fill($_attributes);
         }
 
         if ($request->has('relationships.user')) {

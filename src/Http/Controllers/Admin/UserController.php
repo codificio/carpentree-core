@@ -72,7 +72,7 @@ class UserController extends Controller
             $attributes['password'] = Hash::make($attributes['password']);
         }
 
-        $builder = $this->builder->init()->create($attributes);
+        $builder = $this->builder->init()->fill($attributes);
 
         if ($request->has('relationships.roles')) {
             $builder = $builder->withRoles($request->input('relationships.roles.data', array()));
@@ -105,7 +105,7 @@ class UserController extends Controller
                 $attributes['password'] = Hash::make($attributes['password']);
             }
 
-            $builder = $builder->create($attributes);
+            $builder = $builder->fill($attributes);
         }
 
         if ($request->has('relationships.roles')) {
