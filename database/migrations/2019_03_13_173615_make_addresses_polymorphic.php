@@ -33,12 +33,6 @@ class MakeAddressesPolymorphic extends Migration
             $table->dropColumn('model_id');
             $table->dropColumn('model_type');
             $table->unsignedInteger('user_id')->after('id');
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
         });
     }
 }
