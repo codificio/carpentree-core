@@ -2,10 +2,10 @@
 
 namespace Carpentree\Core\Listing\User;
 
-use Carpentree\Core\Listing\AlgoliaBaseListing;
+use Carpentree\Core\Listing\BaseListing;
 use Carpentree\Core\Models\User;
 
-class UserListing extends AlgoliaBaseListing implements UserListingInterface
+class UserListing extends BaseListing implements UserListingInterface
 {
     public function __construct()
     {

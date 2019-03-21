@@ -2,11 +2,14 @@
 
 namespace Carpentree\Core\Listing;
 
+use Carpentree\Core\Scout\Searchable;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
+use Carpentree\Core\Exceptions\ModelIsNotSearchable;
 
-abstract class BaseListing implements ListingInterface
+class BaseListing implements ListingInterface
 {
     const SORT_DELIMITER = ',';
 
@@ -38,7 +41,31 @@ abstract class BaseListing implements ListingInterface
      * @param string $query
      * @return mixed
      */
-    abstract protected function search(string $query);
+    /**
+     * Perform a full text search.
+     *
+     * @param string $query
+     * @return mixed
+     */
+    protected function search(string $query)
+    {
+        if (!in_array(Searchable::class, class_uses($this->model))) {
+            throw ModelIsNotSearchable::create($this->model);
+        }
+
+        if (method_exists($this->model, 'localizedSearchable') && $this->model::localizedSearchable()) {
+
+            $index = $this->model::first()->searchableAs() . '_' . App::getLocale();
+            $result = $this->model::search($query)->within($index);
+
+        } else {
+
+            $result = $this->model::search($query);
+
+        }
+
+        return $result;
+    }
 
     /**
      * Sort data based on a request compliant to JSON:API specification.
