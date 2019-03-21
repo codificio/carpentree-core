@@ -1,6 +1,6 @@
 <?php
 
-namespace Carpentree\Core\Services\Listing;
+namespace Carpentree\Core\Listing;
 
 use Illuminate\Http\Request;
 

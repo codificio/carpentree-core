@@ -1,11 +1,11 @@
 <?php
 
-namespace Carpentree\Core\Services\Listing\User;
+namespace Carpentree\Core\Listing\User;
 
+use Carpentree\Core\Listing\AlgoliaBaseListing;
 use Carpentree\Core\Models\User;
-use Carpentree\Core\Services\Listing\BaseListing;
 
-class UserListing extends BaseListing implements UserListingInterface
+class UserListing extends AlgoliaBaseListing implements UserListingInterface
 {
     public function __construct()
     {

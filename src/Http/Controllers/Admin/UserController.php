@@ -9,7 +9,7 @@ use Carpentree\Core\Http\Requests\Admin\User\CreateUserRequest;
 use Carpentree\Core\Http\Requests\Admin\User\UpdateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
-use Carpentree\Core\Services\Listing\User\UserListingInterface;
+use Carpentree\Core\Listing\User\UserListingInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Exceptions\UnauthorizedException;

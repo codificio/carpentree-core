@@ -1,23 +1,12 @@
 <?php
 
-namespace Carpentree\Core\Services\Listing;
+namespace Carpentree\Core\Listing;
 
-use Carpentree\Core\Exceptions\ModelIsNotSearchable;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Class BaseListingService
- *
- * Filter entity based on Http Request.
- * Compliant to JSON:API specification.
- *
- * @see https://jsonapi.org/format/#fetching-sorting
- * @package Carpentree\Core\Services\Listing
- */
-class BaseListing implements ListingInterface
+abstract class BaseListing implements ListingInterface
 {
     const SORT_DELIMITER = ',';
 
@@ -49,26 +38,7 @@ class BaseListing implements ListingInterface
      * @param string $query
      * @return mixed
      */
-    protected function search(string $query)
-    {
-        if (!method_exists($this->model, 'toSearchableArray')) {
-            throw ModelIsNotSearchable::create($this->model);
-        }
-
-        if ($this->model::localizedSearchable()) {
-
-            $index = $this->model::first()->searchableAs() . '_' . App::getLocale();
-            $result = $this->model::search($query)->within($index);
-
-        } else {
-
-            $result = $this->model::search($query);
-
-        }
-
-
-        return $result;
-    }
+    abstract protected function search(string $query);
 
     /**
      * Sort data based on a request compliant to JSON:API specification.
