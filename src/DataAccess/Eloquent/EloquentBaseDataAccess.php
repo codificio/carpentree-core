@@ -48,35 +48,6 @@ class EloquentBaseDataAccess implements BaseDataAccess
     }
 
     /**
-     * @param Builder $builder
-     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
-     */
-    protected function get(Builder $builder)
-    {
-        return $builder->get();
-    }
-
-    /**
-     * @param Builder $builder
-     * @return Builder|Model|object|null
-     */
-    protected function first(Builder $builder)
-    {
-        return $builder->first();
-    }
-
-    /**
-     * @param Builder $builder
-     * @param null $perPage
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    protected function paginate(Builder $builder, $perPage = null)
-    {
-        $perPage = $perPage ?: config('carpentree.core.pagination.per_page');
-        return $builder->paginate($perPage);
-    }
-
-    /**
      * @param Model $model
      * @return bool|mixed|null
      * @throws Exception
