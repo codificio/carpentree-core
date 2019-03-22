@@ -1,9 +1,9 @@
 <?php
 
-namespace Carpentree\Core\DataAccess\Eloquent;
+namespace Carpentree\Core\DataAccess;
 
-use Carpentree\Core\DataAccess\BaseDataAccess;
-use Illuminate\Database\Eloquent\Builder;
+use Carpentree\Core\Exceptions\ModelIsNotSearchable;
+use Carpentree\Core\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Exception;
 
@@ -45,6 +45,19 @@ class EloquentBaseDataAccess implements BaseDataAccess
     public function all()
     {
         return $this->class::all();
+    }
+
+    /**
+     * @param string $query
+     * @return mixed
+     */
+    public function fullTextSearch($query = '')
+    {
+        if (!in_array(Searchable::class, class_uses($this->class))) {
+            throw ModelIsNotSearchable::create($this->class);
+        }
+
+        return $this->class::search($query)->paginate(config('carpentree.core.pagination.per_page'));
     }
 
     /**

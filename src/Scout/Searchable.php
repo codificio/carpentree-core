@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Scout;
 
+use Illuminate\Support\Facades\App;
 use Laravel\Scout\Searchable as ParentTrait;
 
 trait Searchable
@@ -16,5 +17,22 @@ trait Searchable
     public static function localizedSearchable()
     {
         return false;
+    }
+
+    /**
+     * @param string $query
+     * @param null $callback
+     * @return \Laravel\Scout\Builder
+     */
+    public static function search($query = '', $callback = null)
+    {
+        if (static::localizedSearchable()) {
+            $index = static::first()->searchableAs() . '_' . App::getLocale();
+            $result = ParentTrait::search($query, $callback)->within($index);
+        } else {
+            $result = ParentTrait::search($query, $callback);
+        }
+
+        return $result;
     }
 }

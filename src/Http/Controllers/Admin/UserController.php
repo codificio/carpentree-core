@@ -10,16 +10,12 @@ use Carpentree\Core\Http\Requests\Admin\User\CreateUserRequest;
 use Carpentree\Core\Http\Requests\Admin\User\UpdateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
-use Carpentree\Core\Listing\User\UserListingInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class UserController extends Controller
 {
-
-    /** @var UserListingInterface */
-    protected $listingService;
 
     /** @var UserBuilderInterface */
     protected $builder;
@@ -28,12 +24,10 @@ class UserController extends Controller
     protected $dataAccess;
 
     public function __construct(
-        UserListingInterface $listingService,
         UserBuilderInterface $builder,
         UserDataAccess $dataAccess
     )
     {
-        $this->listingService = $listingService;
         $this->builder = $builder;
         $this->dataAccess = $dataAccess;
     }
@@ -48,7 +42,7 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        $users = $this->listingService->list($request);
+        $users = $this->dataAccess->fullTextSearch($request->input('filter.query'));
         return UserResource::collection($users);
     }
 

@@ -10,5 +10,7 @@ interface BaseDataAccess
 
     public function all();
 
+    public function fullTextSearch($query = '');
+
     public function delete($model);
 }
