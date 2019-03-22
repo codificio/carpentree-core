@@ -6,8 +6,11 @@ use Barryvdh\Cors\HandleCors;
 use Carpentree\Core\Console\Commands\RefreshPermissions;
 use Carpentree\Core\Builders\User\UserBuilder;
 use Carpentree\Core\Builders\User\UserBuilderInterface;
+use Carpentree\Core\DataAccess\User\Eloquent\EloquentUserDataAccess;
+use Carpentree\Core\DataAccess\User\UserDataAccess;
 use Carpentree\Core\Listing\User\UserListing;
 use Carpentree\Core\Listing\User\UserListingInterface;
+use Carpentree\Core\Models\User;
 use Carpentree\Core\Services\SocialUserResolver;
 use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Routing\Router;
@@ -79,6 +82,11 @@ class CoreServiceProvider extends ServiceProvider
 
         // User Http Builder Service
         $this->app->bind(UserBuilderInterface::class, UserBuilder::class);
+
+        // User Data Access
+        $this->app->bind(UserDataAccess::class, function () {
+            return new EloquentUserDataAccess(User::class);
+        });
     }
 
     public function publish()

@@ -3,6 +3,7 @@
 namespace Carpentree\Core\Http\Controllers\Admin;
 
 use Carpentree\Core\Builders\User\UserBuilderInterface;
+use Carpentree\Core\DataAccess\User\UserDataAccess;
 use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\Admin\ListRequest;
 use Carpentree\Core\Http\Requests\Admin\User\CreateUserRequest;
@@ -23,10 +24,18 @@ class UserController extends Controller
     /** @var UserBuilderInterface */
     protected $builder;
 
-    public function __construct(UserListingInterface $listingService, UserBuilderInterface $builder)
+    /** @var UserDataAccess */
+    protected $dataAccess;
+
+    public function __construct(
+        UserListingInterface $listingService,
+        UserBuilderInterface $builder,
+        UserDataAccess $dataAccess
+    )
     {
         $this->listingService = $listingService;
         $this->builder = $builder;
+        $this->dataAccess = $dataAccess;
     }
 
     /**
@@ -53,7 +62,7 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        return UserResource::make(User::findOrFail($id));
+        return UserResource::make($this->dataAccess->findOrFail($id));
     }
 
     /**
@@ -93,7 +102,7 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.update']);
         }
 
-        $user = User::findOrFail($request->input('id'));
+        $user = $this->dataAccess->findOrFail($request->input('id'));
 
         $builder = $this->builder->init($user);
 
@@ -135,9 +144,9 @@ class UserController extends Controller
         }
 
         /** @var User $user */
-        $user = User::findOrFail($id);
+        $user = $this->dataAccess->findOrFail($id);
 
-        if ($user->delete($id)) {
+        if ($this->dataAccess->delete($user)) {
             return response()->json(null, 204);
         } else {
             return response()->json(null, 202);
