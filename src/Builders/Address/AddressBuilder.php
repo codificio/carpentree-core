@@ -23,10 +23,10 @@ class AddressBuilder extends BaseBuilder implements AddressBuilderInterface
 
     /**
      * @param User|integer $data
-     * @return BuilderInterface
+     * @return $this
      * @throws Exception
      */
-    public function withUser($data): BuilderInterface
+    public function withUser($data)
     {
         try {
 
@@ -48,10 +48,10 @@ class AddressBuilder extends BaseBuilder implements AddressBuilderInterface
 
     /**
      * @param $id
-     * @return BuilderInterface
+     * @return $this
      * @throws Exception
      */
-    public function withAddressType($id): BuilderInterface
+    public function withAddressType($id)
     {
         try {
             $type = Address\Type::findOrFail($id);

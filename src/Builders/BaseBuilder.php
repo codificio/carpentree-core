@@ -29,10 +29,10 @@ abstract class BaseBuilder implements BuilderInterface
 
     /**
      * @param Model|null $model
-     * @return BaseBuilder
+     * @return $this
      * @throws Exception
      */
-    public function init(Model $model = null) : BuilderInterface
+    public function init(Model $model = null)
     {
         if ($model instanceof $this->class) {
             // Existing object
@@ -51,10 +51,10 @@ abstract class BaseBuilder implements BuilderInterface
 
     /**
      * @param array $attributes
-     * @return BuilderInterface
+     * @return $this
      * @throws Exception
      */
-    public function fill(array $attributes) : BuilderInterface
+    public function fill(array $attributes)
     {
         try {
             $this->model = $this->model->fill($attributes);
@@ -72,20 +72,20 @@ abstract class BaseBuilder implements BuilderInterface
     /**
      * @deprecated 0.3.14.3
      * @param array $attributes
-     * @return BuilderInterface
+     * @return $this
      * @throws Exception
      */
-    public function create(array $attributes) : BuilderInterface
+    public function create(array $attributes)
     {
         return $this->fill($attributes);
     }
 
     /**
      * @param array $data
-     * @return BuilderInterface
+     * @return $this
      * @throws Exception
      */
-    public function withCategories(array $data): BuilderInterface
+    public function withCategories(array $data)
     {
         try {
             if (!in_array(Categorizable::class, class_uses($this->getClass()))) {
@@ -104,10 +104,10 @@ abstract class BaseBuilder implements BuilderInterface
 
     /**
      * @param array $data
-     * @return BuilderInterface
+     * @return $this
      * @throws Exception
      */
-    public function withMeta(array $data): BuilderInterface
+    public function withMeta(array $data)
     {
         try {
             $this->model->syncMeta($data);
@@ -121,10 +121,10 @@ abstract class BaseBuilder implements BuilderInterface
 
     /**
      * @param array $data
-     * @return BuilderInterface
+     * @return $this
      * @throws Exception
      */
-    public function withMedia(array $data): BuilderInterface
+    public function withMedia(array $data)
     {
         try {
 
@@ -155,10 +155,10 @@ abstract class BaseBuilder implements BuilderInterface
 
     /**
      * @param array $data
-     * @return BuilderInterface
+     * @return $this
      * @throws Exception
      */
-    public function withAddresses(array $data) : BuilderInterface
+    public function withAddresses(array $data)
     {
         try {
 

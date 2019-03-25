@@ -6,7 +6,7 @@ use Carpentree\Core\Builders\BuilderInterface;
 
 interface AddressBuilderInterface extends BuilderInterface
 {
-    public function withUser($data) : BuilderInterface;
+    public function withUser($data);
 
-    public function withAddressType($id) : BuilderInterface;
+    public function withAddressType($id);
 }

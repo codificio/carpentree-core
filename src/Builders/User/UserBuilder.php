@@ -22,10 +22,10 @@ class UserBuilder extends BaseBuilder implements UserBuilderInterface
 
     /**
      * @param array $data
-     * @return BuilderInterface
+     * @return $this
      * @throws Exception
      */
-    public function withRoles(array $data): BuilderInterface
+    public function withRoles(array $data)
     {
         try {
             $this->model = $this->model->syncRoles($data);
