@@ -4,7 +4,6 @@ namespace Carpentree\Core\Builders;
 
 use Carpentree\Core\Exceptions\ModelHasNotAddresses;
 use Carpentree\Core\Exceptions\ModelHasNotCategories;
-use Carpentree\Core\Models\Address;
 use Carpentree\Core\Traits\Categorizable;
 use Carpentree\Core\Traits\HasAddresses;
 use Illuminate\Database\Eloquent\Model;

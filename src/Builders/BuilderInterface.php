@@ -3,6 +3,7 @@
 namespace Carpentree\Core\Builders;
 
 use Illuminate\Database\Eloquent\Model;
+use Exception;
 
 /**
  * Interface BuilderInterface.
@@ -19,48 +20,57 @@ interface BuilderInterface
 
     /**
      * @param Model|null $model
-     * @return BuilderInterface
+     * @return $this
+     * @throws Exception
      */
     public function init(Model $model = null);
 
     /**
      * @param array $attributes
-     * @return BuilderInterface
+     * @return $this
+     * @throws Exception
      */
     public function fill(array $attributes);
 
     /**
-     * @param array $attributes
      * @deprecated 0.3.14.3
+     * @param array $attributes
+     * @return $this
+     * @throws Exception
      */
     public function create(array $attributes);
 
     /**
      * @param array $data
-     * @return BuilderInterface
+     * @return $this
+     * @throws Exception
      */
     public function withCategories(array $data);
 
     /**
      * @param array $data
-     * @return BuilderInterface
+     * @return $this
+     * @throws Exception
      */
     public function withMeta(array $data);
 
     /**
      * @param array $data
-     * @return BuilderInterface
+     * @return $this
+     * @throws Exception
      */
     public function withMedia(array $data);
 
     /**
      * @param array $data
-     * @return BuilderInterface
+     * @return $this
+     * @throws Exception
      */
     public function withAddresses(array $data);
 
     /**
-     * @return mixed
+     * @return bool|Model
+     * @throws \Throwable
      */
     public function build();
 }
