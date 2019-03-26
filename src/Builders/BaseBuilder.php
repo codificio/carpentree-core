@@ -177,7 +177,7 @@ abstract class BaseBuilder implements BuilderInterface
 
     /**
      * @return bool|Model
-     * @throws \Throwable
+     * @throws Exception
      */
     public function build()
     {
