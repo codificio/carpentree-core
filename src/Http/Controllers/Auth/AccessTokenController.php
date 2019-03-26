@@ -58,8 +58,9 @@ class AccessTokenController extends ParentController
             $scope = $this->convertScopesQueryStringToArray($scope);
         }
 
+        $userModel = config('auth.providers.users.model');
         /** @var User $user */
-        $user = User::where('email', $username)->first();
+        $user = $userModel::where('email', $username)->first();
 
         if (!$user) {
             throw OAuthServerException::invalidCredentials();
