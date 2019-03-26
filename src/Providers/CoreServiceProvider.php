@@ -3,6 +3,8 @@
 namespace Carpentree\Core\Providers;
 
 use Barryvdh\Cors\HandleCors;
+use Carpentree\Core\Builders\Address\AddressBuilder;
+use Carpentree\Core\Builders\Address\AddressBuilderInterface;
 use Carpentree\Core\Console\Commands\RefreshPermissions;
 use Carpentree\Core\Builders\User\UserBuilder;
 use Carpentree\Core\Builders\User\UserBuilderInterface;
@@ -75,8 +77,11 @@ class CoreServiceProvider extends ServiceProvider
 
     public function bindImplementation()
     {
-        // User Http Builder Service
+        // User Builder Service
         $this->app->bind(UserBuilderInterface::class, UserBuilder::class);
+
+        // Address Builder Service
+        $this->app->bind(AddressBuilderInterface::class, AddressBuilder::class);
 
         // User Data Access
         $this->app->bind(UserDataAccess::class, function () {
