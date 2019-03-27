@@ -149,4 +149,14 @@ class User extends Authenticatable implements MustVerifyEmailInterface
     {
         return $this->hasAnyRole(config('carpentree.core.backend_roles'));
     }
+
+    /**
+     * Determine whether the user is Super Admin (total privileges).
+     *
+     * @return bool
+     */
+    public function isSuperAdmin()
+    {
+        return $this->hasRole('Super Admin');
+    }
 }
