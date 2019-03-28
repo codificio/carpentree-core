@@ -43,13 +43,6 @@ class AddressResource extends JsonResource
                         ]
                     ]
                 ],
-
-                // User
-                'user' => [
-                    'data' => [
-                        'id' => $this->user->id,
-                    ]
-                ],
             ]
 
         ];
