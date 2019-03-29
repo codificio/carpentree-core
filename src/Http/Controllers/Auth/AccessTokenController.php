@@ -22,9 +22,30 @@ class AccessTokenController extends ParentController
     {
 
         $response = $this->withErrorHandling(function() use ($request) {
-            // Check for backend access
+
             $attributes = $request->getParsedBody();
-            if (!$this->checkScopesAgainstRoles($attributes['username'], $attributes['scope'])) {
+
+            if (is_null($attributes['username']) || $attributes['username'] == "") {
+                throw OAuthServerException::invalidRequest('username');
+            }
+
+            if (is_null($attributes['scope']) || $attributes['scope'] == "") {
+                throw OAuthServerException::invalidRequest('scope');
+            }
+
+            $userModel = config('auth.providers.users.model');
+            /** @var User $user */
+            $user = $userModel::where('email', $attributes['username'])->first();
+
+            if (!$user) {
+                throw OAuthServerException::invalidCredentials();
+            }
+
+            if (!$user->hasVerifiedEmail()) {
+                throw OAuthServerException::accessDenied(__("Your email is not verified"));
+            }
+
+            if (!$this->checkScopesAgainstRoles($user, $attributes['scope'])) {
                 throw OAuthServerException::invalidCredentials();
             }
 
@@ -45,30 +66,12 @@ class AccessTokenController extends ParentController
      * @param $scope
      * @return bool
      */
-    protected function checkScopesAgainstRoles($username, $scope)
+    protected function checkScopesAgainstRoles($user, $scope)
     {
-        if (is_null($username) || $username == "") {
-            throw OAuthServerException::invalidRequest('username');
-        }
-
-        if (is_null($scope) || $scope == "") {
-            throw OAuthServerException::invalidRequest('scope');
-        }
+        /** @var User $user */
 
         if (!is_array($scope)) {
             $scope = $this->convertScopesQueryStringToArray($scope);
-        }
-
-        $userModel = config('auth.providers.users.model');
-        /** @var User $user */
-        $user = $userModel::where('email', $username)->first();
-
-        if (!$user) {
-            throw OAuthServerException::invalidCredentials();
-        }
-
-        if (!$user->hasVerifiedEmail()) {
-            throw EmailNotVerified::create();
         }
 
         if (in_array('admin', $scope)) {
