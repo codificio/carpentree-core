@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Http\Controllers\Auth;
 
+use Carpentree\Core\Exceptions\EmailNotVerified;
 use Carpentree\Core\Models\User;
 use Illuminate\Http\Response;
 use Laravel\Passport\Http\Controllers\AccessTokenController as ParentController;
@@ -64,6 +65,10 @@ class AccessTokenController extends ParentController
 
         if (!$user) {
             throw OAuthServerException::invalidCredentials();
+        }
+
+        if (!$user->hasVerifiedEmail()) {
+            throw EmailNotVerified::create();
         }
 
         if (in_array('admin', $scope)) {

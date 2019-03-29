@@ -2,8 +2,8 @@
 
 namespace Carpentree\Core\Http\Middleware;
 
+use Carpentree\Core\Exceptions\EmailNotVerified;
 use Closure;
-use Illuminate\Support\Facades\Redirect;
 
 class EnsureEmailIsVerified
 {
@@ -21,9 +21,7 @@ class EnsureEmailIsVerified
         $hasVerifiedEmail = $user->hasVerifiedEmail();
 
         if (!$user || ($instanceOf && !$hasVerifiedEmail)) {
-            return $request->expectsJson()
-                ? abort(403, 'Your email address is not verified.')
-                : Redirect::route('verification.notice');
+            throw EmailNotVerified::create();
         }
 
         return $next($request);
