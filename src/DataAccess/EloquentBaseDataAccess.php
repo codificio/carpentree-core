@@ -53,7 +53,7 @@ class EloquentBaseDataAccess implements BaseDataAccess
      */
     public function fullTextSearch($query = '')
     {
-        if (!in_array(Searchable::class, class_uses($this->class))) {
+        if (!in_array(Searchable::class, class_uses_recursive($this->class))) {
             throw ModelIsNotSearchable::create($this->class);
         }
 

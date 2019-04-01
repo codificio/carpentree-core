@@ -87,7 +87,7 @@ abstract class BaseBuilder implements BuilderInterface
     public function withCategories(array $data)
     {
         try {
-            if (!in_array(Categorizable::class, class_uses($this->getClass()))) {
+            if (!in_array(Categorizable::class, class_uses_recursive($this->getClass()))) {
                 throw ModelHasNotCategories::create($this->getClass());
             }
 
@@ -161,7 +161,7 @@ abstract class BaseBuilder implements BuilderInterface
     {
         try {
 
-            if (!in_array(HasAddresses::class, class_uses($this->getClass()))) {
+            if (!in_array(HasAddresses::class, class_uses_recursive($this->getClass()))) {
                 throw ModelHasNotAddresses::create($this->getClass());
             }
 
