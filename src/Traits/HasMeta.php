@@ -3,6 +3,7 @@
 namespace Carpentree\Core\Traits;
 
 use Carpentree\Core\Models\MetaField;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Exception;
@@ -15,6 +16,19 @@ trait HasMeta
     public function meta()
     {
         return $this->morphMany($this->getMetaModelClassName(), 'model', 'model_type','model_id');
+    }
+
+
+    /**
+     * @param Builder $builder
+     * @param $key
+     * @param $value
+     * @return Builder
+     */
+    public function scopeWhereMeta(Builder $builder, $key, $value) {
+        return $builder->whereHas('meta', function ($query) use ($key, $value) {
+            $query->where($key, $value);
+        });
     }
 
     /**
