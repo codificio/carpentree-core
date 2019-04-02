@@ -2,8 +2,9 @@
 
 namespace Carpentree\Core\Http\Controllers\Auth;
 
+use Carpentree\Core\DataAccess\User\UserDataAccess;
 use Carpentree\Core\Http\Controllers\Controller;
-use Illuminate\Auth\Access\AuthorizationException;
+use Carpentree\Core\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
@@ -30,29 +31,34 @@ class VerificationController extends Controller
      */
     protected $redirectTo = '/';
 
+    /** @var UserDataAccess */
+    protected $dataAccess;
+
+    public function __construct(UserDataAccess $dataAccess)
+    {
+        $this->dataAccess = $dataAccess;
+    }
+
     /**
      * Mark the authenticated user's email address as verified.
      *
-     * @see https://stackoverflow.com/questions/52362927/laravel-email-verification-5-7-using-rest-api
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function verify(Request $request)
     {
-        if ($request->route('id') != $request->user()->getKey()) {
-            throw new AuthorizationException;
-        }
+        /** @var User $user */
+        $user = $this->dataAccess->findOrFail($request->route('id'));
 
-        if ($request->user()->hasVerifiedEmail()) {
+        if ($user->hasVerifiedEmail()) {
             throw new HttpException(400, __("User email has already been verified"));
         }
 
-        if ($request->user()->markEmailAsVerified()) {
+        if ($user->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        return response()->json();
+        return view("carpentree-core::email-verification");
     }
 
     /**

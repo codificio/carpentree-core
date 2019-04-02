@@ -2,24 +2,27 @@
 
 namespace Carpentree\Core\Notifications;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Auth\Notifications\VerifyEmail as ParentNotifications;
 
 class VerifyEmail extends ParentNotifications
 {
     /**
-     * Get the verification URL for the given notifiable.
+     * Build the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return string
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    protected function verificationUrl($notifiable)
+    public function toMail($notifiable)
     {
-        $temporarySignedURL = URL::temporarySignedRoute(
-            'verification.verify', Carbon::now()->addMinutes(60), ['id' => $notifiable->getKey()]
-        );
+        if (static::$toMailCallback) {
+            return call_user_func(static::$toMailCallback, $notifiable);
+        }
 
-        return url("verify-email?queryURL=$temporarySignedURL");
+        return (new MailMessage)
+            ->subject(__('Verify Email Address'))
+            ->view('carpentree-core::emails.auth.verify-email', [
+                'verificationUrl' => $this->verificationUrl($notifiable)
+            ]);
     }
 }

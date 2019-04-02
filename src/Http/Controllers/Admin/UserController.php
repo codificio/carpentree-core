@@ -62,6 +62,7 @@ class UserController extends Controller
     /**
      * @param CreateUserRequest $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function create(CreateUserRequest $request)
     {
@@ -89,6 +90,7 @@ class UserController extends Controller
     /**
      * @param UpdateUserRequest $request
      * @return UserResource
+     * @throws \Exception
      */
     public function update(UpdateUserRequest $request)
     {

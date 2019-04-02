@@ -47,7 +47,7 @@ class CoreServiceProvider extends ServiceProvider
         }
 
         // Views
-        // $this->loadViewsFrom(__DIR__.'/../../resources/views', 'carpentree');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'carpentree-core');
 
         // Middlewares
         /** @var Router $router */
@@ -91,19 +91,10 @@ class CoreServiceProvider extends ServiceProvider
 
     public function publish()
     {
-        // Assets
-        /*
+        // Views
         $this->publishes([
-            __DIR__ . '/../../resources/assets' => resource_path('vendor/carpentree/core')
-        ], 'assets');
-        */
-
-        // Public assets
-        /*
-        $this->publishes([
-            __DIR__ . '/../../resources/public' => public_path('vendor/carpentree/core')
-        ], 'public');
-        */
+            __DIR__ . '/../../resources/views' => resource_path('views/vendor/carpentree-core')
+        ], 'views');
 
         // Config
         $this->publishes([

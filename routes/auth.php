@@ -24,7 +24,7 @@ Route::prefix('email')->namespace('Carpentree\Core\Http\Controllers\Auth')->grou
 
     // Route::get('verify', 'Auth\VerificationController@show')->name('verification.notice');
 
-    Route::middleware(['auth:api', 'signed', 'throttle:6,1'])->group(function() {
+    Route::middleware(['signed', 'throttle:6,1'])->group(function() {
         Route::get('verify/{id}', 'VerificationController@verify')->name('verification.verify');
     });
 
