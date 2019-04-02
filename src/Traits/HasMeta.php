@@ -27,7 +27,7 @@ trait HasMeta
      */
     public function scopeWhereMeta(Builder $builder, $key, $value) {
         return $builder->whereHas('meta', function ($query) use ($key, $value) {
-            $query->where($key, $value);
+            $query->where('key', $key)->whereTranslationLike('value', "$value");
         });
     }
 
