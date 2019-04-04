@@ -7,7 +7,9 @@ use Laravel\Scout\Searchable as ParentTrait;
 
 trait Searchable
 {
-    use ParentTrait;
+    use ParentTrait {
+        search as parentSearch;
+    }
 
     /**
      * Return true if you want to store this model in localized index.
@@ -29,9 +31,9 @@ trait Searchable
         if (static::localizedSearchable()) {
             $model = new static;
             $index = $model->searchableAs() . '_' . App::getLocale();
-            $result = ParentTrait::search($query, $callback)->within($index);
+            $result = self::parentSearch($query, $callback)->within($index);
         } else {
-            $result = ParentTrait::search($query, $callback);
+            $result = self::parentSearch($query, $callback);
         }
 
         return $result;
