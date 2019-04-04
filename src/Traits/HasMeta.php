@@ -23,11 +23,12 @@ trait HasMeta
      * @param Builder $builder
      * @param $key
      * @param $value
+     * @param null $locale
      * @return Builder
      */
-    public function scopeWhereMeta(Builder $builder, $key, $value) {
-        return $builder->whereHas('meta', function ($query) use ($key, $value) {
-            $query->where('key', $key)->whereTranslationLike('value', "$value");
+    public function scopeWhereMeta(Builder $builder, $key, $value, $locale = null) {
+        return $builder->whereHas('meta', function ($query) use ($key, $value, $locale) {
+            $query->where('key', $key)->whereTranslationLike('value', $value, $locale);
         });
     }
 
