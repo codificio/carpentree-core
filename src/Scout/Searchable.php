@@ -27,7 +27,8 @@ trait Searchable
     public static function search($query = '', $callback = null)
     {
         if (static::localizedSearchable()) {
-            $index = static::first()->searchableAs() . '_' . App::getLocale();
+            $model = new static;
+            $index = $model->searchableAs() . '_' . App::getLocale();
             $result = ParentTrait::search($query, $callback)->within($index);
         } else {
             $result = ParentTrait::search($query, $callback);
