@@ -22,19 +22,37 @@ class LocalizedAlgoliaEngine extends ParentEngine
             return;
         }
 
-        $index = $this->algolia->initIndex($models->first()->searchableAs());
-
         if ($this->usesSoftDelete($models->first()) && $this->softDelete) {
             $models->each->pushSoftDeleteMetadata();
         }
 
         $class = get_class($models->first());
 
-        $objects = (in_array(Translatable::class, class_uses_recursive($class))) ?
-            $this->getLocalizedObjects($models) :
-            $this->getObjects($models);
+        if (in_array(Translatable::class, class_uses_recursive($class))) {
+            // Localized
+            $this->updateLocalized($models);
+        } else {
+            // Non localized
+            $this->updateStandard($models);
+        }
+    }
 
-        $objects = $objects->filter()->values()->all();
+
+    protected function updateStandard(Collection $models)
+    {
+        $index = $this->algolia->initIndex($models->first()->searchableAs());
+
+        $objects = $models->map(function ($model) {
+            if (empty($searchableData = $model->toSearchableArray())) {
+                return;
+            }
+
+            return array_merge(
+                ['objectID' => $model->getScoutKey()],
+                $searchableData,
+                $model->scoutMetadata()
+            );
+        })->filter()->values()->all();
 
         if (!empty($objects)) {
             $index->saveObjects($objects);
@@ -43,56 +61,39 @@ class LocalizedAlgoliaEngine extends ParentEngine
 
     /**
      * @param Collection $models
-     * @return Collection|\Illuminate\Support\Collection
+     * @throws \Algolia\AlgoliaSearch\Exceptions\MissingObjectId
      */
-    protected function getObjects(Collection $models)
+    protected function updateLocalized(Collection $models)
     {
-        return $models->map(
-            function ($model) {
-                if (empty($searchableData = $model->toSearchableArray())) {
-                    return;
-                }
-
-                return array_merge(
-                    ['objectID' => $model->getScoutKey()],
-                    $searchableData,
-                    $model->scoutMetadata()
-                );
-            });
-    }
-
-    /**
-     * @param Collection $models
-     * @return \Illuminate\Support\Collection
-     */
-    protected function getLocalizedObjects(Collection $models)
-    {
-        $objects = new \Illuminate\Support\Collection();
+        $localizedCollection = [];
 
         foreach ($models as $model) {
-
             $locales = $model->getTranslationsArray();
 
             foreach ($locales as $lang => $values) {
                 App::setlocale($lang);
 
-                $model->pushLocaleMetadata($lang);
-
                 if (empty($searchableData = $model->toSearchableArray())) {
                     continue;
                 }
 
-                $objects->add(array_merge(
-                    ['objectID' => $model->getScoutKey() . "-$lang"],
+                $localizedCollection[$lang][] = array_merge(
+                    ['objectID' => $model->getScoutKey()],
                     $searchableData,
                     $model->scoutMetadata()
-                ));
-
+                );
             }
-
         }
 
-        return $objects;
+        $indexName = $models->first()->searchableAs();
+
+        foreach ($localizedCollection as $locale => $objects) {
+            $index = $this->algolia->initIndex($indexName . "_$locale");
+
+            if (!empty($objects)) {
+                $index->saveObjects($objects);
+            }
+        }
     }
 
 }

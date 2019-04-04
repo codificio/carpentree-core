@@ -13,15 +13,6 @@ trait Searchable
     }
 
     /**
-     * @param $locale
-     * @return Searchable
-     */
-    public function pushLocaleMetadata($locale)
-    {
-        return $this->withScoutMetadata('locale', $locale);
-    }
-
-    /**
      * @param string $query
      * @param null $callback
      * @return \Laravel\Scout\Builder
@@ -32,7 +23,9 @@ trait Searchable
 
         if (in_array(Translatable::class, class_uses_recursive(static::class))) {
             // Localized search
-            $result = $result->where('locale', App::getLocale());
+            $locale = App::getLocale();
+            $temp = new static;
+            $result = $result->within($temp->searchableAs() . "_$locale");
         }
 
         return $result;
