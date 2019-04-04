@@ -2,6 +2,7 @@
 
 namespace Carpentree\Core\Scout;
 
+use Dimsav\Translatable\Translatable;
 use Illuminate\Support\Facades\App;
 use Laravel\Scout\Searchable as ParentTrait;
 
@@ -12,13 +13,12 @@ trait Searchable
     }
 
     /**
-     * Return true if you want to store this model in localized index.
-     *
-     * @return bool
+     * @param $locale
+     * @return Searchable
      */
-    public static function localizedSearchable()
+    public function pushLocaleMetadata($locale)
     {
-        return false;
+        return $this->withScoutMetadata('locale', $locale);
     }
 
     /**
@@ -28,12 +28,11 @@ trait Searchable
      */
     public static function search($query = '', $callback = null)
     {
-        if (static::localizedSearchable()) {
-            $model = new static;
-            $index = $model->searchableAs() . '_' . App::getLocale();
-            $result = self::parentSearch($query, $callback)->within($index);
-        } else {
-            $result = self::parentSearch($query, $callback);
+        $result = self::parentSearch($query, $callback);
+
+        if (in_array(Translatable::class, class_uses_recursive(static::class))) {
+            // Localized search
+            $result = $result->where('locale', App::getLocale());
         }
 
         return $result;

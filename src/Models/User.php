@@ -4,6 +4,7 @@ namespace Carpentree\Core\Models;
 
 use Carpentree\Core\Events\UserDeleted;
 use Carpentree\Core\Notifications\ResetPassword;
+use Carpentree\Core\Scout\Searchable;
 use Carpentree\Core\Traits\HasAddresses;
 use Carpentree\Core\Traits\HasMeta;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -12,7 +13,6 @@ use Illuminate\Notifications\Notifiable;
 use Carpentree\Core\Traits\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailInterface;
 use Laravel\Passport\HasApiTokens;
-use Carpentree\Core\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -73,16 +73,6 @@ class User extends Authenticatable implements MustVerifyEmailInterface
     ];
 
     /**
-     * Return true if you want to store this model in localized index.
-     *
-     * @return bool
-     */
-    public static function localizedSearchable()
-    {
-        return true;
-    }
-
-    /**
      * Get the indexable data array for the model.
      *
      * @return array
@@ -103,11 +93,6 @@ class User extends Authenticatable implements MustVerifyEmailInterface
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
-    }
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
     }
 
     /**

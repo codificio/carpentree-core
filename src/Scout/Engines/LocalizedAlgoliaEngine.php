@@ -2,6 +2,8 @@
 
 namespace Carpentree\Core\Scout\Engines;
 
+use Dimsav\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\App;
 use Laravel\Scout\Engines\AlgoliaEngine as ParentEngine;
 
@@ -10,7 +12,7 @@ class LocalizedAlgoliaEngine extends ParentEngine
     /**
      * Update the given model in the index.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection  $models
+     * @param  \Illuminate\Database\Eloquent\Collection $models
      * @throws \Algolia\AlgoliaSearch\Exceptions\AlgoliaException
      * @return void
      */
@@ -20,89 +22,77 @@ class LocalizedAlgoliaEngine extends ParentEngine
             return;
         }
 
-        $temp = $models->first();
+        $index = $this->algolia->initIndex($models->first()->searchableAs());
 
-        $baseIndex = $temp->searchableAs();
-        $localizedIndexes = $temp::localizedSearchable();
-
-        if ($this->usesSoftDelete($models->first()) && config('scout.soft_delete', false)) {
+        if ($this->usesSoftDelete($models->first()) && $this->softDelete) {
             $models->each->pushSoftDeleteMetadata();
         }
 
-        if ($localizedIndexes) {
-            $this->updateLocalized($models, $baseIndex);
-        } else {
-            $this->standardUpdate($models, $baseIndex);
-        }
+        $class = get_class($models->first());
 
-    }
+        $objects = (in_array(Translatable::class, class_uses_recursive($class))) ?
+            $this->getLocalizedObjects($models) :
+            $this->getObjects($models);
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Collection $models
-     * @param string $indexName
-     * @throws \Algolia\AlgoliaSearch\Exceptions\MissingObjectId
-     */
-    protected function standardUpdate($models, string $indexName)
-    {
-        $objects = $models->map(function ($model) {
-            $array = array_merge(
-                $model->toSearchableArray(), $model->scoutMetadata()
-            );
+        $objects = $objects->filter()->values()->all();
 
-            if (empty($array)) {
-                return;
-            }
-
-            return array_merge(['objectID' => $model->getScoutKey()], $array);
-        })->filter()->values()->all();
-
-        if (! empty($objects)) {
-            $index = $this->algolia->initIndex($indexName);
-
+        if (!empty($objects)) {
             $index->saveObjects($objects);
         }
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Collection $models
-     * @param string $indexName
-     * @throws \Algolia\AlgoliaSearch\Exceptions\MissingObjectId
+     * @param Collection $models
+     * @return Collection|\Illuminate\Support\Collection
      */
-    protected function updateLocalized($models, string $indexName)
+    protected function getObjects(Collection $models)
     {
-        $objectsByLocale = [];
+        return $models->map(
+            function ($model) {
+                if (empty($searchableData = $model->toSearchableArray())) {
+                    return;
+                }
+
+                return array_merge(
+                    ['objectID' => $model->getScoutKey()],
+                    $searchableData,
+                    $model->scoutMetadata()
+                );
+            });
+    }
+
+    /**
+     * @param Collection $models
+     * @return \Illuminate\Support\Collection
+     */
+    protected function getLocalizedObjects(Collection $models)
+    {
+        $objects = new \Illuminate\Support\Collection();
 
         foreach ($models as $model) {
 
-            $locales = config('translatable.locales');
+            $locales = $model->getTranslationsArray();
 
-            foreach ($locales as $lang) {
+            foreach ($locales as $lang => $values) {
+                App::setlocale($lang);
 
-                App::setLocale($lang);
+                $model->pushLocaleMetadata($lang);
 
-                $array = array_merge(
-                    $model->toSearchableArray(), $model->scoutMetadata()
-                );
-
-                if (empty($array)) {
+                if (empty($searchableData = $model->toSearchableArray())) {
                     continue;
                 }
 
-                $objectsByLocale[$lang][] = array_merge(['objectID' => $model->getScoutKey()], $array);
+                $objects->add(array_merge(
+                    ['objectID' => $model->getScoutKey() . "-$lang"],
+                    $searchableData,
+                    $model->scoutMetadata()
+                ));
 
             }
 
         }
 
-        foreach ($objectsByLocale as $locale => $objects) {
-
-            $index = $this->algolia->initIndex($indexName . "_$locale");
-
-            if (! empty($objects)) {
-                $index->saveObjects($objects);
-            }
-
-        }
+        return $objects;
     }
 
 }
