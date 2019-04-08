@@ -52,7 +52,7 @@ class EloquentBaseDataAccess implements BaseDataAccess
      */
     public function list()
     {
-        return $this->class::all()->paginate(config('carpentree.core.pagination.per_page'));
+        return $this->class::paginate(config('carpentree.core.pagination.per_page'));
     }
 
     /**
