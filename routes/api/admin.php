@@ -29,6 +29,9 @@ Route::prefix('api/admin')
             Route::get('/', 'Admin\UserController@list')
                 ->name('users.list');
 
+            Route::get('search', 'Admin\UserController@search')
+                ->name('users.search');
+
             Route::get('{id}', 'Admin\UserController@get')
                 ->name('users.get');
 

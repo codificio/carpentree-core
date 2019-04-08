@@ -10,6 +10,8 @@ interface BaseDataAccess
 
     public function all();
 
+    public function list();
+
     public function fullTextSearch($query = '');
 
     public function delete($model);

@@ -4,7 +4,7 @@ namespace Carpentree\Core\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ListRequest extends FormRequest
+class SearchRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,8 +14,7 @@ class ListRequest extends FormRequest
     public function rules()
     {
         return [
-            'filter.query' => 'string',
-            'sort' => 'string|filled'
+            'filter.query' => 'string'
         ];
     }
 }

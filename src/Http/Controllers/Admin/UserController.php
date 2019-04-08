@@ -5,7 +5,7 @@ namespace Carpentree\Core\Http\Controllers\Admin;
 use Carpentree\Core\Builders\User\UserBuilderInterface;
 use Carpentree\Core\DataAccess\User\UserDataAccess;
 use Carpentree\Core\Http\Controllers\Controller;
-use Carpentree\Core\Http\Requests\Admin\ListRequest;
+use Carpentree\Core\Http\Requests\Admin\SearchRequest;
 use Carpentree\Core\Http\Requests\Admin\User\CreateUserRequest;
 use Carpentree\Core\Http\Requests\Admin\User\UpdateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
@@ -33,10 +33,23 @@ class UserController extends Controller
     }
 
     /**
-     * @param ListRequest $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function list(ListRequest $request)
+    public function list()
+    {
+        if (!Auth::user()->can('users.read')) {
+            throw UnauthorizedException::forPermissions(['users.read']);
+        }
+
+        $users = $this->dataAccess->list();
+        return UserResource::collection($users);
+    }
+
+    /**
+     * @param SearchRequest $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function search(SearchRequest $request)
     {
         if (!Auth::user()->can('users.read')) {
             throw UnauthorizedException::forPermissions(['users.read']);
