@@ -5,6 +5,7 @@ namespace Carpentree\Core\Http\Controllers\Admin;
 use Carpentree\Core\Http\Controllers\Controller;
 use Carpentree\Core\Http\Requests\Admin\Media\CreateMediaRequest;
 use Carpentree\Core\Http\Resources\MediaResource;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Plank\Mediable\Media;
 use Plank\Mediable\MediaUploaderFacade as MediaUploader;
@@ -23,9 +24,13 @@ class MediaController extends Controller
             throw UnauthorizedException::forPermissions(['media.upload']);
         }
 
-        $media = MediaUploader::fromSource($request->file('media'))->upload();
+        $files = $request->file('media');
+        $media = new Collection();
+        foreach ($files as $file) {
+            $media->add(MediaUploader::fromSource($file)->upload());
+        }
 
-        return MediaResource::make($media)->response()->setStatusCode(201);
+        return MediaResource::collection($media)->response()->setStatusCode(201);
     }
 
     /**
