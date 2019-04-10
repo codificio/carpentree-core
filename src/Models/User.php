@@ -80,6 +80,7 @@ class User extends Authenticatable implements MustVerifyEmailInterface
     public function toSearchableArray()
     {
         $array = [
+            'id' => $this->id, // TNTSearch needs id
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
