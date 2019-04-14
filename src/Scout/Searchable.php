@@ -21,7 +21,9 @@ trait Searchable
     {
         $result = self::parentSearch($query, $callback);
 
-        if (in_array(Translatable::class, class_uses_recursive(static::class))) {
+        $localized = config('scout.localized', false);
+
+        if ($localized && in_array(Translatable::class, class_uses_recursive(static::class))) {
             // Localized search
             $locale = App::getLocale();
             $temp = new static;

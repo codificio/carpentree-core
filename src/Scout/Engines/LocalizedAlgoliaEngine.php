@@ -28,7 +28,9 @@ class LocalizedAlgoliaEngine extends ParentEngine
 
         $class = get_class($models->first());
 
-        if (in_array(Translatable::class, class_uses_recursive($class))) {
+        $localized = config('scout.localized', false);
+
+        if ($localized && in_array(Translatable::class, class_uses_recursive($class))) {
             // Localized
             $this->updateLocalized($models);
         } else {
