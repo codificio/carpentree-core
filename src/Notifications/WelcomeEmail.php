@@ -12,6 +12,17 @@ use Illuminate\Notifications\Notification;
 class WelcomeEmail extends Notification
 {
     /**
+     * Create a notification instance.
+     *
+     * @param  User  $user
+     * @return void
+     */
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * Build the mail representation of the notification.
      *
      * @param  mixed  $notifiable

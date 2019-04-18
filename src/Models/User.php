@@ -4,10 +4,11 @@ namespace Carpentree\Core\Models;
 
 use Carpentree\Core\Events\UserDeleted;
 use Carpentree\Core\Notifications\ResetPassword;
+use Carpentree\Core\Notifications\WelcomeEmail;
+use Carpentree\Core\Notifications\WelcomeEmailWithEmailNotification;
 use Carpentree\Core\Scout\Searchable;
 use Carpentree\Core\Traits\HasAddresses;
 use Carpentree\Core\Traits\HasMeta;
-use Carpentree\Core\Traits\IsWelcome;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -23,7 +24,6 @@ class User extends Authenticatable implements MustVerifyEmailInterface
         HasApiTokens,
         HasRoles,
         MustVerifyEmail,
-        IsWelcome,
         CanResetPassword,
         SoftDeletes,
         Searchable,
@@ -116,6 +116,26 @@ class User extends Authenticatable implements MustVerifyEmailInterface
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token, $this->email));
+    }
+
+    /**
+     * Send the welcome email notification.
+     *
+     * @return void
+     */
+    public function sendWelcomeNotification()
+    {
+        $this->notify(new WelcomeEmail($this));
+    }
+
+    /**
+     * Send the welcome email notification with email verification
+     *
+     * @return void
+     */
+    public function sendWelcomeNotificationWithEmailVerification()
+    {
+        $this->notify(new WelcomeEmailWithEmailNotification($this));
     }
 
     /**

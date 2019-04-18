@@ -16,7 +16,8 @@ class CreateUserRequest extends FormRequest
         return [
             'attributes.first_name' => 'required|string',
             'attributes.last_name' => 'required|string',
-            'attributes.email' => 'required|email|unique:users,email',
+            // Email uniqueness but not soft-deleted
+            'attributes.email' => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             'attributes.password' => 'required|string|min:8',
 
             // Roles

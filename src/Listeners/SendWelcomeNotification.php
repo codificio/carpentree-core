@@ -2,7 +2,7 @@
 
 namespace Carpentree\Core\Listeners;
 
-use Carpentree\Core\Traits\IsWelcome;
+use Carpentree\Core\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 
@@ -16,14 +16,13 @@ class SendWelcomeNotification
      */
     public function handle(Registered $event)
     {
-        if (!in_array(IsWelcome::class, class_uses_recursive(get_class($event->user)))) {
-            return;
-        }
+        /** @var User $user */
+        $user = $event->user;
 
-        if ($event->user instanceof MustVerifyEmail && ! $event->user->hasVerifiedEmail()) {
-            $event->user->sendWelcomeNotificationWithEmailVerification();
+        if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
+            $user->sendWelcomeNotificationWithEmailVerification();
         } else {
-            $event->user->sendWelcomeNotification();
+            $user->sendWelcomeNotification();
         }
     }
 }
