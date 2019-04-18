@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'Laravel\Passport\Events\RefreshTokenCreated' => [
             PruneOldTokens::class,
         ],
+        'Illuminate\Auth\Events\Registered' => [
+            'Illuminate\Auth\Listeners\SendWelcomeNotification',
+        ],
     ];
 
     /**
