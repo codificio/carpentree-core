@@ -8,12 +8,15 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Carbon;
+use Illuminate\Bus\Queueable;
 
 /**
  * @property  User user
  */
 class WelcomeEmailWithEmailNotification extends Notification
 {
+    use Queueable;
+
     /**
      * Create a notification instance.
      *
@@ -23,6 +26,17 @@ class WelcomeEmailWithEmailNotification extends Notification
     public function __construct($user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * Get the notification's channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array|string
+     */
+    public function via($notifiable)
+    {
+        return ['mail'];
     }
 
     /**

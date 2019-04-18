@@ -5,12 +5,15 @@ namespace Carpentree\Core\Notifications;
 use Carpentree\Core\Models\User;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Bus\Queueable;
 
 /**
  * @property  User user
  */
 class WelcomeEmail extends Notification
 {
+    use Queueable;
+
     /**
      * Create a notification instance.
      *
@@ -20,6 +23,17 @@ class WelcomeEmail extends Notification
     public function __construct($user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * Get the notification's channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array|string
+     */
+    public function via($notifiable)
+    {
+        return ['mail'];
     }
 
     /**
