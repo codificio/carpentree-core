@@ -65,7 +65,9 @@ class EloquentBaseDataAccess implements BaseDataAccess
             throw ModelIsNotSearchable::create($this->class);
         }
 
-        return $this->class::search($query)->paginate(config('carpentree.core.pagination.per_page'));
+        return $query != ''
+            ? $this->class::search($query)->paginate(config('carpentree.core.pagination.per_page'))
+            : $this->class::paginate(config('carpentree.core.pagination.per_page'));
     }
 
     /**
