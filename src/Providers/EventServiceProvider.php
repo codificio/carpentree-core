@@ -17,7 +17,7 @@ class EventServiceProvider extends ServiceProvider
             PruneOldTokens::class,
         ],
         'Illuminate\Auth\Events\Registered' => [
-            'Illuminate\Auth\Listeners\SendWelcomeNotification',
+            'Carpentree\Core\Listeners\SendWelcomeNotification',
         ],
     ];
 

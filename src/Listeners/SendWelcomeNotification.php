@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Auth\Listeners;
+namespace Carpentree\Core\Listeners;
 
 use Carpentree\Core\Traits\IsWelcome;
 use Illuminate\Auth\Events\Registered;
