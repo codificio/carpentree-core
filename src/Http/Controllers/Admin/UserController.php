@@ -95,7 +95,11 @@ class UserController extends Controller
             $builder = $builder->withRoles($request->input('relationships.roles.data', array()));
         }
 
+        /** @var User $user */
         $user = $builder->build();
+
+        // Creation from admin panel expect to verify user simultaneously
+        $user->markEmailAsVerified();
 
         return UserResource::make($user)->response()->setStatusCode(201);
     }
