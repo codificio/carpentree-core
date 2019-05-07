@@ -65,11 +65,11 @@ class ResetPassword extends Notification
         }
 
         return (new MailMessage)
-            ->subject(Lang::getFromJson('Reset Password Notification'))
-            ->line(Lang::getFromJson('You are receiving this email because we received a password reset request for your account.'))
-            ->action(Lang::getFromJson('Reset Password'), $this->resetPasswordUrl())
-            ->line(Lang::getFromJson('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.users.expire')]))
-            ->line(Lang::getFromJson('If you did not request a password reset, no further action is required.'));
+            ->subject(__('Reset Password Notification'))
+            ->view('carpentree-core::emails.auth.reset-password', [
+                'resetPasswordUrl' => $this->resetPasswordUrl(),
+                'expiresIn' => config('auth.passwords.users.expire')
+            ]);
     }
 
     protected function resetPasswordUrl()
