@@ -87,6 +87,9 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(UserDataAccess::class, function () {
             return new EloquentUserDataAccess(User::class);
         });
+
+        // Category Repository
+        $this->app->bind('Carpentree\Core\Repositories\CategoryRepository', 'Carpentree\Core\Repositories\CategoryRepositoryEloquent');
     }
 
     public function publish()

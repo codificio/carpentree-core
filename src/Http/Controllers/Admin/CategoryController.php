@@ -7,6 +7,7 @@ use Carpentree\Core\Http\Requests\Admin\Category\CreateCategoryRequest;
 use Carpentree\Core\Http\Requests\Admin\Category\UpdateCategoryRequest;
 use Carpentree\Core\Http\Resources\CategoryResource;
 use Carpentree\Core\Models\Category;
+use Carpentree\Core\Repositories\CategoryRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Exceptions\UnauthorizedException;
@@ -15,11 +16,23 @@ class CategoryController extends Controller
 {
 
     /**
+     * @var CategoryRepository $repository
+     */
+    protected $repository;
+
+    public function __construct(CategoryRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
      * @param $type
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function getByType($type)
     {
+        $this->repository->findByField('type', $type);
+
         $categories = Category::where('type', $type)->get();
         return CategoryResource::collection($categories);
     }
