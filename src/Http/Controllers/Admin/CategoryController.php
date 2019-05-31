@@ -31,9 +31,11 @@ class CategoryController extends Controller
      */
     public function getByType($type)
     {
-        $this->repository->findByField('type', $type);
+        if (!Auth::user()->can('categories.read')) {
+            throw UnauthorizedException::forPermissions(['categories.read']);
+        }
 
-        $categories = Category::where('type', $type)->get();
+        $categories = $this->repository->findByField('type', $type);
         return CategoryResource::collection($categories);
     }
 
@@ -132,10 +134,7 @@ class CategoryController extends Controller
             throw UnauthorizedException::forPermissions(['categories.delete']);
         }
 
-        /** @var Category $user */
-        $category = Category::findOrFail($id);
-
-        if ($category->delete($id)) {
+        if ($this->repository->delete($id)) {
             return response()->json(null, 204);
         } else {
             return response()->json(null, 202);

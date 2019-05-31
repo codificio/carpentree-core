@@ -20,7 +20,7 @@ class CreateCategoryRequest extends FormRequest
             'attributes.description' => 'nullable|string',
 
             'relationships.parent.data' => 'nullable',
-            'relationships.parent.data.id' => 'exists:categories,id'
+            'relationships.parent.data.id' => 'nullable|exists:categories,id'
         ];
     }
 }
