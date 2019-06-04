@@ -29,11 +29,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     protected $fieldSearchable = [];
 
     /**
-     * @var bool $translatable
-     */
-    protected $translatable = false;
-
-    /**
      * Collection of Criteria
      *
      * @var Collection $criteria
@@ -306,15 +301,5 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->criteria = new Collection();
 
         return $this;
-    }
-
-    /**
-     * Return true if associated model is translatable.
-     *
-     * @return bool
-     */
-    public function modelIsTranslatable()
-    {
-        return $this->translatable;
     }
 }

@@ -93,6 +93,10 @@ class CoreServiceProvider extends ServiceProvider
             return new EloquentUserDataAccess(User::class);
         });
 
+        // RequestCriteria Statement builder
+        $this->app->bind('Carpentree\Core\Repositories\Contracts\StatementBuilderInterface',
+            'Carpentree\Core\Repositories\Criteria\Request\DimsavStatementBuilder');
+
         // User Repository
         $this->app->bind('Carpentree\Core\Repositories\UserRepository', 'Carpentree\Core\Repositories\UserRepositoryEloquent');
     }

@@ -2,7 +2,7 @@
 
 namespace Carpentree\Core\Repositories;
 
-use Carpentree\Core\Repositories\Criteria\RequestCriteria;
+use Carpentree\Core\Repositories\Criteria\RequestCriteriaEloquent;
 use Carpentree\Core\Repositories\Eloquent\BaseRepository;
 use Carpentree\Core\Models\User;
 
@@ -17,8 +17,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
     protected $fieldSearchable = [
         'first_name' => 'like',
         'last_name' => 'like',
-        'email',
-        'addresses.type.label' => 'like'
+        'email' => 'like'
     ];
 
     /**
@@ -38,6 +37,6 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
      */
     public function boot()
     {
-        $this->pushCriteria(app(RequestCriteria::class));
+        $this->pushCriteria(app(RequestCriteriaEloquent::class));
     }
 }

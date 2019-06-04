@@ -2,7 +2,7 @@
 
 namespace Carpentree\Core\Repositories\Criteria;
 
-use Carpentree\Core\Exceptions\RepositoryException;
+use Carpentree\Core\Repositories\Contracts\StatementBuilderInterface;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,9 +15,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * Class RequestCriteria
  *
+ * It consider use of Dimsav Translation system
+ *
  * @package Carpentre\Core\Repositories
  */
-class RequestCriteria implements CriteriaInterface
+class RequestCriteriaEloquent implements CriteriaInterface
 {
 
     const DEFAULT_OPERATOR = '=';
@@ -28,9 +30,15 @@ class RequestCriteria implements CriteriaInterface
      */
     protected $request;
 
-    public function __construct(Request $request)
+    /**
+     * @var StatementBuilderInterface $builder
+     */
+    protected $builder;
+
+    public function __construct(Request $request, StatementBuilderInterface $builder)
     {
         $this->request = $request;
+        $this->builder = $builder;
     }
 
     /**
@@ -87,27 +95,16 @@ class RequestCriteria implements CriteriaInterface
 
                             $i = 0;
                             foreach ($fieldsSearchable as $field => $operator) {
-                                $isFirst = $i == 0 ? true : false;
+                                $isFirst = ($i == 0) ? true : false;
                                 $operator = isset($operator) ? $operator : self::DEFAULT_OPERATOR;
-
-                                $fieldIsTranslatable = $this->fieldIsTranslatable($model->getModel(), $field);
-
-                                if ($this->fieldExists($model->getModel(), $field, $fieldIsTranslatable)) {
-                                    $this->makeWhereStatement($query, $field, $operator, $value, $fieldIsTranslatable, 'or', $isFirst);
-                                    $i++;
-                                }
+                                $result = $this->builder->makeWhereStatement($query, $field, $operator, $value, 'or', $isFirst);
+                                $i = $result ? $i + 1 : $i;
                             }
 
                         });
 
                     } else {
-
-                        $fieldIsTranslatable = $this->fieldIsTranslatable($model->getModel(), $field);
-
-                        if ($this->fieldExists($model->getModel(), $field, $fieldIsTranslatable)) {
-                            $this->makeWhereStatement($query, $field, $operator, $value, $fieldIsTranslatable);
-                        }
-
+                        $this->builder->makeWhereStatement($query, $field, $operator, $value);
                     }
 
                 }
@@ -134,7 +131,7 @@ class RequestCriteria implements CriteriaInterface
                         break;
                 }
 
-                $this->makeOrderByStatement($model, $field, $direction);
+                $this->builder->makeOrderByStatement($model, $field, $direction);
             }
         }
 
@@ -144,60 +141,6 @@ class RequestCriteria implements CriteriaInterface
         }
 
         return $model;
-    }
-
-    /**
-     * Check if model has a specific column.
-     *
-     * @param Model $model
-     * @param $field
-     * @param bool $translatable
-     * @return bool
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    protected function fieldExists($model, $field, $translatable = false)
-    {
-        if (stripos($field, '.')) {
-            $explode = explode('.', $field);
-            $field = array_pop($explode);
-
-            foreach ($explode as $relation) {
-                $model = $model->{$relation}()->getModel();
-            }
-        }
-
-        if ($translatable) {
-            /** @var Translatable $model */
-            $translatedTable = app()->make($model->getTranslationModelName())->getTable();
-            return Schema::hasColumn($translatedTable, $field);
-        } else {
-            return Schema::hasColumn($model->getTable(), $field);
-        }
-    }
-
-    /**
-     * Check if given field is translatable
-     *
-     * @param Model $model
-     * @param $field
-     * @return bool
-     */
-    protected function fieldIsTranslatable($model, $field)
-    {
-        if (stripos($field, '.')) {
-            $explode = explode('.', $field);
-            $field = array_pop($explode);
-
-            foreach ($explode as $relation) {
-                $model = $model->{$relation}()->getModel();
-            }
-        }
-
-        if (in_array(Translatable::class, class_uses_recursive($model))) {
-            return in_array($field, $model->translatedAttributes);
-        }
-
-        return false;
     }
 
     /**
@@ -266,71 +209,4 @@ class RequestCriteria implements CriteriaInterface
         return $searchData;
     }
 
-    /**
-     * @param Builder $query
-     * @param $field
-     * @param $operator
-     * @param $value
-     * @param bool $translatable
-     * @param string $joinOperator
-     * @param bool $isFirst
-     */
-    private function makeWhereStatement(Builder &$query, $field, $operator, $value, $translatable = false, $joinOperator = 'and', $isFirst = false)
-    {
-        $modelTableName = $query->getModel()->getTable();
-
-        $value = ($operator == 'like' || $operator == 'ilike') ? "%$value%" : $value;
-
-        $relation = null;
-        if (stripos($field, '.')) {
-            $explode = explode('.', $field);
-            $field = array_pop($explode);
-            $relation = implode('.', $explode);
-            $relation .= $translatable ? '.translations' : '';
-        }
-
-        if ($isFirst || $joinOperator == 'and') {
-
-            if (!is_null($relation)) {
-                $query->whereHas($relation, function ($query) use ($field, $operator, $value) {
-                    /** @var Builder $query */
-                    $query->where($field, $operator, $value);
-                });
-            } else {
-                $query->where($modelTableName . '.' . $field, $operator, $value);
-            }
-
-        } elseif ($joinOperator == 'or') {
-
-            if (!is_null($relation)) {
-                $query->orWhereHas($relation, function ($query) use ($field, $operator, $value) {
-                    /** @var Builder $query */
-                    $query->where($field, $operator, $value);
-                });
-            } else {
-                $query->orWhere($modelTableName . '.' . $field, $operator, $value);
-            }
-
-        }
-
-    }
-
-    private function makeOrderByStatement(Builder &$query, $field, $direction)
-    {
-        $relation = null;
-        if (stripos($field, '.')) {
-            $explode = explode('.', $field);
-            $field = array_pop($explode);
-            $relation = implode('.', $explode);
-        }
-
-        if (!is_null($relation)) {
-            $query->with([$relation => function ($q) use ($field, $direction) {
-                /** @var Builder $q */
-                $q->orderBy($field, $direction);
-            }]);
-        } else {
-            $query->orderBy($field, $direction);
-        }
-    }
 }
