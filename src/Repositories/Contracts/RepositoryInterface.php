@@ -53,4 +53,11 @@ interface RepositoryInterface
      * @return array
      */
     public function getFieldsSearchable();
+
+    /**
+     * Return true if associated model is translatable.
+     *
+     * @return bool
+     */
+    public function modelIsTranslatable();
 }

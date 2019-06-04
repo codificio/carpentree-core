@@ -1,11 +1,15 @@
 <?php
+
 namespace Carpentree\Core\Repositories\Criteria;
 
+use Carpentree\Core\Exceptions\RepositoryException;
+use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Carpentree\Core\Repositories\Contracts\CriteriaInterface;
 use Carpentree\Core\Repositories\Contracts\RepositoryInterface;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -29,11 +33,10 @@ class RequestCriteria implements CriteriaInterface
         $this->request = $request;
     }
 
-
     /**
      * Apply criteria in query repository
      *
-     * @param         Builder|Model     $model
+     * @param         Builder|Model $model
      * @param RepositoryInterface $repository
      *
      * @return mixed
@@ -78,22 +81,32 @@ class RequestCriteria implements CriteriaInterface
                     }
 
                     if ($simpleSearch) {
+                        // Simple search: search for $value in all fields listed in $fieldsSearchable.
 
-                        $query->where(function($query) use ($fieldsSearchable, $value) {
+                        $query->where(function ($query) use ($fieldsSearchable, $value, $model) {
 
                             $i = 0;
                             foreach ($fieldsSearchable as $field => $operator) {
                                 $isFirst = $i == 0 ? true : false;
                                 $operator = isset($operator) ? $operator : self::DEFAULT_OPERATOR;
-                                $this->makeWhereStatement($query, $field, $operator, $value, 'or', $isFirst);
-                                $i++;
+
+                                $fieldIsTranslatable = $this->fieldIsTranslatable($model->getModel(), $field);
+
+                                if ($this->fieldExists($model->getModel(), $field, $fieldIsTranslatable)) {
+                                    $this->makeWhereStatement($query, $field, $operator, $value, $fieldIsTranslatable, 'or', $isFirst);
+                                    $i++;
+                                }
                             }
 
                         });
 
                     } else {
 
-                        $this->makeWhereStatement($query, $field, $operator, $value);
+                        $fieldIsTranslatable = $this->fieldIsTranslatable($model->getModel(), $field);
+
+                        if ($this->fieldExists($model->getModel(), $field, $fieldIsTranslatable)) {
+                            $this->makeWhereStatement($query, $field, $operator, $value, $fieldIsTranslatable);
+                        }
 
                     }
 
@@ -122,7 +135,6 @@ class RequestCriteria implements CriteriaInterface
                 }
 
                 $this->makeOrderByStatement($model, $field, $direction);
-
             }
         }
 
@@ -132,6 +144,60 @@ class RequestCriteria implements CriteriaInterface
         }
 
         return $model;
+    }
+
+    /**
+     * Check if model has a specific column.
+     *
+     * @param Model $model
+     * @param $field
+     * @param bool $translatable
+     * @return bool
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function fieldExists($model, $field, $translatable = false)
+    {
+        if (stripos($field, '.')) {
+            $explode = explode('.', $field);
+            $field = array_pop($explode);
+
+            foreach ($explode as $relation) {
+                $model = $model->{$relation}()->getModel();
+            }
+        }
+
+        if ($translatable) {
+            /** @var Translatable $model */
+            $translatedTable = app()->make($model->getTranslationModelName())->getTable();
+            return Schema::hasColumn($translatedTable, $field);
+        } else {
+            return Schema::hasColumn($model->getTable(), $field);
+        }
+    }
+
+    /**
+     * Check if given field is translatable
+     *
+     * @param Model $model
+     * @param $field
+     * @return bool
+     */
+    protected function fieldIsTranslatable($model, $field)
+    {
+        if (stripos($field, '.')) {
+            $explode = explode('.', $field);
+            $field = array_pop($explode);
+
+            foreach ($explode as $relation) {
+                $model = $model->{$relation}()->getModel();
+            }
+        }
+
+        if (in_array(Translatable::class, class_uses_recursive($model))) {
+            return in_array($field, $model->translatedAttributes);
+        }
+
+        return false;
     }
 
     /**
@@ -151,7 +217,7 @@ class RequestCriteria implements CriteriaInterface
 
             if (is_int($key)) {
                 // Only array value. I'll use default operator
-                 $newFields[$value] = self::DEFAULT_OPERATOR;
+                $newFields[$value] = self::DEFAULT_OPERATOR;
             } else {
                 if (!in_array($value, $acceptedConditions)) {
                     throw new BadRequestHttpException("Operator $value is no an accepted operator");
@@ -205,45 +271,44 @@ class RequestCriteria implements CriteriaInterface
      * @param $field
      * @param $operator
      * @param $value
+     * @param bool $translatable
      * @param string $joinOperator
      * @param bool $isFirst
      */
-    private function makeWhereStatement(Builder &$query, $field, $operator, $value, $joinOperator = 'and', $isFirst = false)
+    private function makeWhereStatement(Builder &$query, $field, $operator, $value, $translatable = false, $joinOperator = 'and', $isFirst = false)
     {
         $modelTableName = $query->getModel()->getTable();
-
-        // TODO controllare se il campo esiste
-        // TODO controllare se è un campo traducibile
 
         $value = ($operator == 'like' || $operator == 'ilike') ? "%$value%" : $value;
 
         $relation = null;
-        if(stripos($field, '.')) {
+        if (stripos($field, '.')) {
             $explode = explode('.', $field);
             $field = array_pop($explode);
             $relation = implode('.', $explode);
+            $relation .= $translatable ? '.translations' : '';
         }
 
         if ($isFirst || $joinOperator == 'and') {
 
-            if(!is_null($relation)) {
-                $query->whereHas($relation, function($query) use($field, $operator, $value) {
+            if (!is_null($relation)) {
+                $query->whereHas($relation, function ($query) use ($field, $operator, $value) {
                     /** @var Builder $query */
                     $query->where($field, $operator, $value);
                 });
             } else {
-                $query->where($modelTableName.'.'.$field, $operator, $value);
+                $query->where($modelTableName . '.' . $field, $operator, $value);
             }
 
         } elseif ($joinOperator == 'or') {
 
-            if(!is_null($relation)) {
-                $query->orWhereHas($relation, function($query) use($field, $operator, $value) {
+            if (!is_null($relation)) {
+                $query->orWhereHas($relation, function ($query) use ($field, $operator, $value) {
                     /** @var Builder $query */
                     $query->where($field, $operator, $value);
                 });
             } else {
-                $query->orWhere($modelTableName.'.'.$field, $operator, $value);
+                $query->orWhere($modelTableName . '.' . $field, $operator, $value);
             }
 
         }
@@ -253,13 +318,13 @@ class RequestCriteria implements CriteriaInterface
     private function makeOrderByStatement(Builder &$query, $field, $direction)
     {
         $relation = null;
-        if(stripos($field, '.')) {
+        if (stripos($field, '.')) {
             $explode = explode('.', $field);
             $field = array_pop($explode);
             $relation = implode('.', $explode);
         }
 
-        if(!is_null($relation)) {
+        if (!is_null($relation)) {
             $query->with([$relation => function ($q) use ($field, $direction) {
                 /** @var Builder $q */
                 $q->orderBy($field, $direction);

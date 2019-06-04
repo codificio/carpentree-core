@@ -14,29 +14,34 @@ use Illuminate\Database\Eloquent\Builder;
 abstract class BaseRepository implements RepositoryInterface, RepositoryCriteriaInterface
 {
     /**
-     * @var Application
+     * @var Application $app
      */
     protected $app;
 
     /**
-     * @var Model
+     * @var Model $model
      */
     protected $model;
 
     /**
-     * @var array
+     * @var array $fieldSearchable
      */
     protected $fieldSearchable = [];
 
     /**
+     * @var bool $translatable
+     */
+    protected $translatable = false;
+
+    /**
      * Collection of Criteria
      *
-     * @var Collection
+     * @var Collection $criteria
      */
     protected $criteria;
 
     /**
-     * @var bool
+     * @var bool $skipCriteria
      */
     protected $skipCriteria = false;
 
@@ -301,5 +306,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->criteria = new Collection();
 
         return $this;
+    }
+
+    /**
+     * Return true if associated model is translatable.
+     *
+     * @return bool
+     */
+    public function modelIsTranslatable()
+    {
+        return $this->translatable;
     }
 }
