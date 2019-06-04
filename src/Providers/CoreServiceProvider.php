@@ -72,6 +72,11 @@ class CoreServiceProvider extends ServiceProvider
             'carpentree.roles'
         );
 
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/repository.php',
+            'carpentree.repository'
+        );
+
         $this->bindImplementation();
     }
 
@@ -88,8 +93,8 @@ class CoreServiceProvider extends ServiceProvider
             return new EloquentUserDataAccess(User::class);
         });
 
-        // Category Repository
-        $this->app->bind('Carpentree\Core\Repositories\CategoryRepository', 'Carpentree\Core\Repositories\CategoryRepositoryEloquent');
+        // User Repository
+        $this->app->bind('Carpentree\Core\Repositories\UserRepository', 'Carpentree\Core\Repositories\UserRepositoryEloquent');
     }
 
     public function publish()
@@ -104,6 +109,7 @@ class CoreServiceProvider extends ServiceProvider
             __DIR__.'/../../config/core.php' => config_path('carpentree/core.php'),
             __DIR__.'/../../config/permissions.php' => config_path('carpentree/permissions.php'),
             __DIR__.'/../../config/roles.php' => config_path('carpentree/roles.php'),
+            __DIR__.'/../../config/repository.php' => config_path('carpentree/repository.php'),
         ], 'config');
 
         // Migrations

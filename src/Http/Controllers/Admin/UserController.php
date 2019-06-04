@@ -10,6 +10,7 @@ use Carpentree\Core\Http\Requests\Admin\User\CreateUserRequest;
 use Carpentree\Core\Http\Requests\Admin\User\UpdateUserRequest;
 use Carpentree\Core\Http\Resources\UserResource;
 use Carpentree\Core\Models\User;
+use Carpentree\Core\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Exceptions\UnauthorizedException;
@@ -23,13 +24,18 @@ class UserController extends Controller
     /** @var UserDataAccess */
     protected $dataAccess;
 
+    /** @var UserRepository */
+    protected $repository;
+
     public function __construct(
         UserBuilderInterface $builder,
-        UserDataAccess $dataAccess
+        UserDataAccess $dataAccess,
+        UserRepository $repository
     )
     {
         $this->builder = $builder;
         $this->dataAccess = $dataAccess;
+        $this->repository = $repository;
     }
 
     /**
@@ -41,7 +47,8 @@ class UserController extends Controller
             throw UnauthorizedException::forPermissions(['users.read']);
         }
 
-        $users = $this->dataAccess->list();
+        //$users = $this->dataAccess->list();
+        $users = $this->repository->paginate();
         return UserResource::collection($users);
     }
 
