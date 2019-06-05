@@ -2,6 +2,8 @@
 
 namespace Carpentree\Core\Repositories\Contracts;
 
+use Carpentree\Core\Exceptions\RepositoryException;
+
 interface RepositoryInterface
 {
     /**
@@ -53,4 +55,22 @@ interface RepositoryInterface
      * @return array
      */
     public function getFieldsSearchable();
+
+    /**
+     * Retrieve first data of repository
+     *
+     * @param array $columns
+     * @return mixed
+     */
+    public function first($columns = ['*']);
+
+    /**
+     * Retrieve data of repository
+     *
+     * @param array $columns
+     * @return mixed
+     * @throws RepositoryException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function get($columns = ['*']);
 }

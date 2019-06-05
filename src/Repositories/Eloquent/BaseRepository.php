@@ -181,15 +181,53 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     }
 
     /**
-     * Find data by id
+     * Retrieve first data of repository
      *
-     * @param       $id
      * @param array $columns
      * @return mixed
+     * @throws RepositoryException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function first($columns = ['*'])
+    {
+        $this->applyCriteria();
+        $results = $this->model->first($columns);
+        $this->resetModel();
+        return $results;
+    }
+
+    /**
+     * Retrieve data of repository
+     *
+     * @param array $columns
+     * @return mixed
+     * @throws RepositoryException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function get($columns = ['*'])
+    {
+        $this->applyCriteria();
+        $results = $this->model->get($columns);
+        $this->resetModel();
+        return $results;
+    }
+
+
+    /**
+     * Find data by id
+     *
+     * @param $id
+     * @param array $columns
+     * @return mixed
+     * @throws RepositoryException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function find($id, $columns = ['*'])
     {
-        // TODO: Implement find() method.
+        $this->applyCriteria();
+        $model = $this->model->findOrFail($id, $columns);
+        $this->resetModel();
+        return $model;
     }
 
     /**
@@ -200,7 +238,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function with($relations)
     {
-        // TODO: Implement with() method.
+        $this->model = $this->model->with($relations);
+        return $this;
     }
 
     /**
@@ -212,9 +251,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     public function orderBy($column, $direction = 'asc')
     {
-        // TODO: Implement orderBy() method.
+        $this->model = $this->model->orderBy($column, $direction);
+        return $this;
     }
-
 
     /**
      * Push Criteria for filter the query
