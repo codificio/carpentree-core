@@ -11,10 +11,4 @@ return [
         'Super Admin'
     ],
 
-    'media' => [
-        'allowed_mimes' => 'jpeg,png,pdf',
-        'temp_path' => 'media/temp',
-        'temp_disk' => 'public'
-    ]
-
 ];

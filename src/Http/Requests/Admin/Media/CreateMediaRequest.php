@@ -13,8 +13,10 @@ class CreateMediaRequest extends FormRequest
      */
     public function rules()
     {
+        $maxFileSize = config('carpentree.media.max_file_size', 4000);
+
         return [
-            'media' => 'required',
+            'media' => "required|size:$maxFileSize",
         ];
     }
 }
