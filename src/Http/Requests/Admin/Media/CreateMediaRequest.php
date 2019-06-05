@@ -14,7 +14,7 @@ class CreateMediaRequest extends FormRequest
     public function rules()
     {
         return [
-            'media' => 'required|size:4000',
+            'media' => 'required',
         ];
     }
 }
