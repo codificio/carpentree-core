@@ -20,7 +20,7 @@ class CategoryController extends Controller
      */
     public function getByType($type)
     {
-        $categories = Category::where('type', $type)->get();
+        $categories = Category::where('type', $type)->defaultOrder()->get();
         return CategoryResource::collection($categories);
     }
 
@@ -46,6 +46,13 @@ class CategoryController extends Controller
             if (!is_null($parentData)) {
                 $parent = Category::findOrFail($parentData['id']);
                 $category->parent()->associate($parent);
+            }
+
+            $beforeData = $request->input('relationships.before.data', null);
+
+            if (!is_null($beforeData)) {
+                $before = Category::findOrFail($beforeData['id']);
+                $category->beforeNode($before);
             }
 
             // Check tree consinstency and fix
@@ -86,6 +93,7 @@ class CategoryController extends Controller
             }
 
             if ($request->has('relationships.parent')) {
+                // Set parent of the category
                 $_data = $request->input('relationships.parent.data', null);
 
                 if ($_data === null) {
@@ -94,6 +102,14 @@ class CategoryController extends Controller
                     $parent = Category::findOrFail($_data['id']);
                     $category->parent_id = $parent->id;
                 }
+            }
+
+            if ($request->has('relationships.before')) {
+                // Insert category before
+                $_data = $request->input('relationships.before.data', null);
+
+                $before = Category::findOrFail($_data['id']);
+                $category->beforeNode($before);
             }
 
             // Check tree consinstency and fix
