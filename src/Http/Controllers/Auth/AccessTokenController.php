@@ -42,7 +42,7 @@ class AccessTokenController extends ParentController
             }
 
             if (!$user->hasVerifiedEmail()) {
-                throw OAuthServerException::accessDenied(__("Your email is not verified"));
+                throw new OAuthServerException(__("Your email is not verified"), 9, 'email_not_verified', 401);
             }
 
             if (!$this->checkScopesAgainstRoles($user, $attributes['scope'])) {
