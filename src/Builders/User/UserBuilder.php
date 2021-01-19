@@ -17,7 +17,8 @@ class UserBuilder extends BaseBuilder implements UserBuilderInterface
      */
     protected function getClass()
     {
-        return User::class;
+        $class = config('carpentree.core.user_class', User::class);
+        return $class;
     }
 
     /**
