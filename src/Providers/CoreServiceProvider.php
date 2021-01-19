@@ -90,7 +90,7 @@ class CoreServiceProvider extends ServiceProvider
 
         // User Data Access
         $this->app->bind(UserDataAccess::class, function () {
-            return new EloquentUserDataAccess(User::class);
+            return new EloquentUserDataAccess(config('carpentree.core.user_class', User::class));
         });
     }
 
