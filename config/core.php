@@ -11,6 +11,6 @@ return [
         'Super Admin'
     ],
     
-    'user_class => 'Carpentree\Core\Models\User'
+    'user_class' => 'Carpentree\Core\Models\User'
 
 ];
