@@ -10,5 +10,7 @@ return [
     'backend_roles' => [
         'Super Admin'
     ],
+    
+    'user_class => 'Carpentree\Core\Models\User'
 
 ];
