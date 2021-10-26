@@ -10,7 +10,6 @@ use Carpentree\Core\Scout\Searchable;
 use Carpentree\Core\Traits\HasAddresses;
 use Carpentree\Core\Traits\HasMeta;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Carpentree\Core\Traits\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailInterface;
@@ -25,7 +24,6 @@ class User extends Authenticatable implements MustVerifyEmailInterface
         HasRoles,
         MustVerifyEmail,
         CanResetPassword,
-        SoftDeletes,
         Searchable,
         HasMeta,
         HasAddresses;
