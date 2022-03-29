@@ -3,11 +3,12 @@
 namespace Carpentree\Core\Models\Address;
 
 use Carpentree\Core\Models\Address;
-use Dimsav\Translatable\Translatable;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class Type extends Model
+class Type extends Model implements TranslatableContract
 {
     use Translatable;
 

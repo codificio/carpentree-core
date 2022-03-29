@@ -2,7 +2,7 @@
 
 namespace Carpentree\Core\Scout;
 
-use Dimsav\Translatable\Translatable;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Support\Facades\App;
 use Laravel\Scout\Searchable as ParentTrait;
 

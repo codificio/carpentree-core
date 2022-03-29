@@ -2,7 +2,7 @@
 
 namespace Carpentree\Core\Scout\Engines;
 
-use Dimsav\Translatable\Translatable;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\App;
 use Laravel\Scout\Engines\AlgoliaEngine as ParentEngine;

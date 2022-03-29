@@ -5,9 +5,10 @@ namespace Carpentree\Core\Models;
 use Carpentree\Core\Models\MetaField\Translation;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
-use Dimsav\Translatable\Translatable;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 
-class MetaField extends Model
+class MetaField extends Model implements TranslatableContract
 {
     use NodeTrait;
     use Translatable;
