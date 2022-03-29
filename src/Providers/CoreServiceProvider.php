@@ -12,7 +12,7 @@ use Carpentree\Core\DataAccess\User\EloquentUserDataAccess;
 use Carpentree\Core\DataAccess\User\UserDataAccess;
 use Carpentree\Core\Models\User;
 use Carpentree\Core\Services\SocialUserResolver;
-use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
+use Coderello\SocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 

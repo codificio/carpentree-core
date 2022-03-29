@@ -3,7 +3,7 @@
 namespace Carpentree\Core\Services;
 
 use Exception;
-use Hivokas\LaravelPassportSocialGrant\Resolvers\SocialUserResolverInterface;
+use Coderello\SocialGrant\Resolvers\SocialUserResolverInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Laravel\Socialite\Facades\Socialite;
 
